@@ -1,6 +1,8 @@
 ### v6.7.1-beta-2 (preset storage and save safety)
 
-* Include root app 1.7.1-beta-2/code 83; module code 164.
+* Include root app 1.7.1-beta-2/code 84; module code 165.
+* Reissue beta-2 with Android-compatible XML preset parsing, rejecting DOCTYPE and external entities without unsupported Xerces features.
+* Create the public /sdcard/LightningDSP/Presets folder during installation; app-private libraries remain separate.
 * Initialize all app-private effect libraries, including Presets, and create missing
   import directories. Public module examples are not the app's live preset library.
 * Write presets to a temporary archive and atomically replace the destination only
@@ -9,7 +11,7 @@
   preset archives that contain no DSP settings instead of reporting false success.
 * Restore embedded Live Programmable DSP scripts from the extracted archive path.
 * Reuse native driver/helper unchanged. No broad storage permission grants are added.
-* 297 root tests and rootless/plugin release Kotlin compilation passed. The specific
+* 299 root tests and rootless/plugin release Kotlin compilation passed. The specific
   reported device/storage failure still requires runtime verification.
 
 ### v6.7.1-beta-1 (device profile reconciliation)

@@ -232,6 +232,7 @@ sed -i "1a NVBASE=$NVBASE" "$MODPATH/service.sh"
 
 ui_print "   Staging the selected APK to /sdcard as a manual-install fallback"
 cp -rf "$MODPATH/common/files/LightningDSP" /storage/emulated/0/LightningDSP
+mkdir -p /storage/emulated/0/LightningDSP/Presets || ui_print "! Could not create the public Presets folder; app-private presets remain separate."
 cp -f "$MODPATH/LightningDSP.apk" /storage/emulated/0/LightningDSP.apk
 # Handle upgrades while the installer UI can display the bounded confirmation.
 # On recovery or when Package Manager is unavailable, service.sh retries safely.

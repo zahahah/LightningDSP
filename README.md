@@ -37,6 +37,8 @@ An optional **Disable App Audio Focus (Requires Xposed)** setting is available o
 
 The module installs its library and effect configuration systemlessly. It does not permanently rewrite your system or vendor partitions. Device firmware, effect host, root mounts and audio route still affect compatibility. The native library supports Android's AIDL effect entry and a legacy effect entry in one ARM64 binary; the app keeps the AudioEffect lifecycle and uses native control where supported.
 
+The installer creates `/sdcard/LightningDSP/Presets` alongside the public effect examples. The app keeps its live preset library separately in its app-specific storage, normally `Android/data/com.lightning.dsp/files/Presets`. Use the app's preset import/export controls to move presets between locations.
+
 ### Coming from JamesDSP?
 
 This project continues my JamesDSP-based work under the LightningDSP name. The last pre-rebrand stable releases remain available as [JamesDSPManager-Classic 6.6](https://github.com/zahahah/JamesDSPManager-Classic/releases/tag/v6.6) and [RootJamesDSP-Classic 1.6.17](https://github.com/zahahah/RootJamesDSP-Classic/releases/tag/v1.6.17).
