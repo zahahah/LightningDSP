@@ -1,3 +1,17 @@
+### v6.7.1-beta-2 (preset storage and save safety)
+
+* Include root app 1.7.1-beta-2/code 83; module code 164.
+* Initialize all app-private effect libraries, including Presets, and create missing
+  import directories. Public module examples are not the app's live preset library.
+* Write presets to a temporary archive and atomically replace the destination only
+  after completion. Keep the previous preset if writing fails, and report the save stage.
+* Include default DSP namespaces when saving an untouched configuration; reject
+  preset archives that contain no DSP settings instead of reporting false success.
+* Restore embedded Live Programmable DSP scripts from the extracted archive path.
+* Reuse native driver/helper unchanged. No broad storage permission grants are added.
+* 297 root tests and rootless/plugin release Kotlin compilation passed. The specific
+  reported device/storage failure still requires runtime verification.
+
 ### v6.7.1-beta-1 (device profile reconciliation)
 
 * Reissue beta-1 with app 1.7.1-beta-1/code 82 and module code 163.

@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-beta-1'
-VERSION_CODE = 163
+VERSION = 'v6.7.1-beta-2'
+VERSION_CODE = 164
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-beta-1'
-APP_CODE = 82
-APP_SOURCE_COMMIT = '5f4e8e948e30c05f6c893a91dfab192aff6fe598'
+APP_VERSION = '1.7.1-beta-2'
+APP_CODE = 83
+APP_SOURCE_COMMIT = '229e1c406a0f17f5fb17f43d4d5154aba9d638b7'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
