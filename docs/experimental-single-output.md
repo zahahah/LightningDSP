@@ -67,7 +67,44 @@ No toggle, APK or ZIP should be distributed as a single-output implementation
 until these conditions are met. The current packaging branch also contains
 unfinished beta-4 metadata; it is not a distributable candidate.
 
+## Alternative evaluated: privileged RENDER-only dynamic policy
+
+A Java `AudioPolicy` with a RENDER-only `AudioMix` is a distinct candidate that
+does not require a custom native manager or audio capture/replay. In the AOSP
+manager examined, registration associates the mix with the first already-open,
+nonduplicated output supporting its named physical device. Matching clients can
+then receive that stored output before ordinary output selection. This could
+concentrate the two reported normal PCM streams; it does not prove effect
+placement or select an arbitrary mixer by handle.
+
+It is not safe to translate this directly into a default-on generic rule:
+
+- [Mixing rules][rules] can match usage, UID/user ID and session, but cannot
+  exclude output flags, channel masks or rates. Native [mix matching][mixes]
+  can match exact-format direct PCM as well as mixed PCM. A compatible session
+  allowlist cannot exclude a later incompatible track reusing a session.
+- Special requests can open a direct output and change the shared mix's stored
+  output. Registration can invalidate a product strategy's tracks.
+- A RENDER mix names a physical device; asynchronous route callbacks are not an
+  atomic guarantee that a speaker policy stops before headphone/USB/BT routing.
+
+A short-lived, session-restricted device experiment could test registration,
+selected mixer/effect placement and unregister/Binder-death cleanup separately.
+It would require explicit authorization to change routing and a separate scope:
+success would not resolve the flag-exclusion or device-pinning limitations above
+and would not unlock the requested default-on generic feature. Do not write a
+throwaway routing helper as though it were the missing production backend. Do
+not enable Volume Manager to own a policy; DSP routing needs its own lifetime.
+
+The official [build table][builds] consulted on 2026-11-01 maps Android 17 r1 to
+a different build than the supplied report. This does not prove matching source
+is unavailable, but no exact source/ABI match has been established here. Do not
+substitute the public tag as proof of binary compatibility.
+
 [service]: https://android.googlesource.com/platform/frameworks/av/+/refs/heads/main/services/audiopolicy/service/AudioPolicyService.cpp
 [header]: https://android.googlesource.com/platform/frameworks/av/+/refs/heads/main/services/audiopolicy/managerdefault/AudioPolicyManager.h
 [build]: https://android.googlesource.com/platform/frameworks/av/+/refs/heads/main/services/audiopolicy/managerdefault/Android.bp
 [android16]: https://android.googlesource.com/platform/frameworks/av/+/android-16.0.0_r1/services/audiopolicy/managerdefault/AudioPolicyManager.h
+[rules]: https://android.googlesource.com/platform/frameworks/base/+/refs/heads/main/media/java/android/media/audiopolicy/AudioMixingRule.java
+[mixes]: https://android.googlesource.com/platform/frameworks/av/+/refs/heads/main/services/audiopolicy/common/managerdefinitions/src/AudioPolicyMix.cpp
+[builds]: https://source.android.com/docs/setup/reference/build-numbers
