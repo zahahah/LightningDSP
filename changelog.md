@@ -1,3 +1,19 @@
+### v6.7.1-beta-3 (device profiles and preset state isolation)
+
+* Include root app 1.7.1-beta-3/code 85; module code 166.
+* Keep the beta-1 device-profile reconciliation and beta-2 Android XML, storage,
+  atomic-save and preset import fixes together.
+* Prevent an interrupted preset load from leaving extracted DSP settings that
+  contaminate the next preset or device profile. Isolate each load and clean up
+  its temporary files on success or failure.
+* Save loaded preference values instead of relying on XML files whose disk
+  writes may still be pending. Preserve disabled effects and default namespaces.
+* Stop a profile switch if its outgoing settings cannot be saved, and do not
+  overwrite an existing destination profile when the active marker is missing.
+* Reuse the native driver and helper unchanged. No DuckStation routing changes
+  are included. Device-specific reboot, routing and audible behavior still need
+  runtime verification.
+
 ### v6.7.1-beta-2 (preset storage and save safety)
 
 * Include root app 1.7.1-beta-2/code 84; module code 165.
