@@ -1,3 +1,20 @@
+### v6.7.1-beta-4 (experimental Global output coverage recovery)
+
+* Include root app 1.7.1-beta-4/code 86; module code 167.
+* Add bounded, experimental recovery when Global is attached to an idle output
+  while one eligible playback output has no LightningDSP effect chain.
+* Keep ldsp.control as the main path for supported native controls. Require a
+  verified, unambiguous native context before recovery, and re-check output
+  coverage after reattachment instead of treating Binder readiness as success.
+* Preserve the current power state, loaded preferences and desired-state guards.
+  Do not create parallel Global and per-session contexts or retry in a loop.
+* Keep the beta-3 device-profile, preset state isolation, safe-save and secure
+  Android XML fixes. Reuse the native driver and helper unchanged.
+* This is not universal coverage for every firmware or output type. Ambiguous
+  simultaneous outputs and unsupported FAST, direct, MMAP or offload paths must
+  not be treated as verified coverage. DuckStation behavior and audible recovery
+  on the affected device remain runtime-unverified.
+
 ### v6.7.1-beta-3 (device profiles and preset state isolation)
 
 * Include root app 1.7.1-beta-3/code 85; module code 166.
