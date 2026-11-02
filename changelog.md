@@ -1,3 +1,11 @@
+### v6.7.1-mixers-test-6 (Actions-only voice-message coverage fix)
+
+* Include root app 1.7.1-mixers-test-6/code 91; module code 172.
+* Match the observed mono WhatsApp voice-message client using its
+  AudioAttributes flag field; other unknown combinations remain excluded.
+* Device playback remains unverified. Native driver and helper unchanged;
+  no release is published.
+
 ### v6.7.1-mixers-test-5 (Actions-only mono session experiment)
 
 * Include root app 1.7.1-mixers-test-5/code 90; module code 171.

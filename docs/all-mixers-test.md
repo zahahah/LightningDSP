@@ -11,6 +11,9 @@ diagnostics. A previous dump from the same firmware yields an eligible normal
 track after the fix. The later report's raw dumps were not supplied here, so
 this does not by itself confirm the cause or the fix on that device.
 
+Test 6 fixes detection of the observed profile by reading the `0x800` flag
+from the AudioAttributes field, not the separate stream-flags field.
+
 Test 5 additionally admits the observed mono music profile used by the tested
 WhatsApp voice message (PCM mono, music stream, `UNKNOWN` usage, exact client flag).
 Other unknown flag combinations and communication usages remain excluded.

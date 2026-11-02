@@ -13,22 +13,22 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "8ce1737a44ca0b6307b36934f61cd8ad63f472f1",
-    "buildBaseCommit": "8ce1737a44ca0b6307b36934f61cd8ad63f472f1",
+    "commit": "e4e93a3799263a2c6ce98d3f1f688e87c983ab80",
+    "buildBaseCommit": "e4e93a3799263a2c6ce98d3f1f688e87c983ab80",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "4d52cc5effe8236d352af3c2fc93b3e6d975df422e9fdc86807982b9cdf3bae5",
+      "sha256": "e08f1477975a9a7d25d94fc60ee4553928c17abda473c23938a986f10882f7d0",
       "sizeBytes": 36081248,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-5",
-      "versionCode": 90,
+      "versionName": "1.7.1-mixers-test-6",
+      "versionCode": 91,
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "8ce1737a44ca0b6307b36934f61cd8ad63f472f1"
+      "sourceCommit": "e4e93a3799263a2c6ce98d3f1f688e87c983ab80"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -51,6 +51,6 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-5/code 90 was built from the experimental branch commit; mono voice-message coverage remains device-unverified."
+    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-6/code 91 was built from the experimental branch commit; WhatsApp mono voice-message coverage remains device-unverified."
   ]
 }
