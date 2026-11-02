@@ -1,3 +1,11 @@
+### v6.7.1-mixers-test-5 (Actions-only mono session experiment)
+
+* Include root app 1.7.1-mixers-test-5/code 90; module code 171.
+* Extend supplemental coverage for the verified mono voice-message playback
+  profile while retaining strict guards for other unknown flags and usages.
+* Device playback remains unverified. Native driver and helper remain unchanged;
+  no release is published.
+
 ### v6.7.1-mixers-test-4 (Actions-only transition experiment)
 
 * Include root app 1.7.1-mixers-test-4/code 89; module code 170.

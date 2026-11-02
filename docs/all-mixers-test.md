@@ -11,6 +11,10 @@ diagnostics. A previous dump from the same firmware yields an eligible normal
 track after the fix. The later report's raw dumps were not supplied here, so
 this does not by itself confirm the cause or the fix on that device.
 
+Test 5 additionally admits the observed mono music profile used by the tested
+WhatsApp voice message (PCM mono, music stream, `UNKNOWN` usage, exact client flag).
+Other unknown flag combinations and communication usages remain excluded.
+
 Test 4 also recognizes a paused transitional track state and retains only
 attachments confirmed in both changing topology samples; no new attachment is
 created from an unstable inspection. Device verification remains necessary.
