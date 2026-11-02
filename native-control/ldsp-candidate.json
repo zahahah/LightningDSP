@@ -13,22 +13,22 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "6790e246b4a59e10b9e1d5e5c5ddde7a082955fe",
-    "buildBaseCommit": "6790e246b4a59e10b9e1d5e5c5ddde7a082955fe",
+    "commit": "0cb9b3d3bfefa72d496468ebf68a356d01cf02c6",
+    "buildBaseCommit": "0cb9b3d3bfefa72d496468ebf68a356d01cf02c6",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "7d836190346d9e6bf6ef0e7b066b6ed6c6e9454e66fd5dc12077753ac4644d29",
+      "sha256": "b96013851ff8c8469f358cee48000d0ca616303ff8298755928f65b58bef9234",
       "sizeBytes": 36060768,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-1",
-      "versionCode": 86,
+      "versionName": "1.7.1-mixers-test-2",
+      "versionCode": 87,
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "6790e246b4a59e10b9e1d5e5c5ddde7a082955fe"
+      "sourceCommit": "0cb9b3d3bfefa72d496468ebf68a356d01cf02c6"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -51,6 +51,6 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-1/code 86 was built from the experimental branch commit; hybrid coverage and transition timing remain device-unverified."
+    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-2/code 87 was built from the experimental branch commit; mixer parsing and transition behavior remain device-unverified."
   ]
 }

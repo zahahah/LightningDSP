@@ -1,3 +1,10 @@
+### v6.7.1-mixers-test-2 (Actions-only hybrid coverage experiment)
+
+* Include root app 1.7.1-mixers-test-2/code 87; module code 168.
+* Improve mixer-track diagnostics and compatibility with Android dump layouts.
+* Runtime behavior, including transient effects during output migration, remains
+  unverified on device. Driver and helper are unchanged; no release is published.
+
 ### v6.7.1-mixers-test-1 (Actions-only hybrid coverage experiment)
 
 * Include root app 1.7.1-mixers-test-1/code 86; module code 167.

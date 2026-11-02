@@ -146,7 +146,7 @@ class LightningDSPPackageTests(unittest.TestCase):
                                ('global-output-experiment', {'appSource': {'branch': 'master'}})]:
             with self.subTest(branch=branch, source=source), self.assertRaises(ValueError):
                 package.verify_distribution_branch(branch, source)
-        with patch.object(package, 'VERSION', 'v6.7.1-mixers-test-2'):
+        with patch.object(package, 'VERSION', 'v6.7.1-mixers-test-1'):
             with self.assertRaises(ValueError):
                 package.verify_distribution_branch('global-output-experiment', manifest)
         with patch.object(package, 'VERSION', 'v6.7.1-beta-3'):

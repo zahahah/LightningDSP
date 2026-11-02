@@ -5,6 +5,12 @@ The existing native driver and ldspctl are unchanged. The app keeps the normal
 Global attachment and can add per-session effects for compatible normal playback
 on other mixers. It does not force apps onto a shared output.
 
+Test 2 corrects parsing of supported AudioFlinger track rows with spatial-status
+columns following latency and adds bounded inspection retries with privacy-safe
+diagnostics. A previous dump from the same firmware yields an eligible normal
+track after the fix. The later report's raw dumps were not supplied here, so
+this does not by itself confirm the cause or the fix on that device.
+
 The root Audio processing setting **Apply effects to all mixers** defaults to
 on and only runs in Global mode. Disable it to remove supplemental instances
 and keep the ordinary Global attachment. Unknown or inconsistent diagnostics
