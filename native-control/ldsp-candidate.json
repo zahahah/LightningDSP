@@ -13,22 +13,22 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "0cb9b3d3bfefa72d496468ebf68a356d01cf02c6",
-    "buildBaseCommit": "0cb9b3d3bfefa72d496468ebf68a356d01cf02c6",
+    "commit": "d28e24af14f90202da61a20aa5533407609a4416",
+    "buildBaseCommit": "d28e24af14f90202da61a20aa5533407609a4416",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "b96013851ff8c8469f358cee48000d0ca616303ff8298755928f65b58bef9234",
-      "sizeBytes": 36060768,
+      "sha256": "060c6cc0a5f3caa76a44b4de68836e393569e76df3d21facc8a800eac240a6ac",
+      "sizeBytes": 36081248,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-2",
-      "versionCode": 87,
+      "versionName": "1.7.1-mixers-test-3",
+      "versionCode": 88,
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "0cb9b3d3bfefa72d496468ebf68a356d01cf02c6"
+      "sourceCommit": "d28e24af14f90202da61a20aa5533407609a4416"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -51,6 +51,6 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-2/code 87 was built from the experimental branch commit; mixer parsing and transition behavior remain device-unverified."
+    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-3/code 88 was built from the experimental branch commit; background retention and transition behavior remain device-unverified."
   ]
 }

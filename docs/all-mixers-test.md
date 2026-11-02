@@ -11,7 +11,13 @@ diagnostics. A previous dump from the same firmware yields an eligible normal
 track after the fix. The later report's raw dumps were not supplied here, so
 this does not by itself confirm the cause or the fix on that device.
 
-The root Audio processing setting **Apply effects to all mixers** defaults to
+Test 3 retains an already-owned supplemental effect while its paused playback
+session, client identity and uncovered output remain verified. It does not create
+new effects for inactive sessions, and rejects invalid or uncertain topology.
+The settings label is now **Cover additional sessions**, shown only in Global
+Mode. Playback after returning from another app requires device validation.
+
+The root Audio processing setting **Cover additional sessions** defaults to
 on and only runs in Global mode. Disable it to remove supplemental instances
 and keep the ordinary Global attachment. Unknown or inconsistent diagnostics
 must not be treated as successful coverage. Special/actual FAST, direct, MMAP,

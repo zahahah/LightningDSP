@@ -1,3 +1,11 @@
+### v6.7.1-mixers-test-3 (Actions-only background session experiment)
+
+* Include root app 1.7.1-mixers-test-3/code 88; module code 169.
+* Keep eligible supplemental effects attached across inactive playback when
+  their session and output remain verified, and align Global/Session wording.
+* Runtime behavior and transition overlap remain device-unverified. Native
+  driver and helper remain unchanged; no release is published.
+
 ### v6.7.1-mixers-test-2 (Actions-only hybrid coverage experiment)
 
 * Include root app 1.7.1-mixers-test-2/code 87; module code 168.
