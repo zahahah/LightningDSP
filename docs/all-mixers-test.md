@@ -1,4 +1,4 @@
-# Apply effects to all mixers: experimental test build
+# Cover additional sessions: experimental test build
 
 This is an Actions test artifact, not a new stable or prerelease publication.
 The existing native driver and ldspctl are unchanged. The app keeps the normal
@@ -14,6 +14,15 @@ this does not by itself confirm the cause or the fix on that device.
 Test 6 fixes detection of the observed profile by reading the `0x800` flag
 from the AudioAttributes field, not the separate stream-flags field.
 
+Test 7 also enables the same conservative session coverage while Global Mode
+is off. It does not create a synthetic session-zero/global effect: existing
+session effects are respected, and database reservations prevent broadcasts or
+the optional scanner from attaching a duplicate effect to an already-covered
+session. The setting is visible in both root processing modes. Detection uses
+one fresh topology read after the native worker barrier; attachment is still
+validated before enable and verified afterward. The additional path and onset
+latency have not yet been validated on a device.
+
 Test 5 additionally admits the observed mono music profile used by the tested
 WhatsApp voice message (PCM mono, music stream, `UNKNOWN` usage, exact client flag).
 Other unknown flag combinations and communication usages remain excluded.
@@ -25,21 +34,25 @@ created from an unstable inspection. Device verification remains necessary.
 Test 3 retains an already-owned supplemental effect while its paused playback
 session, client identity and uncovered output remain verified. It does not create
 new effects for inactive sessions, and rejects invalid or uncertain topology.
-The settings label is now **Cover additional sessions**, shown only in Global
-Mode. Playback after returning from another app requires device validation.
+The setting is **Cover additional sessions**, shown in both root processing
+modes. Playback after returning from another app requires device validation.
 
 The root Audio processing setting **Cover additional sessions** defaults to
-on and only runs in Global mode. Disable it to remove supplemental instances
-and keep the ordinary Global attachment. Unknown or inconsistent diagnostics
-must not be treated as successful coverage. Special/actual FAST, direct, MMAP,
+on. In Global Mode it supplements uncovered mixers; in Session Mode it covers
+supported sessions not already handled by LightningDSP. Disable it to remove
+supplemental instances and keep the selected mode's ordinary behavior. Unknown
+or inconsistent diagnostics must not be treated as successful coverage. Special/actual FAST, direct, MMAP,
 offload and unsupported playback paths are not promised coverage.
 
 The current native helper cannot select among multiple contexts. Before adding
-supplemental effects, the app blocks unscoped native writes, drains its worker
-and reapplies the global's complete current state through AudioEffect. While
-extras exist, each engine uses its own AudioEffect parameter path. Native
-control can resume only after extras are closed and the current global state is
-fenced. No first-context selection or blind native broadcast is introduced.
+supplemental effects, the app blocks unscoped native writes and drains its
+worker. When a session-zero endpoint exists it reapplies that endpoint's
+complete current state through AudioEffect; in Session Mode with no such
+endpoint, the barrier confirms earlier unscoped writes have drained and no
+synthetic global effect is created. While extras exist, each engine uses its
+own AudioEffect parameter path. Native control can resume only after extras
+are closed and any live session-zero state is fenced. No first-context
+selection or blind native broadcast is introduced.
 
 ## Device validation still required
 

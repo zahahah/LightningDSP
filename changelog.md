@@ -1,3 +1,12 @@
+### v6.7.1-mixers-test-7 (Actions-only Session Mode coverage experiment)
+
+* Include root app 1.7.1-mixers-test-7/code 92; module code 173.
+* Extend conservative supplemental session coverage to Session Mode when
+  Global Mode is off, including duplicate-session reservation and live
+  session-zero fencing when applicable.
+* Keep native driver and helper unchanged. Device playback and the reduced
+  attachment onset latency remain unverified; no release is published.
+
 ### v6.7.1-mixers-test-6 (Actions-only voice-message coverage fix)
 
 * Include root app 1.7.1-mixers-test-6/code 91; module code 172.
