@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-beta-4'
+VERSION = 'v6.7.1-mixers-test-1'
 VERSION_CODE = 167
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-beta-4'
+APP_VERSION = '1.7.1-mixers-test-1'
 APP_CODE = 86
-APP_SOURCE_COMMIT = '5237a9da7bb10fe96bc25a48966f293a85fad05a'
+APP_SOURCE_COMMIT = '6790e246b4a59e10b9e1d5e5c5ddde7a082955fe'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -184,6 +184,7 @@ def payloads():
         'native-control/ldsp-NOTICES.txt': 0o100644,
         'native-control/global-service.rule': 0o100644,
         'native-control/default-label-opt-in.rule': 0o100644,
+        'docs/all-mixers-test.md': 0o100644,
         DRIVER: 0o100644,
         HELPER: 0o100755,
     }
@@ -196,11 +197,21 @@ def payloads():
     return result
 
 
+def verify_distribution_branch(branch, manifest):
+    experimental = '-mixers-test-' in VERSION
+    if branch in ('master', 'ldsp-rebrand') and not experimental:
+        return
+    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-mixers-test-1'
+            and manifest.get('appSource', {}).get('branch') == branch):
+        return
+    raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand for releases, '
+                     'or the pinned global-output-experiment test build')
+
+
 def build(output, root=ROOT):
     manifest = verify_candidate(root)
     branch = subprocess.check_output(['git', 'branch', '--show-current'], cwd=root, text=True).strip()
-    if branch not in ('master', 'ldsp-rebrand'):
-        raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand')
+    verify_distribution_branch(branch, manifest)
     output.parent.mkdir(parents=True, exist_ok=True)
     entries = payloads()
     with ZipFile(output, 'w', compression=ZIP_STORED) as archive:

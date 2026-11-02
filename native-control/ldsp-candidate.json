@@ -12,23 +12,23 @@
   },
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
-    "branch": "master",
-    "commit": "5237a9da7bb10fe96bc25a48966f293a85fad05a",
-    "buildBaseCommit": "5237a9da7bb10fe96bc25a48966f293a85fad05a",
+    "branch": "global-output-experiment",
+    "commit": "6790e246b4a59e10b9e1d5e5c5ddde7a082955fe",
+    "buildBaseCommit": "6790e246b4a59e10b9e1d5e5c5ddde7a082955fe",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "97e1b177870378240715f92682454cac97d9ace68c9b985d44e79560ffc97207",
-      "sizeBytes": 36011616,
+      "sha256": "7d836190346d9e6bf6ef0e7b066b6ed6c6e9454e66fd5dc12077753ac4644d29",
+      "sizeBytes": 36060768,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-beta-3",
-      "versionCode": 85,
+      "versionName": "1.7.1-mixers-test-1",
+      "versionCode": 86,
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "5237a9da7bb10fe96bc25a48966f293a85fad05a"
+      "sourceCommit": "6790e246b4a59e10b9e1d5e5c5ddde7a082955fe"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -51,6 +51,6 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native driver and helper are reused unchanged. Root app 1.7.1-beta-3/code 85 is built from committed master source with isolated preset loads and preserved device-profile reconciliation."
+    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-1/code 86 was built from the experimental branch commit; hybrid coverage and transition timing remain device-unverified."
   ]
 }

@@ -1,6 +1,6 @@
 id=ainur_lightningdsp
 name=LightningDSP Manager
-version=v6.7.1-beta-4
+version=v6.7.1-mixers-test-1
 versionCode=167
 author=lightning zahah
 description=LightningDSP (previously JamesDSP), dual-entry AIDL/legacy driver; ldsp.control protocol 3 with legacy fallback

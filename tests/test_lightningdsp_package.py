@@ -18,8 +18,9 @@ class LightningDSPPackageTests(unittest.TestCase):
     def test_rebrand_zip_is_deterministic_and_contains_only_the_current_identity(self):
         with tempfile.TemporaryDirectory() as tmp:
             outputs = [Path(tmp) / 'one.zip', Path(tmp) / 'two.zip']
-            with patch.object(package, 'verify_candidate', return_value={}), \
-                    patch.object(package.subprocess, 'check_output', return_value='master'):
+            with patch.object(package, 'verify_candidate', return_value={
+                    'appSource': {'branch': 'global-output-experiment'}}), \
+                    patch.object(package.subprocess, 'check_output', return_value='global-output-experiment'):
                 hashes = [package.build(output, ROOT) for output in outputs]
 
             self.assertEqual(outputs[0].read_bytes(), outputs[1].read_bytes())
@@ -137,6 +138,21 @@ class LightningDSPPackageTests(unittest.TestCase):
         self.assertNotRegex((ROOT / 'module.prop').read_text(), r'(?m)^banner=')
         self.assertNotIn('JDSP_banner.png', package.payloads())
         self.assertNotIn('LightningDSP_banner.png', package.payloads())
+
+    def test_experimental_distribution_is_exact_branch_and_source_bound(self):
+        manifest = {'appSource': {'branch': 'global-output-experiment'}}
+        package.verify_distribution_branch('global-output-experiment', manifest)
+        for branch, source in [('master', manifest), ('another-experiment', manifest),
+                               ('global-output-experiment', {'appSource': {'branch': 'master'}})]:
+            with self.subTest(branch=branch, source=source), self.assertRaises(ValueError):
+                package.verify_distribution_branch(branch, source)
+        with patch.object(package, 'VERSION', 'v6.7.1-mixers-test-2'):
+            with self.assertRaises(ValueError):
+                package.verify_distribution_branch('global-output-experiment', manifest)
+        with patch.object(package, 'VERSION', 'v6.7.1-beta-3'):
+            package.verify_distribution_branch('master', {})
+            with self.assertRaises(ValueError):
+                package.verify_distribution_branch('global-output-experiment', manifest)
 
 
 if __name__ == '__main__':
