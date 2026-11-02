@@ -73,3 +73,22 @@ been executed on a device by the build process.
 The APK alone requires the matching LightningDSP driver already installed.
 The module ZIP includes the same signed APK as the standalone artifact. Existing
 signature-mismatch and migration confirmation rules remain unchanged.
+
+## Test 8: AAudio compatibility experiment
+
+In Audio processing, Improve app compatibility is off by default. Select only
+incompatible user apps in Vector or LSPosed, enable this option, then restart
+the selected app yourself. Its AAudio LOW_LATENCY requests are changed to NONE
+when the native hook and root-controlled setting are both active. This can
+increase latency and is not limited to streams proven uncovered at creation.
+It remains requested for selected apps while the toggle is on, including when
+the DSP power is off; turn the option off to stop changing new AAudio streams.
+If normal open fails cleanly, the original request is retried. Other processes
+and audio backends such as OpenSL ES and Java AudioTrack are not covered.
+
+Hook readiness, Vector/LSPosed compatibility, the target process property
+read, actual track mode, global/session ownership, duplicate effects and audible
+DSP have not been validated on a device for this build. Hook log readiness
+alone does not prove that audio is processed. The scan option is requested by
+default in Session Mode, but requires DUMP access and retains broadcast fallback
+when that access is unavailable.

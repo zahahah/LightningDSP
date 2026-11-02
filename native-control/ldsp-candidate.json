@@ -13,22 +13,22 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "0de75d6e2ad1e5ba5c9f2452a39510452d03e2ce",
-    "buildBaseCommit": "0de75d6e2ad1e5ba5c9f2452a39510452d03e2ce",
+    "commit": "2d11c396a92a100be35163697b4f31d9777ff487",
+    "buildBaseCommit": "2d11c396a92a100be35163697b4f31d9777ff487",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "b81b86f04bbcf230bdc576eeb570266059141720afccac72f8d54453ff17e80f",
-      "sizeBytes": 36081248,
+      "sha256": "b831163cbb266edc7523500f8ff93f6761d9a6a20fe2b8a857648af0eeeee20f",
+      "sizeBytes": 37445609,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-7",
-      "versionCode": 92,
+      "versionName": "1.7.1-mixers-test-8",
+      "versionCode": 93,
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "0de75d6e2ad1e5ba5c9f2452a39510452d03e2ce"
+      "sourceCommit": "2d11c396a92a100be35163697b4f31d9777ff487"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -51,6 +51,6 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-7/code 92 was built from the committed experimental branch source. Session Mode coverage and playback onset latency remain unverified for this build."
+    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-8/code 93 was built from committed experimental source. AAudio compatibility is opt-in, selected-app scoped and runtime-unverified."
   ]
 }
