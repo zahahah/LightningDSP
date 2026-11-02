@@ -11,6 +11,10 @@ diagnostics. A previous dump from the same firmware yields an eligible normal
 track after the fix. The later report's raw dumps were not supplied here, so
 this does not by itself confirm the cause or the fix on that device.
 
+Test 4 also recognizes a paused transitional track state and retains only
+attachments confirmed in both changing topology samples; no new attachment is
+created from an unstable inspection. Device verification remains necessary.
+
 Test 3 retains an already-owned supplemental effect while its paused playback
 session, client identity and uncovered output remain verified. It does not create
 new effects for inactive sessions, and rejects invalid or uncertain topology.

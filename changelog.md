@@ -1,3 +1,11 @@
+### v6.7.1-mixers-test-4 (Actions-only transition experiment)
+
+* Include root app 1.7.1-mixers-test-4/code 89; module code 170.
+* Preserve verified supplemental sessions through supported pause transitions and
+  avoid creating new effects from unstable topology snapshots.
+* Device playback and transition overlap remain unverified. Native driver and
+  helper remain unchanged; no release is published.
+
 ### v6.7.1-mixers-test-3 (Actions-only background session experiment)
 
 * Include root app 1.7.1-mixers-test-3/code 88; module code 169.
