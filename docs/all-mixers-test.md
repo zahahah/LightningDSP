@@ -92,3 +92,19 @@ DSP have not been validated on a device for this build. Hook log readiness
 alone does not prove that audio is processed. The scan option is requested by
 default in Session Mode, but requires DUMP access and retains broadcast fallback
 when that access is unavailable.
+
+
+## Test 9: safer AAudio experiment
+
+Test 8 was associated with a black screen in NetherSX2 even after the option
+was disabled; removing the app from the Vector scope and reopening it restored
+operation. This test avoids inline patches of system AAudio functions and does
+not load the native compatibility library when the option is disabled before
+the target process starts. The cause of the black screen is not yet proven.
+
+When enabled, the experimental ARM64 path changes imports only in eligible app
+libraries with the complete supported layout. Some apps and audio backends will
+not qualify; opening the app again is necessary after changing the setting or
+Vector/LSPosed scope. If problems persist, disable the option, remove the app
+from the framework scope and restart it. This has not yet been validated on
+the target device.

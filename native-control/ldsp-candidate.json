@@ -13,22 +13,22 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "2d11c396a92a100be35163697b4f31d9777ff487",
-    "buildBaseCommit": "2d11c396a92a100be35163697b4f31d9777ff487",
+    "commit": "0ccb8f4dd4b25390b4204a072ac2be31a6ae2353",
+    "buildBaseCommit": "0ccb8f4dd4b25390b4204a072ac2be31a6ae2353",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "b831163cbb266edc7523500f8ff93f6761d9a6a20fe2b8a857648af0eeeee20f",
-      "sizeBytes": 37445609,
+      "sha256": "825b934f08643dc6b8d539195d61a52fcfd5873c8be6d12548169b2f5a5b56f4",
+      "sizeBytes": 37117929,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-8",
-      "versionCode": 93,
+      "versionName": "1.7.1-mixers-test-9",
+      "versionCode": 94,
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "2d11c396a92a100be35163697b4f31d9777ff487"
+      "sourceCommit": "0ccb8f4dd4b25390b4204a072ac2be31a6ae2353"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -51,6 +51,6 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-8/code 93 was built from committed experimental source. AAudio compatibility is opt-in, selected-app scoped and runtime-unverified."
+    "Native driver and helper remain unchanged. Root app 1.7.1-mixers-test-9/code 94 was built from committed experimental source. AAudio compatibility is opt-in, selected-app scoped and runtime-unverified."
   ]
 }
