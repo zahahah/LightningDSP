@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "77f5408d5d8064270d2c737b13dd50736bac8796",
-    "buildBaseCommit": "77f5408d5d8064270d2c737b13dd50736bac8796",
+    "commit": "e238323765b549db77124d1913d6f029d88ebe88",
+    "buildBaseCommit": "e238323765b549db77124d1913d6f029d88ebe88",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "10e26b3c56732f4c1dae58b180ec4d6d8e33285c4c320f2df26d32061f152ceb",
+      "sha256": "4f253ecaa291b20f82ba431dbbfe5bc638b339a8cd3c34d025c52ab3de232989",
       "sizeBytes": 37154793,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-10-1",
-      "versionCode": 95,
+      "versionName": "1.7.1-mixers-test-12-1",
+      "versionCode": 97,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "77f5408d5d8064270d2c737b13dd50736bac8796"
+      "sourceCommit": "e238323765b549db77124d1913d6f029d88ebe88"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -53,6 +53,6 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native driver and helper remain unchanged. Root universal app 1.7.1-mixers-test-10-1/code 95 was built from committed app source. The Volume Manager media controls request only LightningDSP notification-listener access through root when explicitly enabled; per-app DSP buttons are theme-aware and configurable in Session Mode. Runtime behavior remains unverified."
+    "Native driver and helper remain unchanged. Root universal app 1.7.1-mixers-test-12-1/code 97 was built from committed app source. Volume Manager retains paused media for three minutes only after the same session confirms a recent pause command from its own button. The floating DSP power control is centered under its icon when expanded, and the light-theme active state uses a softer blue. Runtime behavior remains unverified."
   ]
 }
