@@ -110,10 +110,10 @@ from the framework scope and restart it. This has not yet been validated on
 the target device.
 
 
-## Test 13: root universal Volume Manager update
+## Test 14: root universal Volume Manager update
 
 This module artifact embeds the signed Root universal APK built from
-LightningDSP-App commit `e238323765b549db77124d1913d6f029d88ebe88`. It includes
+LightningDSP-App commit `dd6c1195893b98d3eda17aff3eb5f47544a8c0f6`. It includes
 the Volume Manager media play/pause control, three-minute retention only after
 a pause initiated by its own button, and theme-aware media controls and per-app
 DSP power controls. Session Mode can show DSP power controls on demand or always;
@@ -134,8 +134,9 @@ icon. Its Global Mode setting remains visible but unavailable. The per-app DSP
 power control is circular and theme-aware. Media play/pause controls adapt to the
 app and floating-panel theme.
 
-This iteration corrects paused-media retention: the three-minute timer starts
-only after the user pauses through the Volume Manager and that exact session
-confirms the pause. Natural pauses and app-originated pause events do not retain
-the app row. The DSP card power control is centered directly under its
-LightningDSP icon when expanded in the floating panel.
+The three-minute media-retention timer now starts immediately when the user
+presses Pause in the floating player control. It is anchored to that button
+press, so the row remains visible while the asynchronous media-session state
+catches up. A failed pause command rolls back the retention; natural or
+app-originated pauses do not start it. The DSP card power control is centered
+directly under its LightningDSP icon when expanded in the floating panel.
