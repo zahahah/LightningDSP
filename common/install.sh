@@ -166,7 +166,7 @@ fi
 
 ui_print " "
 ui_print "- UI installation -"
-ui_print "   Installing LightningDSP 1.7.1-mixers-test-9 root app"
+ui_print "   Installing LightningDSP 1.7.1-mixers-test-9-1 root universal app"
 ui_print "   APK uses the current maintainer signing key"
 ui_print "   Same-signature apps are updated in place"
 ui_print "   Different signatures require explicit volume-key confirmation"

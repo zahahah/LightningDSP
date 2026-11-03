@@ -66,6 +66,8 @@ class LightningDSPPackageTests(unittest.TestCase):
         apk = ROOT / package.APP
         self.assertEqual(app['versionName'], package.APP_VERSION)
         self.assertEqual(app['versionCode'], package.APP_CODE)
+        self.assertEqual(app['variant'], 'root')
+        self.assertEqual(app['abi'], 'universal')
         self.assertEqual(app['sha256'], sha256(apk.read_bytes()).hexdigest())
         self.assertEqual(app['sizeBytes'], apk.stat().st_size)
         self.assertEqual(app['signerSha256'], package.TRUSTED_APK_SIGNER)
@@ -74,7 +76,7 @@ class LightningDSPPackageTests(unittest.TestCase):
         self.assertEqual(app['sourceCommit'], package.APP_SOURCE_COMMIT)
         self.assertEqual((ROOT / 'common/files/LightningDSP.apk.meta').read_text(),
                          f'versionCode={package.APP_CODE}\n')
-        self.assertIn(f'Installing LightningDSP {package.APP_VERSION} root app',
+        self.assertIn(f'Installing LightningDSP {package.APP_VERSION} root universal app',
                       (ROOT / 'common/install.sh').read_text())
         # App integration must not silently substitute the matched native pair.
         self.assertEqual(manifest['artifacts']['driver']['sha256'],
@@ -106,6 +108,8 @@ class LightningDSPPackageTests(unittest.TestCase):
             apk = Path(tmp) / 'previous.apk'
             with ZipFile(apk, 'w') as archive:
                 archive.writestr('classes.dex', b'previous app without the startup handler')
+                for abi in ('arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'):
+                    archive.writestr(f'lib/{abi}/libtest.so', b'fixture')
             with patch.object(package.subprocess, 'check_output', side_effect=[signer, badging]):
                 with self.assertRaisesRegex(ValueError, 'lacks background startup support'):
                     package.verify_apk(apk)
@@ -118,6 +122,8 @@ class LightningDSPPackageTests(unittest.TestCase):
                 apk = Path(tmp) / 'fixture.apk'
                 with ZipFile(apk, 'w') as archive:
                     archive.writestr(entry, b'com.lightning.dsp.root.service.START_BACKGROUND')
+                    for abi in ('arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'):
+                        archive.writestr(f'lib/{abi}/libtest.so', b'fixture')
                 with patch.object(package.subprocess, 'check_output', side_effect=[signer, badging]):
                     if supported:
                         package.verify_apk(apk)

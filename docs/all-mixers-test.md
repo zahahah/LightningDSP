@@ -108,3 +108,19 @@ not qualify; opening the app again is necessary after changing the setting or
 Vector/LSPosed scope. If problems persist, disable the option, remove the app
 from the framework scope and restart it. This has not yet been validated on
 the target device.
+
+
+## Test 10: root universal Volume Manager update
+
+This module artifact embeds the signed Root universal APK built from
+LightningDSP-App commit `d35a55f32658c3d48b285916a0c446b551e35250`. It includes
+the Volume Manager media play/pause control, three-minute retention for paused
+players when that option is enabled, and per-app DSP power controls in Session
+Mode. The floating panel keeps its center position and adds side clearance when
+these controls need more width. No Rootless APK is included. The module driver
+and helper themselves remain ARM64-only.
+
+The module's dual-entry ARM64 driver and `ldspctl` are unchanged. The app APK is
+about 37 MB; the smaller size shown by Actions is the compressed artifact
+download size, not the installed APK size. This remains an Actions test artifact,
+not a stable or prerelease publication.
