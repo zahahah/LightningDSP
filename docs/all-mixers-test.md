@@ -110,17 +110,26 @@ from the framework scope and restart it. This has not yet been validated on
 the target device.
 
 
-## Test 10: root universal Volume Manager update
+## Test 11: root universal Volume Manager update
 
 This module artifact embeds the signed Root universal APK built from
-LightningDSP-App commit `d35a55f32658c3d48b285916a0c446b551e35250`. It includes
+LightningDSP-App commit `77f5408d5d8064270d2c737b13dd50736bac8796`. It includes
 the Volume Manager media play/pause control, three-minute retention for paused
-players when that option is enabled, and per-app DSP power controls in Session
-Mode. The floating panel keeps its center position and adds side clearance when
-these controls need more width. No Rootless APK is included. The module driver
-and helper themselves remain ARM64-only.
+players when that option is enabled, and theme-aware media controls and per-app
+DSP power controls. Session Mode can show DSP power controls on demand or always;
+Global Mode displays the setting as unavailable. The floating panel keeps its
+center position and adds side clearance when controls need more width. Enabling
+media controls explicitly grants only LightningDSP notification-listener access
+through root, and refuses to enable the setting if that grant cannot be verified.
+No Rootless APK is included. The module driver and helper remain ARM64-only.
 
 The module's dual-entry ARM64 driver and `ldspctl` are unchanged. The app APK is
 about 37 MB; the smaller size shown by Actions is the compressed artifact
 download size, not the installed APK size. This remains an Actions test artifact,
 not a stable or prerelease publication.
+
+The Session Mode DSP power setting has a separate **Always show app DSP power
+buttons** option; otherwise controls appear after tapping the LightningDSP card
+icon. Its Global Mode setting remains visible but unavailable. The per-app DSP
+power control is circular and theme-aware. Media play/pause controls adapt to the
+app and floating-panel theme.
