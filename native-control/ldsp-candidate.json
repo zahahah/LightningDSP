@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "dd6c1195893b98d3eda17aff3eb5f47544a8c0f6",
-    "buildBaseCommit": "dd6c1195893b98d3eda17aff3eb5f47544a8c0f6",
+    "commit": "3e9fb7c9416ccd71dec68d4b6598aac8711cc911",
+    "buildBaseCommit": "3e9fb7c9416ccd71dec68d4b6598aac8711cc911",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "b9916591b2e194392024b2c5543607db37113105db53dd0b93ed8535417d180c",
-      "sizeBytes": 37154793,
+      "sha256": "7d95d4db7543fd53196a5bb442408ea5eda97a4f8d18f4d39e978c41e7a50451",
+      "sizeBytes": 37171177,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-13",
-      "versionCode": 98,
+      "versionName": "1.7.1-mixers-test-14",
+      "versionCode": 99,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "dd6c1195893b98d3eda17aff3eb5f47544a8c0f6"
+      "sourceCommit": "3e9fb7c9416ccd71dec68d4b6598aac8711cc911"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -53,6 +53,6 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "The native driver and helper remain unchanged. Root universal app 1.7.1-mixers-test-13/code 98 was compiled and signed locally from committed app source. Pausing through the floating player control starts the three-minute retention timer immediately; a failed pause request rolls it back. The softer light-theme active DSP color is included. The app build is local; only the module package is built by GitHub Actions. Runtime behavior remains unverified."
+    "Native driver and helper are unchanged. Root universal app 1.7.1-mixers-test-14/code 99 was built and signed locally from committed app source. The opt-in Xposed compatibility experiment additionally requests a normal OpenSL ES mode for eligible PCM players. Hook readiness does not prove audio coverage, correct attachment, or audibility; device tests remain required."
   ]
 }

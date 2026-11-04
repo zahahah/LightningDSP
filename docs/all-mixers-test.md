@@ -140,3 +140,19 @@ press, so the row remains visible while the asynchronous media-session state
 catches up. A failed pause command rolls back the retention; natural or
 app-originated pauses do not start it. The DSP card power control is centered
 directly under its LightningDSP icon when expanded in the floating panel.
+
+## Test 15: experimental OpenSL ES compatibility
+
+Root universal app source commit: `3e9fb7c9416ccd71dec68d4b6598aac8711cc911` (built locally).
+
+The existing opt-in **Improve app compatibility** also attempts to request
+`SL_ANDROID_PERFORMANCE_NONE` for eligible mono/stereo PCM OpenSL ES buffer-queue
+players in selected user-app processes. Vector or LSPosed scope and a restart of
+the selected app are still required. Latency may increase. The native DSP driver
+and ldspctl are unchanged.
+
+This is a limited experiment: an app may override the requested mode, use an
+unsupported audio backend or ELF layout, resolve imports dynamically, or run
+its audio in a process where the hook is not loaded. Failure falls back to the
+original path where possible. No claim is made that Eden or Bannerlator is fixed;
+confirm track type, effect attachment and audible results on the target device.
