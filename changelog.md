@@ -1,3 +1,96 @@
+### v6.7.1-beta-4
+
+* Include the signed root universal app 1.7.1-beta-4/code 104; module code 183.
+* Cover eligible playback sessions outside the mixer hosting Global Mode, without
+  forcing all audio through one output. Improve Session Mode coverage too.
+* Keep verified supplemental effects attached across supported background and
+  pause transitions, reject stale scans, and avoid duplicate global/session effects.
+* Improve recognition of extended AudioFlinger layouts, reduced-buffer normal
+  tracks, and mono voice-message playback, including simultaneous WhatsApp and
+  music playback.
+* Add opt-in Xposed compatibility support for emulators that request FAST audio
+  (confirmed working by testers with Bannerlator, Eden and NetherSX2). Selected
+  apps can request compatible AAudio, OpenSL ES or DirectAudio paths; this does
+  not make the driver process arbitrary FAST tracks directly. Select affected
+  apps in Vector/LSPosed and restart them. Latency can increase.
+* Improve DuckStation coverage through supplemental session effects, independently
+  of the optional Xposed compatibility hook.
+* Add Volume Manager edit cancellation, separate hiding from the floating panel
+  and manager, working edit-mode mute, collapsible inactive apps, and correctly
+  positioned app menus.
+* Add optional per-app play/pause for exposed media sessions and root-assisted
+  notification-listener access. Keep a paused floating-panel row for three minutes
+  only after a pause from the manager; resuming playback cancels that retention.
+* Add per-app DSP power controls for Session Mode, optional always-visible buttons,
+  clearer light-theme states, themed media buttons, and improved floating-panel
+  spacing and LightningDSP card alignment.
+* Preserve the profile and preset fixes from beta 1, beta 2 and beta 3. Keep the
+  matched native driver/helper, SELinux policy, mount and recovery behavior unchanged.
+* Stable module 6.7 and app 1.7 remain the latest stable releases. The universal APK
+  includes multiple app ABIs; the bundled native effect driver is still ARM64.
+
+### v6.7.1-mixers-test-7 (Actions-only Session Mode coverage experiment)
+
+* Include root app 1.7.1-mixers-test-7/code 92; module code 173.
+* Extend conservative supplemental session coverage to Session Mode when
+  Global Mode is off, including duplicate-session reservation and live
+  session-zero fencing when applicable.
+* Keep native driver and helper unchanged. Device playback and the reduced
+  attachment onset latency remain unverified; no release is published.
+
+### v6.7.1-mixers-test-6 (Actions-only voice-message coverage fix)
+
+* Include root app 1.7.1-mixers-test-6/code 91; module code 172.
+* Match the observed mono WhatsApp voice-message client using its
+  AudioAttributes flag field; other unknown combinations remain excluded.
+* Device playback remains unverified. Native driver and helper unchanged;
+  no release is published.
+
+### v6.7.1-mixers-test-5 (Actions-only mono session experiment)
+
+* Include root app 1.7.1-mixers-test-5/code 90; module code 171.
+* Extend supplemental coverage for the verified mono voice-message playback
+  profile while retaining strict guards for other unknown flags and usages.
+* Device playback remains unverified. Native driver and helper remain unchanged;
+  no release is published.
+
+### v6.7.1-mixers-test-4 (Actions-only transition experiment)
+
+* Include root app 1.7.1-mixers-test-4/code 89; module code 170.
+* Preserve verified supplemental sessions through supported pause transitions and
+  avoid creating new effects from unstable topology snapshots.
+* Device playback and transition overlap remain unverified. Native driver and
+  helper remain unchanged; no release is published.
+
+### v6.7.1-mixers-test-3 (Actions-only background session experiment)
+
+* Include root app 1.7.1-mixers-test-3/code 88; module code 169.
+* Keep eligible supplemental effects attached across inactive playback when
+  their session and output remain verified, and align Global/Session wording.
+* Runtime behavior and transition overlap remain device-unverified. Native
+  driver and helper remain unchanged; no release is published.
+
+### v6.7.1-mixers-test-2 (Actions-only hybrid coverage experiment)
+
+* Include root app 1.7.1-mixers-test-2/code 87; module code 168.
+* Improve mixer-track diagnostics and compatibility with Android dump layouts.
+* Runtime behavior, including transient effects during output migration, remains
+  unverified on device. Driver and helper are unchanged; no release is published.
+
+### v6.7.1-mixers-test-1 (Actions-only hybrid coverage experiment)
+
+* Include root app 1.7.1-mixers-test-1/code 86; module code 167.
+* Add a default-on Global-only option to supplement compatible playback
+  sessions on mixers that do not contain the Global effect.
+* Preserve the existing Global attachment; do not force apps onto one output
+  or recreate the Global effect to chase playback.
+* Quiesce ambiguous unscoped native commands before supplemental attachment,
+  and use each AudioEffect endpoint while multiple contexts are managed.
+* Preserve beta-3 profile/preset reconciliation and reuse the driver/helper.
+* Experimental and device-unverified. The framework STOPPING/orphan transition
+  window has not been proven free of overlapping processing. See
+  docs/all-mixers-test.md before testing. No stable or prerelease is published.
+
 ### v6.7.1-beta-3 (device profiles and preset state isolation)
 
 * Include root app 1.7.1-beta-3/code 85; module code 166.

@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-beta-3'
-VERSION_CODE = 166
+VERSION = 'v6.7.1-beta-4'
+VERSION_CODE = 183
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-beta-3'
-APP_CODE = 85
-APP_SOURCE_COMMIT = '5237a9da7bb10fe96bc25a48966f293a85fad05a'
+APP_VERSION = '1.7.1-beta-4'
+APP_CODE = 104
+APP_SOURCE_COMMIT = 'd585fc594ba19999dc0ccb6b9d27a00700255e28'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -63,6 +63,13 @@ def verify_apk(path):
     # previous signed APK, which has no handler for that action.
     startup_action = b'com.lightning.dsp.root.service.START_BACKGROUND'
     with ZipFile(path) as archive:
+        packaged_abis = {
+            match.group(1)
+            for name in archive.namelist()
+            if (match := re.match(r'lib/([^/]+)/', name))
+        }
+        if packaged_abis != {'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'}:
+            raise ValueError('Module APK must be the signed root universal build')
         supports_startup = any(
             startup_action in archive.read(name)
             for name in archive.namelist()
@@ -116,7 +123,8 @@ def verify_candidate(root=ROOT, readelf=None):
         if kind == 'app':
             if (item.get('packageId') != APP_PACKAGE or item.get('versionName') != APP_VERSION or
                     item.get('versionCode') != APP_CODE or item.get('signatureVerified') is not True or
-                    item.get('signerSha256') != TRUSTED_APK_SIGNER):
+                    item.get('signerSha256') != TRUSTED_APK_SIGNER or
+                    item.get('variant') != 'root' or item.get('abi') != 'universal'):
                 raise ValueError('Signed APK metadata is not the authorized rebrand build')
             verify_apk(path)
         else:
@@ -184,6 +192,7 @@ def payloads():
         'native-control/ldsp-NOTICES.txt': 0o100644,
         'native-control/global-service.rule': 0o100644,
         'native-control/default-label-opt-in.rule': 0o100644,
+        'docs/all-mixers-test.md': 0o100644,
         DRIVER: 0o100644,
         HELPER: 0o100755,
     }
@@ -196,11 +205,21 @@ def payloads():
     return result
 
 
+def verify_distribution_branch(branch, manifest):
+    experimental = '-mixers-test-' in VERSION
+    if branch in ('master', 'ldsp-rebrand') and not experimental:
+        return
+    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-mixers-test-16'
+            and manifest.get('appSource', {}).get('branch') == branch):
+        return
+    raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand for releases, '
+                     'or the pinned global-output-experiment test build')
+
+
 def build(output, root=ROOT):
     manifest = verify_candidate(root)
     branch = subprocess.check_output(['git', 'branch', '--show-current'], cwd=root, text=True).strip()
-    if branch not in ('master', 'ldsp-rebrand'):
-        raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand')
+    verify_distribution_branch(branch, manifest)
     output.parent.mkdir(parents=True, exist_ok=True)
     entries = payloads()
     with ZipFile(output, 'w', compression=ZIP_STORED) as archive:

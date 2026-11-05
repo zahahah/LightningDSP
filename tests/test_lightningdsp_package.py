@@ -18,7 +18,8 @@ class LightningDSPPackageTests(unittest.TestCase):
     def test_rebrand_zip_is_deterministic_and_contains_only_the_current_identity(self):
         with tempfile.TemporaryDirectory() as tmp:
             outputs = [Path(tmp) / 'one.zip', Path(tmp) / 'two.zip']
-            with patch.object(package, 'verify_candidate', return_value={}), \
+            with patch.object(package, 'verify_candidate', return_value={
+                    'appSource': {'branch': 'master'}}), \
                     patch.object(package.subprocess, 'check_output', return_value='master'):
                 hashes = [package.build(output, ROOT) for output in outputs]
 
@@ -65,6 +66,8 @@ class LightningDSPPackageTests(unittest.TestCase):
         apk = ROOT / package.APP
         self.assertEqual(app['versionName'], package.APP_VERSION)
         self.assertEqual(app['versionCode'], package.APP_CODE)
+        self.assertEqual(app['variant'], 'root')
+        self.assertEqual(app['abi'], 'universal')
         self.assertEqual(app['sha256'], sha256(apk.read_bytes()).hexdigest())
         self.assertEqual(app['sizeBytes'], apk.stat().st_size)
         self.assertEqual(app['signerSha256'], package.TRUSTED_APK_SIGNER)
@@ -73,7 +76,7 @@ class LightningDSPPackageTests(unittest.TestCase):
         self.assertEqual(app['sourceCommit'], package.APP_SOURCE_COMMIT)
         self.assertEqual((ROOT / 'common/files/LightningDSP.apk.meta').read_text(),
                          f'versionCode={package.APP_CODE}\n')
-        self.assertIn(f'Installing LightningDSP {package.APP_VERSION} root app',
+        self.assertIn(f'Installing LightningDSP {package.APP_VERSION} root universal app',
                       (ROOT / 'common/install.sh').read_text())
         # App integration must not silently substitute the matched native pair.
         self.assertEqual(manifest['artifacts']['driver']['sha256'],
@@ -105,6 +108,8 @@ class LightningDSPPackageTests(unittest.TestCase):
             apk = Path(tmp) / 'previous.apk'
             with ZipFile(apk, 'w') as archive:
                 archive.writestr('classes.dex', b'previous app without the startup handler')
+                for abi in ('arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'):
+                    archive.writestr(f'lib/{abi}/libtest.so', b'fixture')
             with patch.object(package.subprocess, 'check_output', side_effect=[signer, badging]):
                 with self.assertRaisesRegex(ValueError, 'lacks background startup support'):
                     package.verify_apk(apk)
@@ -117,6 +122,8 @@ class LightningDSPPackageTests(unittest.TestCase):
                 apk = Path(tmp) / 'fixture.apk'
                 with ZipFile(apk, 'w') as archive:
                     archive.writestr(entry, b'com.lightning.dsp.root.service.START_BACKGROUND')
+                    for abi in ('arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'):
+                        archive.writestr(f'lib/{abi}/libtest.so', b'fixture')
                 with patch.object(package.subprocess, 'check_output', side_effect=[signer, badging]):
                     if supported:
                         package.verify_apk(apk)
@@ -137,6 +144,22 @@ class LightningDSPPackageTests(unittest.TestCase):
         self.assertNotRegex((ROOT / 'module.prop').read_text(), r'(?m)^banner=')
         self.assertNotIn('JDSP_banner.png', package.payloads())
         self.assertNotIn('LightningDSP_banner.png', package.payloads())
+
+    def test_experimental_distribution_is_exact_branch_and_source_bound(self):
+        manifest = {'appSource': {'branch': 'global-output-experiment'}}
+        with patch.object(package, 'VERSION', 'v6.7.1-mixers-test-16'):
+            package.verify_distribution_branch('global-output-experiment', manifest)
+            for branch, source in [('master', manifest), ('another-experiment', manifest),
+                                   ('global-output-experiment', {'appSource': {'branch': 'master'}})]:
+                with self.subTest(branch=branch, source=source), self.assertRaises(ValueError):
+                    package.verify_distribution_branch(branch, source)
+        with patch.object(package, 'VERSION', 'v6.7.1-mixers-test-3'):
+            with self.assertRaises(ValueError):
+                package.verify_distribution_branch('global-output-experiment', manifest)
+        with patch.object(package, 'VERSION', 'v6.7.1-beta-4'):
+            package.verify_distribution_branch('master', {})
+            with self.assertRaises(ValueError):
+                package.verify_distribution_branch('global-output-experiment', manifest)
 
 
 if __name__ == '__main__':
