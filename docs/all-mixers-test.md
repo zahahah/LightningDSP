@@ -170,3 +170,29 @@ Reduced-buffer normal tracks can be covered by session effects; actual FAST
 tracks are still excluded. This experiment may increase latency and requires
 validation on the affected device. The DirectAudio environment contract was
 reviewed against [upstream DirectAudio](https://github.com/The412Banner/directaudio/blob/8cc1227bf1b929521e6b2df2509d8b309c4c4f25/directaudio.c).
+
+## Mixers test 17: Oboe lookup and route-notification experiments
+
+This build includes an experimental extension of **Improve app compatibility**
+for AAudio functions resolved dynamically by an eligible app-local `liboboe.so`.
+The JL Mod report identified Oboe 1.7.0 requesting low-latency playback and an
+actual FAST track without LightningDSP coverage. The new adapter requests the
+existing compatible playback path; it does not apply DSP directly to FAST tracks.
+It remains opt-in, requires selecting the app in Vector/LSPosed, and requires
+fully restarting the app. Compatibility, latency and audible results on JL Mod
+remain unverified on a device. Existing AAudio, OpenSL ES and DirectAudio paths
+are retained.
+
+The app also includes a route-notification correction intended to prevent
+unchanged output routes from triggering profile reconciliation and rebuilding
+effect cards when physical volume changes. Effect headers also stop replaying
+their highlight animation on every view bind, while real changes still animate.
+The reported blinking can occur with
+the Volume Manager enabled or disabled. This is a code-level diagnosis and fix,
+not confirmation of the reported behavior on the user's device. Test physical
+volume changes on the main page with both manager states, as well as real route
+changes and device-profile selection.
+
+App code 105 and module code 184 exceed the withdrawn beta-4 codes so existing
+prototype and beta installations can update. The native driver and helper are
+unchanged. Host tests and compilation are not audio validation.

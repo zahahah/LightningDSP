@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "9495ccd21c04a0831ad6fce98d52085cc642bd3e",
-    "buildBaseCommit": "9495ccd21c04a0831ad6fce98d52085cc642bd3e",
+    "commit": "35a68b165f5ec4740cb5f59113622614d9e747d8",
+    "buildBaseCommit": "35a68b165f5ec4740cb5f59113622614d9e747d8",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "15ef216f04c41d52f0715d216668ffc29d280aeea5af1b502d5532248d5f5978",
+      "sha256": "c51498475522bbafb9179eaa80831520121122b510e9b1ddc9fe81eeabe0362b",
       "sizeBytes": 37171177,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-15",
-      "versionCode": 100,
+      "versionName": "1.7.1-mixers-test-16",
+      "versionCode": 105,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "9495ccd21c04a0831ad6fce98d52085cc642bd3e"
+      "sourceCommit": "35a68b165f5ec4740cb5f59113622614d9e747d8"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -53,7 +53,7 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native driver and helper are unchanged. Root universal app 1.7.1-mixers-test-15/code 100 was built and signed locally from a local committed app source. The opt-in compatibility experiment adapts eligible DirectAudio child launch settings and recognizes reduced-buffer normal tracks. Runtime behavior and audibility require device validation.",
+    "Native driver and helper are unchanged. Root universal app 1.7.1-mixers-test-16/code 105 was built and signed locally from the committed experimental app source. This build adds restricted Oboe dynamic AAudio lookup support and filters unchanged route notifications to avoid unnecessary profile reconciliation and effect-card rebuilding. Runtime behavior and audibility on JL Mod and the reported volume-button blinking require device validation.",
     "The app source commit is local and has not been published to the app remote."
   ]
 }
