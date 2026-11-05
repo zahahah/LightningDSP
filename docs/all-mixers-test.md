@@ -156,3 +156,17 @@ unsupported audio backend or ELF layout, resolve imports dynamically, or run
 its audio in a process where the hook is not loaded. Failure falls back to the
 original path where possible. No claim is made that Eden or Bannerlator is fixed;
 confirm track type, effect attachment and audible results on the target device.
+
+## Mixers test 16: DirectAudio child launch experiment
+
+The opt-in Xposed compatibility mode now adapts the documented DirectAudio
+performance environment for selected apps when they launch a subprocess, while
+leaving microphone-enabled or unknown capture configurations unchanged. Existing
+AAudio and OpenSL compatibility paths are retained. Changes apply to new child
+processes; restart the affected app after changing the setting. A child can change
+its audio configuration later, and compatibility or audibility is not guaranteed.
+
+Reduced-buffer normal tracks can be covered by session effects; actual FAST
+tracks are still excluded. This experiment may increase latency and requires
+validation on the affected device. The DirectAudio environment contract was
+reviewed against [upstream DirectAudio](https://github.com/The412Banner/directaudio/blob/8cc1227bf1b929521e6b2df2509d8b309c4c4f25/directaudio.c).

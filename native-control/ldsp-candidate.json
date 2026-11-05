@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "3e9fb7c9416ccd71dec68d4b6598aac8711cc911",
-    "buildBaseCommit": "3e9fb7c9416ccd71dec68d4b6598aac8711cc911",
+    "commit": "9495ccd21c04a0831ad6fce98d52085cc642bd3e",
+    "buildBaseCommit": "9495ccd21c04a0831ad6fce98d52085cc642bd3e",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "7d95d4db7543fd53196a5bb442408ea5eda97a4f8d18f4d39e978c41e7a50451",
+      "sha256": "15ef216f04c41d52f0715d216668ffc29d280aeea5af1b502d5532248d5f5978",
       "sizeBytes": 37171177,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-14",
-      "versionCode": 99,
+      "versionName": "1.7.1-mixers-test-15",
+      "versionCode": 100,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "3e9fb7c9416ccd71dec68d4b6598aac8711cc911"
+      "sourceCommit": "9495ccd21c04a0831ad6fce98d52085cc642bd3e"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -53,6 +53,7 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native driver and helper are unchanged. Root universal app 1.7.1-mixers-test-14/code 99 was built and signed locally from committed app source. The opt-in Xposed compatibility experiment additionally requests a normal OpenSL ES mode for eligible PCM players. Hook readiness does not prove audio coverage, correct attachment, or audibility; device tests remain required."
+    "Native driver and helper are unchanged. Root universal app 1.7.1-mixers-test-15/code 100 was built and signed locally from a local committed app source. The opt-in compatibility experiment adapts eligible DirectAudio child launch settings and recognizes reduced-buffer normal tracks. Runtime behavior and audibility require device validation.",
+    "The app source commit is local and has not been published to the app remote."
   ]
 }
