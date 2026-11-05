@@ -196,3 +196,19 @@ changes and device-profile selection.
 App code 105 and module code 184 exceed the withdrawn beta-4 codes so existing
 prototype and beta installations can update. The native driver and helper are
 unchanged. Host tests and compilation are not audio validation.
+
+## Mixers test 18: Volume Manager lifecycle experiment
+
+This prototype aims to preserve the Volume Manager panel/controller after long
+suspensions and recover unexpected loss of its helper using bounded backoff and
+verified cleanup. This is a code-level hypothesis and correction, not an observed
+runtime cause or confirmation that the reported device behavior is fixed.
+
+The Oboe/JL Mod compatibility and physical-volume effect-header corrections from
+test 17 are retained and are also not yet validated on the target device. Host
+tests and compilation are not audio or lifecycle validation. Test long suspension,
+foreground/background transitions, real volume controls, and ordinary global and
+session playback coverage. No native DSP driver or ldspctl change is included.
+
+App code 106 and module code 185 allow an update from test 17 and the withdrawn
+beta 4 without lowering installed version codes.

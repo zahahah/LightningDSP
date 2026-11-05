@@ -55,9 +55,9 @@ class LightningDSPPackageTests(unittest.TestCase):
         self.assertIn(f'dist/LightningDSP-{package.VERSION}.zip', experiment)
         self.assertIn(f'dist/LightningDSP-{package.APP_VERSION}.apk', experiment)
         self.assertIn(f'name: LightningDSP-{package.VERSION.removeprefix("v6.7.1-")}-', experiment)
-        # Withdrawn prereleases may still be installed; test builds must update them.
-        self.assertGreater(package.VERSION_CODE, 183)
-        self.assertGreater(package.APP_CODE, 104)
+        # Previously distributed prototypes may remain installed; keep upgrades possible.
+        self.assertGreater(package.VERSION_CODE, 184)
+        self.assertGreater(package.APP_CODE, 105)
         workflow = (ROOT / '.github/workflows/pixel-native-control-v4.yml').read_text()
         self.assertIn('ldsp-rebrand]', workflow)
         self.assertLess(workflow.index('native-control/ldsp-candidate.json'),
