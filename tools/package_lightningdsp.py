@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-mixers-test-19'
-VERSION_CODE = 186
+VERSION = 'v6.7.1-mixers-test-20'
+VERSION_CODE = 187
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-mixers-test-18'
-APP_CODE = 107
-APP_SOURCE_COMMIT = '5a690216d85310b219c63f6e71e679f97a74d5eb'
+APP_VERSION = '1.7.1-mixers-test-19'
+APP_CODE = 108
+APP_SOURCE_COMMIT = '93f776d912cbe6814d6f197a92a0aaf1c6c5acd7'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -209,7 +209,7 @@ def verify_distribution_branch(branch, manifest):
     experimental = '-mixers-test-' in VERSION
     if branch in ('master', 'ldsp-rebrand') and not experimental:
         return
-    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-mixers-test-19'
+    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-mixers-test-20'
             and manifest.get('appSource', {}).get('branch') == branch):
         return
     raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand for releases, '

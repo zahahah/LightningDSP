@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "5a690216d85310b219c63f6e71e679f97a74d5eb",
-    "buildBaseCommit": "5a690216d85310b219c63f6e71e679f97a74d5eb",
+    "commit": "93f776d912cbe6814d6f197a92a0aaf1c6c5acd7",
+    "buildBaseCommit": "93f776d912cbe6814d6f197a92a0aaf1c6c5acd7",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "b7b304b3e58d255d0435eb6a4678f4f398d9cff34ace6a360df9784a34930b89",
+      "sha256": "62f4735155bb2ee61ab62166cbb39f5d0e21b17279cfd33a07e522154321d852",
       "sizeBytes": 37187561,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-18",
-      "versionCode": 107,
+      "versionName": "1.7.1-mixers-test-19",
+      "versionCode": 108,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "5a690216d85310b219c63f6e71e679f97a74d5eb"
+      "sourceCommit": "93f776d912cbe6814d6f197a92a0aaf1c6c5acd7"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -54,6 +54,6 @@
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
     "Module test 18 embedded root universal app 1.7.1-mixers-test-17/code 106. That prototype targeted Volume Manager persistence across long suspensions and helper-loss recovery with bounded backoff; device validation remained pending.",
-    "Native DSP driver and ldspctl are unchanged. Root universal app 1.7.1-mixers-test-18/code 107 was built and signed locally from committed experimental app source. It retains the Volume Manager lifecycle work and mutually exclusive Global/Session controls, and extends opt-in AAudio compatibility lookup to JL Mod TinySoundFont and Sonivox backend DSOs. JL Mod custom-SoundFont runtime behavior remains unverified on device."
+    "Native driver and ldspctl are unchanged. App test 19 contains the bounded partial-PT_LOAD-page compatibility fix for JL Mod liboboe; 4 KiB host ELF fixture passes, 16 KiB shared-segment case remains rejected, and device audio validation is pending."
   ]
 }

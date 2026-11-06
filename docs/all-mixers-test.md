@@ -229,3 +229,14 @@ This may increase latency. The user's JL Mod soundbank playback has not yet
 been validated with this build; host tests and compilation do not prove device
 compatibility or audibility. App code 107 and module code 186 are incremented
 for upgrade testing. This is an Actions artifact, not a prerelease.
+
+## Mixers test 20: JL Mod partial ELF page compatibility
+
+Embeds LightningDSP-App `1.7.1-mixers-test-19` (code 108), source commit
+`93f776d912cbe6814d6f197a92a0aaf1c6c5acd7`. The compatibility hook now allows
+an import slot within a load segment's final partial 4 KiB page when no other
+load segment shares that page. Exact ELF read bounds, non-executable mappings,
+RELRO restoration and third-party hook checks remain enforced. The examined
+JL Mod ELF still fails conservatively on 16 KiB pages because that page overlaps
+another segment. Device playback and audible DSP remain unverified. Module code
+187 allows updates from test 19. This is an Actions artifact, not a prerelease.
