@@ -240,3 +240,14 @@ RELRO restoration and third-party hook checks remain enforced. The examined
 JL Mod ELF still fails conservatively on 16 KiB pages because that page overlaps
 another segment. Device playback and audible DSP remain unverified. Module code
 187 allows updates from test 19. This is an Actions artifact, not a prerelease.
+
+## Mixers test 21: remove confirmed inactive session effects
+
+Embeds LightningDSP-App `1.7.1-mixers-test-20` (code 109), source commit
+`c54a2bd904bd7df6dfba305a85dfeaa5afe133e0`. In Session Mode, an effect
+attachment is now closed after two identity-consistent inactive AudioPolicy
+observations and the existing grace interval. Confirmed inactive sessions are
+not reattached until a fresh active observation appears. Unknown or incomplete
+activity remains conservative. Host tests and build passed; on-device stale
+session cleanup and resume behavior still need validation. Module code 188
+allows updates from test 20. This is an Actions artifact, not a prerelease.
