@@ -212,3 +212,20 @@ session playback coverage. No native DSP driver or ldspctl change is included.
 
 App code 106 and module code 185 allow an update from test 17 and the withdrawn
 beta 4 without lowering installed version codes.
+
+## Mixers test 19: JL Mod soundfont compatibility and mode controls
+
+This artifact embeds the signed root universal APK built from LightningDSP-App
+commit `5a690216d85310b219c63f6e71e679f97a74d5eb`. Audio processing now presents
+Global Mode and Session Mode as mutually exclusive choices. The opt-in app
+compatibility hook also checks JL Mod's app-local TinySoundFont and Sonivox
+backend libraries (`libmmapi_tsf.so` and `libmmapi_eas.so`) for Oboe's dynamic
+AAudio lookup, in addition to `liboboe.so`. This targets the reported custom
+SoundFont path without patching system AAudio or changing the DSP driver.
+
+The affected app must be selected in Vector/LSPosed and **Improve app
+compatibility** must be enabled. Restart the app after changing either setting.
+This may increase latency. The user's JL Mod soundbank playback has not yet
+been validated with this build; host tests and compilation do not prove device
+compatibility or audibility. App code 107 and module code 186 are incremented
+for upgrade testing. This is an Actions artifact, not a prerelease.

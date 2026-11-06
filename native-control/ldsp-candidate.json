@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "6cd17cd2690ac6a249000e00c914a0cc76420f72",
-    "buildBaseCommit": "6cd17cd2690ac6a249000e00c914a0cc76420f72",
+    "commit": "5a690216d85310b219c63f6e71e679f97a74d5eb",
+    "buildBaseCommit": "5a690216d85310b219c63f6e71e679f97a74d5eb",
     "builtFromWorkingTree": false,
-    "buildNote": "Signed root APK built from the committed app source at appSource.commit."
+    "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "5e86d7c9a9478a229e471c6a0f056f2a0e7aca336416e948f316cf6fc056ce66",
-      "sizeBytes": 37171177,
+      "sha256": "b7b304b3e58d255d0435eb6a4678f4f398d9cff34ace6a360df9784a34930b89",
+      "sizeBytes": 37187561,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-17",
-      "versionCode": 106,
+      "versionName": "1.7.1-mixers-test-18",
+      "versionCode": 107,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "6cd17cd2690ac6a249000e00c914a0cc76420f72"
+      "sourceCommit": "5a690216d85310b219c63f6e71e679f97a74d5eb"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -53,7 +53,7 @@
     "One ARM64 dual-entry effect driver supports the embedded AIDL Effect V4 interface and the legacy AELI factory entry.",
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
-    "Native DSP driver and ldspctl are unchanged. Root universal app 1.7.1-mixers-test-17/code 106 was built and signed locally from committed experimental app source. This prototype aims to preserve the Volume Manager panel/controller across long suspensions and recover unexpected helper loss with bounded backoff and verified cleanup. The suspected cause and correction remain unverified on a device. It retains the experimental Oboe/JL Mod and volume-button effect-header corrections from test 17, also awaiting device validation.",
-    "The app source commit is local and has not been published to the app remote."
+    "Module test 18 embedded root universal app 1.7.1-mixers-test-17/code 106. That prototype targeted Volume Manager persistence across long suspensions and helper-loss recovery with bounded backoff; device validation remained pending.",
+    "Native DSP driver and ldspctl are unchanged. Root universal app 1.7.1-mixers-test-18/code 107 was built and signed locally from committed experimental app source. It retains the Volume Manager lifecycle work and mutually exclusive Global/Session controls, and extends opt-in AAudio compatibility lookup to JL Mod TinySoundFont and Sonivox backend DSOs. JL Mod custom-SoundFont runtime behavior remains unverified on device."
   ]
 }

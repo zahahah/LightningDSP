@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-mixers-test-18'
-VERSION_CODE = 185
+VERSION = 'v6.7.1-mixers-test-19'
+VERSION_CODE = 186
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-mixers-test-17'
-APP_CODE = 106
-APP_SOURCE_COMMIT = '6cd17cd2690ac6a249000e00c914a0cc76420f72'
+APP_VERSION = '1.7.1-mixers-test-18'
+APP_CODE = 107
+APP_SOURCE_COMMIT = '5a690216d85310b219c63f6e71e679f97a74d5eb'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -102,7 +102,7 @@ def verify_candidate(root=ROOT, readelf=None):
             app_source.get('buildBaseCommit') != APP_SOURCE_COMMIT or
             app_source.get('builtFromWorkingTree') is not False or
             app_artifact.get('sourceCommit') != APP_SOURCE_COMMIT or
-            app_source.get('buildNote') != 'Signed root APK built from the committed app source at appSource.commit.'):
+            app_source.get('buildNote') != 'Signed root universal APK built from the committed app source at appSource.commit.'):
         raise ValueError('Signed app source/provenance pin mismatch')
     if provenance.get('state') != 'elf-validated-runtime-unverified':
         raise ValueError('Native artifact has not passed static ELF validation')
@@ -209,7 +209,7 @@ def verify_distribution_branch(branch, manifest):
     experimental = '-mixers-test-' in VERSION
     if branch in ('master', 'ldsp-rebrand') and not experimental:
         return
-    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-mixers-test-18'
+    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-mixers-test-19'
             and manifest.get('appSource', {}).get('branch') == branch):
         return
     raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand for releases, '
