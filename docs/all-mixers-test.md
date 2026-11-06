@@ -251,3 +251,16 @@ not reattached until a fresh active observation appears. Unknown or incomplete
 activity remains conservative. Host tests and build passed; on-device stale
 session cleanup and resume behavior still need validation. Module code 188
 allows updates from test 20. This is an Actions artifact, not a prerelease.
+
+
+## Mixers test 23: preserve DSP through brief session gaps
+
+Embeds LightningDSP-App `1.7.1-mixers-test-22` (code 111), source commit
+`baaa40fa6e41703e958305fc2382eb278a42cff4`. Session Mode now keeps a per-session effect and its root service
+alive for 10 seconds after a close broadcast, and cancels that pending cleanup if
+the session reopens. Session-zero close remains immediate. Enhanced session
+coverage also keeps short inactive sessions through a 10-second grace while
+retaining identity confirmation and eventual cleanup. This is intended to avoid
+reinitialization gaps between brief JL Mod soundbank effects; on-device audio
+validation is still required. Module code 190 allows updates from test 21. This is
+an Actions artifact, not a prerelease.

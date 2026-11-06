@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "c54a2bd904bd7df6dfba305a85dfeaa5afe133e0",
-    "buildBaseCommit": "c54a2bd904bd7df6dfba305a85dfeaa5afe133e0",
+    "commit": "baaa40fa6e41703e958305fc2382eb278a42cff4",
+    "buildBaseCommit": "baaa40fa6e41703e958305fc2382eb278a42cff4",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "a158e3bde04de817b0e8b3ae8becb3ae04bf181cc936e45a94a5e410a6e0217b",
+      "sha256": "8834e9ab330ae58d6a91bcb4cc5e18ea092b064bd106d93ba4d7636751fa1245",
       "sizeBytes": 37187561,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-20",
-      "versionCode": 109,
+      "versionName": "1.7.1-mixers-test-22",
+      "versionCode": 111,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "c54a2bd904bd7df6dfba305a85dfeaa5afe133e0"
+      "sourceCommit": "baaa40fa6e41703e958305fc2382eb278a42cff4"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -54,6 +54,6 @@
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
     "Module test 18 embedded root universal app 1.7.1-mixers-test-17/code 106. That prototype targeted Volume Manager persistence across long suspensions and helper-loss recovery with bounded backoff; device validation remained pending.",
-    "App test 20 removes per-session effects after two identity-consistent inactive AudioPolicy observations and the existing grace period, and blocks reattachment while inactivity remains confirmed. Active playback clears the stale-session gate. Runtime device validation remains pending."
+    "App test 22 preserves non-global session effects and the root service for 10 seconds after CLOSE, canceling delayed cleanup if the session reopens. Session-zero closure remains immediate. Enhanced session cleanup also uses a 10-second inactivity grace with identity-consistent confirmation. JL Mod short-sound playback still needs device validation."
   ]
 }
