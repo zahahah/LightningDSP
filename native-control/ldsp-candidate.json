@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "a85805279c05c5c11ade3117e17ffd3aded62885",
-    "buildBaseCommit": "a85805279c05c5c11ade3117e17ffd3aded62885",
+    "commit": "5068320994a7c2b2e654061ca054e4818006f222",
+    "buildBaseCommit": "5068320994a7c2b2e654061ca054e4818006f222",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "2af9cd924b6ce59f0139dd7724493cc75c916fbd891ebec90c1d651a8c6966fa",
+      "sha256": "2b37a5304b9a406edbb27239f425f1b3a1403645f7d3e9fdc2dd1da221f3e2d5",
       "sizeBytes": 37498857,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-23",
-      "versionCode": 112,
+      "versionName": "1.7.1-mixers-test-24",
+      "versionCode": 113,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "a85805279c05c5c11ade3117e17ffd3aded62885"
+      "sourceCommit": "5068320994a7c2b2e654061ca054e4818006f222"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -54,6 +54,7 @@
     "Global Binder control is ldsp.control protocol 3. Audio effect UUIDs remain unchanged for effect attachment compatibility.",
     "Android factory, Binder authorization, audio processing, and device compatibility remain unverified for this build.",
     "Module test 18 embedded root universal app 1.7.1-mixers-test-17/code 106. That prototype targeted Volume Manager persistence across long suspensions and helper-loss recovery with bounded backoff; device validation remained pending.",
-    "App test 23 adds bounded pre-start preparation for scoped opt-in AAudio streams through the existing coverage controller. Binder UID/session matching, independent topology and duplicate/global-output guards, original IPC deadlines and never-started cleanup remain mandatory. May delay stream opening by up to 2.2 seconds. JL Mod audible results remain device-unverified; driver and ldspctl unchanged."
+    "App test 23 adds bounded pre-start preparation for scoped opt-in AAudio streams through the existing coverage controller. Binder UID/session matching, independent topology and duplicate/global-output guards, original IPC deadlines and never-started cleanup remain mandatory. May delay stream opening by up to 2.2 seconds. JL Mod audible results remain device-unverified; driver and ldspctl unchanged.",
+    "App test 24 corrects AudioFlinger track parsing for unrelated fast/shared rows such as Type F1 S. These rows remain ineligible for session DSP; a confirmed normal PCM track is still covered. A regression test proves the previously captured layout is accepted without weakening the active-fast-track exclusion. Preparation failures now log a bounded phase, root exception class, and fixed category without exposing exception messages or paths. The user confirmed CompatibilityPreparationProvider and its authority are registered; the only reported provider error was an unrelated Huawei authority. JL Mod preparation failure remains unresolved pending the new diagnostic and runtime testing. Root unit tests: 506 passed; no device validation."
   ]
 }

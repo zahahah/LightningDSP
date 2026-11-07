@@ -289,3 +289,26 @@ Root tests, native ASan/UBSan tests and release assembly passed. Actual provider
 access, first-frame coverage and audible JL Mod behavior require device testing.
 Driver/helper and ldsp.control are unchanged. Module code 191 allows updates
 from test 23. Actions artifact only, not a prerelease.
+
+## Mixers test 25: accept shared fast rows and expose preparation failure phase
+
+Embeds signed root universal LightningDSP-App `1.7.1-mixers-test-24` (code 113),
+source `5068320994a7c2b2e654061ca054e4818006f222`. The AudioFlinger parser now
+accepts unrelated `F<n> S` track rows while retaining their non-normal status;
+these rows are not DSP targets. A regression test covers inactive shared rows,
+normal PCM candidate discovery, and exclusion of active fast/shared-only tracks.
+
+AAudio preparation errors now report a bounded phase, underlying exception class,
+and fixed category, without logging exception text, paths, or caller inventories.
+The latest user output confirms that `CompatibilityPreparationProvider` and
+`com.lightning.dsp.compatibility` are registered. The only provider lookup error
+shown is for Huawei's unrelated `com.huawei.appmarket.commondata` authority.
+That rules out a missing LightningDSP manifest registration, but does not reveal
+why the JL Mod provider call failed. This artifact adds diagnostics; it does not
+claim to resolve JL Mod soundbank instability. Capture the new
+`LightningDSP_AAudio` preparation line after fully restarting JL Mod.
+
+Root tests and release assembly passed; runtime provider access and consistent
+audible processing still require device validation. Driver/helper and
+`ldsp.control` are unchanged. Module code 192 allows updates from test 24.
+Actions artifact only, not a prerelease.
