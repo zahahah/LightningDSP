@@ -264,3 +264,28 @@ retaining identity confirmation and eventual cleanup. This is intended to avoid
 reinitialization gaps between brief JL Mod soundbank effects; on-device audio
 validation is still required. Module code 190 allows updates from test 21. This is
 an Actions artifact, not a prerelease.
+
+## Mixers test 24: prepare scoped AAudio sessions before playback
+
+Embeds signed root universal LightningDSP-App `1.7.1-mixers-test-23` (code 112),
+source `a85805279c05c5c11ade3117e17ffd3aded62885`. JL Mod logs showed a new session starting
+about 922 ms before its DSP was enabled. This prototype requests preparation
+while a compatible AAudio stream is opened, rather than relying only on scans
+after playback has started. Only observed NONE session requests are temporarily
+allocated; observed positive IDs and original builder settings are preserved.
+
+The existing coverage controller independently validates Binder caller UID,
+session, normal PCM layout, global-output exclusion and effect ownership. IPC
+is only a hint and cannot request arbitrary parameters or privileged commands.
+Deadlines are carried across IPC and rechecked before creation/activation.
+Never-started preparations are cleaned up. Missing service/provider, unsupported
+layout or timeout releases playback; preparation is not universally guaranteed.
+Stream opening may be delayed by up to 2.2 seconds, so test responsiveness as
+well as short sound effects. Fully restart the scoped emulator after updating.
+The existing opt-in compatibility setting and Vector/LSPosed app scope are
+required, along with enabled additional-session coverage.
+
+Root tests, native ASan/UBSan tests and release assembly passed. Actual provider
+access, first-frame coverage and audible JL Mod behavior require device testing.
+Driver/helper and ldsp.control are unchanged. Module code 191 allows updates
+from test 23. Actions artifact only, not a prerelease.
