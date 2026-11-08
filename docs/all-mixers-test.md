@@ -406,3 +406,25 @@ if streams fail or audio quality/regressions occur. Root tests, native AAudio
 hook host tests and universal release compilation passed; runtime audio and
 latency remain unverified. Driver, helper and `ldsp.control` are unchanged.
 This is an Actions test artifact, not a prerelease.
+
+## Mixers test 29: recognize AAudio's implicit default session
+
+Embeds signed root universal app `1.7.1-mixers-test-27` (code 116), source
+`bf270aa574f127e272129bb1060e8ccdeaff4681`. The test 28 reuse hook required an
+observed call to `AAudioStreamBuilder_setSessionId(NONE)`. AAudio instead
+defaults to `AAUDIO_SESSION_ID_NONE` when an app omits that call, so those
+builders were bypassing the reuse experiment. The hook now recognizes that
+documented default and, only when **Reuse AAudio session** is enabled, assigns
+and reuses the first allocated session for later eligible streams.
+
+To avoid changing behavior for users who leave the experiment off, the existing
+pre-start allocation path remains limited to apps that explicitly call the
+session setter. Explicit positive app IDs, input streams, normal/untracked
+builders and the one-shot original-request fallback remain protected. Direct
+session-setter imports are observed through an optional safe GOT transaction;
+reuse fails closed if an imported setter cannot be safely observed. Regression
+tests cover omitted setter, explicit NONE/positive ID, optional import and shared
+ID reuse without changing the opt-out path. Root unit tests and all four ABI native
+compilation passed. Device-level short-sound coverage, delay, latency and JL Mod
+behavior remain unverified. Driver/helper and `ldsp.control` are unchanged.
+This is an Actions test artifact, not a prerelease.

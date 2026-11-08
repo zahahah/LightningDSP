@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "58ed9f200596d3f712d2eb3dd713fcaeb8d7399b",
-    "buildBaseCommit": "58ed9f200596d3f712d2eb3dd713fcaeb8d7399b",
+    "commit": "bf270aa574f127e272129bb1060e8ccdeaff4681",
+    "buildBaseCommit": "bf270aa574f127e272129bb1060e8ccdeaff4681",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "4af9fafd4cde455604819347450347974c975628dc7f5e5bbbcd8342c901f647",
+      "sha256": "a638cb99538a073e63074ed324a2fd1c25fa0d5b2e1c7af075247c73fc32f985",
       "sizeBytes": 37502953,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-26",
-      "versionCode": 115,
+      "versionName": "1.7.1-mixers-test-27",
+      "versionCode": 116,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "58ed9f200596d3f712d2eb3dd713fcaeb8d7399b"
+      "sourceCommit": "bf270aa574f127e272129bb1060e8ccdeaff4681"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -58,6 +58,7 @@
     "App test 24 corrects AudioFlinger track parsing for unrelated fast/shared rows such as Type F1 S. These rows remain ineligible for session DSP; a confirmed normal PCM track is still covered. A regression test proves the previously captured layout is accepted without weakening the active-fast-track exclusion. Preparation failures now log a bounded phase, root exception class, and fixed category without exposing exception messages or paths. The user confirmed CompatibilityPreparationProvider and its authority are registered; the only reported provider error was an unrelated Huawei authority. JL Mod preparation failure remains unresolved pending the new diagnostic and runtime testing. Root unit tests: 506 passed; no device validation.",
     "Module test 26 requests the official Package Manager --force-queryable install override for LightningDSP only on Android 11+. Live Pixel capture repeatedly reported provider_unresolved before short JL Mod streams; session effects were created only after playback began. This targets caller-side package visibility without granting QUERY_ALL_PACKAGES to emulators or changing exported provider methods, Binder UID/session verification, opt-in, deadlines or duplicate-effect guards. Signed APK, driver and helper are reused unchanged. Runtime resolution and audible distortion remain unverified with this installer change.",
     "Module test 27 embeds app test 25/code 114: Session Mode reports verified playback rather than retained engine ownership; explicitly idle engines are bypassed immediately, ordinary-mode ownership can resume on fresh playback, and activity observation is independent of optional session discovery. AudioService player states and validated empty-vs-unavailable collection are handled separately. Global-to-Session removes session zero. Provider visibility installer fix from test 26 retained. 519 root tests passed; rootless/plugin Kotlin compiled; on-device pause/resume and vendor layout compatibility remain unverified. Driver/helper unchanged.",
-    "Module test 28 embeds signed root universal app test 26/code 115 from committed source 58ed9f200596d3f712d2eb3dd713fcaeb8d7399b. Adds a separate default-off Reuse AAudio session option beneath Improve app compatibility. In selected Vector/LSPosed processes only, the first successful eligible AAudio stream pins an allocated session ID and later streams that requested NONE reuse it, avoiding repeated session preparation for short sounds. Explicit app session IDs are untouched; failed reuse clears the pinned ID and retries once with the original request. Existing LOW_LATENCY-to-NONE compatibility remains separate and required. Root tests, native hook host tests and all four ABI release build completed; real JL Mod behavior, session policy, latency and audio stability remain device-unverified. Native driver/helper unchanged; Actions artifact only, not a prerelease."
+    "Module test 28 embeds signed root universal app test 26/code 115 from committed source 58ed9f200596d3f712d2eb3dd713fcaeb8d7399b. Adds a separate default-off Reuse AAudio session option beneath Improve app compatibility. In selected Vector/LSPosed processes only, the first successful eligible AAudio stream pins an allocated session ID and later streams that requested NONE reuse it, avoiding repeated session preparation for short sounds. Explicit app session IDs are untouched; failed reuse clears the pinned ID and retries once with the original request. Existing LOW_LATENCY-to-NONE compatibility remains separate and required. Root tests, native hook host tests and all four ABI release build completed; real JL Mod behavior, session policy, latency and audio stability remain device-unverified. Native driver/helper unchanged; Actions artifact only, not a prerelease.",
+    "Module test 29 embeds signed root universal app test 27/code 116 from committed source bf270aa574f127e272129bb1060e8ccdeaff4681. Fixes an eligibility gap: AAudio defaults a builder to SESSION_ID_NONE when the app never calls setSessionId, but test 28 only treated an explicit setter call as eligible, so common app streams did not enter session reuse. The default-off reuse path now recognizes the documented default, allocates/pins its first successful session and reuses it for subsequent eligible streams. Direct setter imports are observed through an optional safe GOT transaction; if a present import cannot be safely observed, reuse is disabled for that process, protecting app-specified IDs. Legacy pre-start allocation remains restricted to explicit setter callers unless reuse is separately opted in. Host regressions cover implicit-default reuse, optional imports and explicit IDs; root tests and all four ABI native compilation passed. Short-sound audibility, latency and JL Mod behavior remain device-unverified. Native driver/helper unchanged; Actions artifact only, not a prerelease."
   ]
 }

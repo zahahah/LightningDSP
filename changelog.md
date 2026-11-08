@@ -1,3 +1,12 @@
+### v6.7.1-mixers-test-29 (Actions-only AAudio default-session coverage fix)
+
+* Include signed root universal app 1.7.1-mixers-test-27/code 116; module code 196.
+* Recognize AAudio's default `SESSION_ID_NONE` even when an app never calls
+  `setSessionId`, enabling the opt-in session-reuse path for those streams.
+* Keep legacy pre-start allocation unchanged while the reuse option is off.
+  Host regression, root tests and all-ABI native compilation passed; device
+  audio and JL Mod behavior remain unverified. Actions artifact only.
+
 ### v6.7.1-mixers-test-28 (Actions-only AAudio session reuse experiment)
 
 * Include signed root universal app 1.7.1-mixers-test-26/code 115; module code 195.
