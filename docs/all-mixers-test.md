@@ -347,3 +347,35 @@ This artifact deliberately reuses the same signed root universal app
 Provider resolution, pre-start preparation success, responsiveness and audible
 JL Mod results still require testing after this change. It is not a confirmed
 universal fix for distortion. Actions artifact only, not a prerelease.
+
+
+## Mixers test 27: distinguish playing apps from retained session engines
+
+Embeds signed root universal app `1.7.1-mixers-test-25` (code 114), source
+`f1254990f2234d155f992ba145f38c393c7a028a`. Session Mode observes playback
+activity even when optional Media session scanning is off; discovery remains
+optional. Explicitly inactive sessions are bypassed immediately and are not
+reported as Active. Ownership retained for short-gap reuse is not playback.
+Ordinary-mode bypassed engines can resume on fresh active evidence without
+requiring another OPEN broadcast. Enhanced discovery keeps bounded idle cleanup.
+
+AudioService collection now distinguishes started players from paused, stopped,
+released and idle players. Same-session concurrent players remain active when
+any player is started. Unknown/failed observations are not advertised as Active,
+and do not turn known-idle engines back on. Only a validated complete empty
+player section counts as successful silence; malformed and unsupported output
+remains unavailable. A fresh matching active observation restores processing.
+
+Global-to-Session transitions explicitly remove session zero. Global baseline
+behavior, the scoped compatibility pre-start path, UID/session safeguards and
+Volume Manager's explicit-pause media retention are otherwise unchanged.
+The test 26 provider-discovery installation correction is preserved.
+
+519 root unit tests passed without failures or skips; rootless/plugin release
+Kotlin compilation passed. Runtime pause/resume, background playback, muted but
+active tracks and vendor layouts still require device validation. No native DSP
+algorithm, driver/helper or ldsp.control changes. Module code 194 allows upgrades
+from test 26. Actions artifact only, not a prerelease.
+
+Lint was executed: 680 Error, 67 Fatal and 262 Warning findings. Lint is not
+clean; a complete pre-existing-baseline comparison has not been established.
