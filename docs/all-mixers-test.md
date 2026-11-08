@@ -312,3 +312,38 @@ Root tests and release assembly passed; runtime provider access and consistent
 audible processing still require device validation. Driver/helper and
 `ldsp.control` are unchanged. Module code 192 allows updates from test 24.
 Actions artifact only, not a prerelease.
+
+
+## Mixers test 26: make the preparation endpoint discoverable
+
+Live Pixel testing with module test 25 showed repeated `provider_unresolved`
+errors in JL Mod's audio process. Normal PCM playback and enabled session effects
+were observed, but effects were created only after each new stream opened.
+That delay is particularly problematic for short sounds. These observations do
+not independently establish the cause of the reported distortion.
+
+On Android 11+, the module's existing APK installation now requests Package
+Manager's `--force-queryable` override for **LightningDSP only**. This targets
+provider discovery from scoped apps without modifying those apps, granting them
+package-inventory permissions, or bypassing provider caller/session validation.
+The compatibility option remains opt-in and Vector/LSPosed app scope is still
+required. Android 10 and older retain the previous install command. If a firmware
+rejects the option, installation reports failure and preserves the existing app;
+it does not uninstall or silently retry with weakened behavior.
+
+This is the official AOSP install-session override, not the manifest
+`forceQueryable` attribute, which is restricted for non-system apps:
+https://android.googlesource.com/platform/frameworks/base/+/android11-release/services/core/java/com/android/server/pm/PackageManagerShellCommand.java
+
+Flash the module through the normal installer to apply the install-session
+metadata, then fully close and reopen the scoped emulator. Merely extracting the
+unchanged APK or restarting the app does not apply this fix. No reinstall or
+visibility modification is performed repeatedly by the boot service.
+
+This artifact deliberately reuses the same signed root universal app
+`1.7.1-mixers-test-24` (code 113), source
+`5068320994a7c2b2e654061ca054e4818006f222`. Native driver/helper and
+`ldsp.control` are unchanged. Module code 193 permits upgrades from test 25.
+Provider resolution, pre-start preparation success, responsiveness and audible
+JL Mod results still require testing after this change. It is not a confirmed
+universal fix for distortion. Actions artifact only, not a prerelease.

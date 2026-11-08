@@ -67,9 +67,21 @@ install_for_users() {
 	chmod 644 "$TEMP_INSTALL_PATH"
 	chcon u:object_r:apk_data_file:s0 "$TEMP_INSTALL_PATH" 2>/dev/null
 	[ -f "$TEMP_INSTALL_PATH" ] || return 1
+	# Scoped compatibility hooks call our provider from another app's UID.
+	# Android 11+ package visibility can otherwise hide its registered authority.
+	# Expose only LightningDSP, not other packages, and grant no new permissions.
+	INSTALL_VISIBILITY_FLAG=""
+	INSTALL_SDK=$(getprop ro.build.version.sdk 2>/dev/null)
+	case "$INSTALL_SDK" in
+		''|*[!0-9]*) ;;
+		*) if [ "$INSTALL_SDK" -ge 30 ]; then
+			INSTALL_VISIBILITY_FLAG="--force-queryable"
+			log "Installing LightningDSP as queryable for scoped compatibility-provider discovery."
+		fi ;;
+	esac
 
 	for USER_ID in $INSTALL_USERS; do
-		OUTPUT=$($PM_CMD install --user "$USER_ID" -r -g "$TEMP_INSTALL_PATH" 2>&1)
+		OUTPUT=$($PM_CMD install --user "$USER_ID" -r -g $INSTALL_VISIBILITY_FLAG "$TEMP_INSTALL_PATH" 2>&1)
 		RESULT=$?
 		log "Install result (User $USER_ID): $OUTPUT (Code: $RESULT)"
 		if echo "$OUTPUT" | grep -qiE 'INSTALL_FAILED_UPDATE_INCOMPATIBLE|signatures do not match|signature.*match'; then

@@ -471,7 +471,7 @@ class LateLoadTests(unittest.TestCase):
         extra_env: dict[str, str] | None = None,
     ) -> subprocess.CompletedProcess[str]:
         temp_apk = module / "tmp-install.apk"
-        mock_executable(mocks / "getprop", "echo 1\n")
+        mock_executable(mocks / "getprop", 'case "$1" in ro.build.version.sdk) echo "${MOCK_ANDROID_SDK:-1}" ;; *) echo 1 ;; esac\n')
         mock_executable(mocks / "chcon", "exit 0\n")
         pm = mock_executable(mocks / "pm", pm_body)
         cmd = mock_executable(
@@ -589,6 +589,33 @@ esac
             commands = (root / "pm.log").read_text()
             self.assertIn("install --user 0 -r -g", commands)
             self.assertNotIn("uninstall", commands)
+
+    def test_preparation_provider_visibility_is_requested_only_on_android_11_plus(self):
+        for sdk, expected in (("29", False), ("30", True), ("37", True), ("unknown", False)):
+            with self.subTest(sdk=sdk), tempfile.TemporaryDirectory() as tmp:
+                root = pathlib.Path(tmp)
+                module, mocks = self.setup_lightningdsp_app_test(root)
+                result = self.run_lightningdsp_app(module, mocks,
+                    self.make_lightningdsp_package_manager(root, "same"),
+                    {"MOCK_ANDROID_SDK": sdk})
+                self.assertEqual(result.returncode, 0, result.stderr)
+                commands = (root / "pm.log").read_text()
+                self.assertEqual("--force-queryable" in commands, expected)
+                self.assertNotIn("uninstall", commands)
+
+    def test_provider_visibility_rejection_preserves_existing_app(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            module, mocks = self.setup_lightningdsp_app_test(root)
+            body = self.make_lightningdsp_package_manager(root, "same")
+            body = body.replace('echo installed >"$state"',
+                'echo "Error: unknown option --force-queryable"; exit 1\n    echo installed >"$state"')
+            self.run_lightningdsp_app(module, mocks, body, {"MOCK_ANDROID_SDK": "37"})
+            commands = (root / "pm.log").read_text()
+            self.assertIn("--force-queryable", commands)
+            self.assertEqual(commands.count("install --user"), 1)
+            self.assertNotIn("uninstall", commands)
+            self.assertEqual((root / "package-installed").read_text(), "installed\n")
 
     def test_lightningdsp_app_volume_down_confirms_signer_migration_and_restores_data(self):
         with tempfile.TemporaryDirectory() as tmp:
