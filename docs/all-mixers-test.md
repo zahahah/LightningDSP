@@ -428,3 +428,25 @@ ID reuse without changing the opt-out path. Root unit tests and all four ABI nat
 compilation passed. Device-level short-sound coverage, delay, latency and JL Mod
 behavior remain unverified. Driver/helper and `ldsp.control` are unchanged.
 This is an Actions test artifact, not a prerelease.
+
+
+## Mixers test 30: discover already-loaded AAudio backends
+
+Embeds signed root universal app `1.7.1-mixers-test-28` (code 117), source
+`9bf38e85efd7f9ca3b6bf4e772e7016367adbc31`. The latest JL Mod capture showed the compatibility observer
+was registered by Vector/LSPosed, but remained waiting while its app-local Oboe
+backend was mapped and short sounds continued creating distinct sessions. The
+compatibility entry now scans the process's current app-library list after
+observer registration and retries every two seconds until AAudio imports are
+actually rebound. This also covers libraries loaded before or without an
+observable linker callback. OpenSL readiness does not stop AAudio discovery.
+
+The sweep executes on a daemon worker only in explicitly scoped processes with
+the compatibility property enabled. It does not access PCM callbacks or modify
+system libraries. Existing safe import/GOT validation remains in force, and a
+failed/unsupported transaction retains original audio behavior. Host AAudio, GOT
+and OpenSL tests passed; Root unit tests passed; native release compilation
+passed for all four app ABIs. The device disconnected before this build could be
+tried, so short-sound processing, delay, latency and freedom from glitches are
+not yet verified on JL Mod or other apps. Driver, helper and `ldsp.control` are
+unchanged. This is an Actions test artifact, not a prerelease.

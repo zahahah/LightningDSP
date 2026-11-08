@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "bf270aa574f127e272129bb1060e8ccdeaff4681",
-    "buildBaseCommit": "bf270aa574f127e272129bb1060e8ccdeaff4681",
+    "commit": "9bf38e85efd7f9ca3b6bf4e772e7016367adbc31",
+    "buildBaseCommit": "9bf38e85efd7f9ca3b6bf4e772e7016367adbc31",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "a638cb99538a073e63074ed324a2fd1c25fa0d5b2e1c7af075247c73fc32f985",
-      "sizeBytes": 37502953,
+      "sha256": "30f1438cf83b7743edd187d96f5c8885b808e7f7b1574f65742fff7f23387db0",
+      "sizeBytes": 37519337,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-mixers-test-27",
-      "versionCode": 116,
+      "versionName": "1.7.1-mixers-test-28",
+      "versionCode": 117,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "bf270aa574f127e272129bb1060e8ccdeaff4681"
+      "sourceCommit": "9bf38e85efd7f9ca3b6bf4e772e7016367adbc31"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -59,6 +59,7 @@
     "Module test 26 requests the official Package Manager --force-queryable install override for LightningDSP only on Android 11+. Live Pixel capture repeatedly reported provider_unresolved before short JL Mod streams; session effects were created only after playback began. This targets caller-side package visibility without granting QUERY_ALL_PACKAGES to emulators or changing exported provider methods, Binder UID/session verification, opt-in, deadlines or duplicate-effect guards. Signed APK, driver and helper are reused unchanged. Runtime resolution and audible distortion remain unverified with this installer change.",
     "Module test 27 embeds app test 25/code 114: Session Mode reports verified playback rather than retained engine ownership; explicitly idle engines are bypassed immediately, ordinary-mode ownership can resume on fresh playback, and activity observation is independent of optional session discovery. AudioService player states and validated empty-vs-unavailable collection are handled separately. Global-to-Session removes session zero. Provider visibility installer fix from test 26 retained. 519 root tests passed; rootless/plugin Kotlin compiled; on-device pause/resume and vendor layout compatibility remain unverified. Driver/helper unchanged.",
     "Module test 28 embeds signed root universal app test 26/code 115 from committed source 58ed9f200596d3f712d2eb3dd713fcaeb8d7399b. Adds a separate default-off Reuse AAudio session option beneath Improve app compatibility. In selected Vector/LSPosed processes only, the first successful eligible AAudio stream pins an allocated session ID and later streams that requested NONE reuse it, avoiding repeated session preparation for short sounds. Explicit app session IDs are untouched; failed reuse clears the pinned ID and retries once with the original request. Existing LOW_LATENCY-to-NONE compatibility remains separate and required. Root tests, native hook host tests and all four ABI release build completed; real JL Mod behavior, session policy, latency and audio stability remain device-unverified. Native driver/helper unchanged; Actions artifact only, not a prerelease.",
-    "Module test 29 embeds signed root universal app test 27/code 116 from committed source bf270aa574f127e272129bb1060e8ccdeaff4681. Fixes an eligibility gap: AAudio defaults a builder to SESSION_ID_NONE when the app never calls setSessionId, but test 28 only treated an explicit setter call as eligible, so common app streams did not enter session reuse. The default-off reuse path now recognizes the documented default, allocates/pins its first successful session and reuses it for subsequent eligible streams. Direct setter imports are observed through an optional safe GOT transaction; if a present import cannot be safely observed, reuse is disabled for that process, protecting app-specified IDs. Legacy pre-start allocation remains restricted to explicit setter callers unless reuse is separately opted in. Host regressions cover implicit-default reuse, optional imports and explicit IDs; root tests and all four ABI native compilation passed. Short-sound audibility, latency and JL Mod behavior remain device-unverified. Native driver/helper unchanged; Actions artifact only, not a prerelease."
+    "Module test 29 embeds signed root universal app test 27/code 116 from committed source bf270aa574f127e272129bb1060e8ccdeaff4681. Fixes an eligibility gap: AAudio defaults a builder to SESSION_ID_NONE when the app never calls setSessionId, but test 28 only treated an explicit setter call as eligible, so common app streams did not enter session reuse. The default-off reuse path now recognizes the documented default, allocates/pins its first successful session and reuses it for subsequent eligible streams. Direct setter imports are observed through an optional safe GOT transaction; if a present import cannot be safely observed, reuse is disabled for that process, protecting app-specified IDs. Legacy pre-start allocation remains restricted to explicit setter callers unless reuse is separately opted in. Host regressions cover implicit-default reuse, optional imports and explicit IDs; root tests and all four ABI native compilation passed. Short-sound audibility, latency and JL Mod behavior remain device-unverified. Native driver/helper unchanged; Actions artifact only, not a prerelease.",
+    "Module test 30 embeds signed root universal app 1.7.1-mixers-test-28/code 117 from committed source 9bf38e85efd7f9ca3b6bf4e772e7016367adbc31. Runtime capture showed Vector injecting AudioCompatibilityHook and registering the native observer in both the launcher and JL Mod :midlet process, while libmmapi_eas.so/liboboe.so were mapped and short sounds kept receiving new session IDs. The observer had no AAudio imports rebound. The app now sweeps already-loaded app DSOs immediately and retries every two seconds until AAudio imports are actually patched; readiness is tracked separately from OpenSL. The sweep runs on a daemon worker, does not inspect or modify PCM callbacks, and remains limited to explicitly scoped apps with the compatibility property enabled. Native AAudio/GOT/OpenSL host tests, root unit tests, and native release builds for arm64-v8a, armeabi-v7a, x86 and x86_64 passed. The phone was disconnected before runtime validation, so glitch-free playback and JL Mod short-sound behavior remain unverified. Driver/helper unchanged; Actions artifact only, not a prerelease."
   ]
 }

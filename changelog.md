@@ -1,3 +1,9 @@
+### v6.7.1-mixers-test-30 (Actions-only AAudio loaded-library discovery fix)
+
+* Include signed root universal app 1.7.1-mixers-test-28/code 117; module code 197.
+* Sweep app-local DSOs already loaded before the Vector/LSPosed linker callback, then retry discovery every two seconds until AAudio imports are rebound. Keep this off the real-time audio path and distinguish AAudio readiness from OpenSL readiness.
+* Host regressions, root unit tests, and four-ABI release compilation passed. JL Mod short-sound behavior and glitch-free playback are not yet device-verified; the phone was disconnected. Native driver/helper unchanged. Actions artifact only, not a prerelease.
+
 ### v6.7.1-mixers-test-29 (Actions-only AAudio default-session coverage fix)
 
 * Include signed root universal app 1.7.1-mixers-test-27/code 116; module code 196.
