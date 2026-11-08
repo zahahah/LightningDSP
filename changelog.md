@@ -1,3 +1,16 @@
+### v6.7.1-mixers-test-28 (Actions-only AAudio session reuse experiment)
+
+* Include signed root universal app 1.7.1-mixers-test-26/code 115; module code 195.
+* Add a separate, default-off AAudio session reuse option for selected
+  Vector/LSPosed compatibility apps. Reuse the first successful allocated
+  session for later streams that request no session, so short sounds can keep
+  the same effect chain instead of repeatedly preparing a new one.
+* Preserve explicit app session IDs and retry once with the original request
+  when reuse fails. Existing AAudio compatibility remains separately required.
+* Host tests and all-ABI release assembly passed. Device audio, latency and
+  JL Mod stability remain unverified. Driver/helper unchanged; Actions artifact
+  only, not a prerelease.
+
 ### v6.7.1-mixers-test-7 (Actions-only Session Mode coverage experiment)
 
 * Include root app 1.7.1-mixers-test-7/code 92; module code 173.

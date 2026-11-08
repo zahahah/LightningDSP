@@ -379,3 +379,30 @@ from test 26. Actions artifact only, not a prerelease.
 
 Lint was executed: 680 Error, 67 Fatal and 262 Warning findings. Lint is not
 clean; a complete pre-existing-baseline comparison has not been established.
+
+## Mixers test 28: opt-in AAudio session reuse for short sounds
+
+Embeds the signed root universal app `1.7.1-mixers-test-26` (code 115), source
+`58ed9f200596d3f712d2eb3dd713fcaeb8d7399b`. The new **Reuse AAudio session**
+option is separate from and off by default. It is available only with
+**Improve app compatibility** enabled and only affects apps selected in
+Vector/LSPosed that load the LightningDSP hook. Fully close and reopen those
+apps after changing either setting.
+
+When enabled, the hook records the first successful allocated AAudio session
+ID in that app process and reuses it for later builders that explicitly
+requested no session. This is intended to let short sound effects share an
+already-prepared effect session rather than causing repeated session setup.
+An app-provided session ID is never replaced. If opening with the reused ID
+fails, the hook clears it and makes one retry with the app's original request.
+The existing compatibility option still changes eligible LOW_LATENCY requests
+to NONE; session reuse does not itself guarantee that an app's output is
+processed or that its audio policy accepts cross-stream session reuse.
+
+Session IDs and effect attachment behavior vary by Android implementation.
+This option can affect latency or application audio behavior and has not yet
+been validated on-device with JL Mod or other short-sound workloads. Disable it
+if streams fail or audio quality/regressions occur. Root tests, native AAudio
+hook host tests and universal release compilation passed; runtime audio and
+latency remain unverified. Driver, helper and `ldsp.control` are unchanged.
+This is an Actions test artifact, not a prerelease.
