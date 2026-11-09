@@ -1,3 +1,9 @@
+### v6.7.1-armsx2-audio-test-32 (Actions-only static Oboe AAudio compatibility)
+
+* Include signed root universal app 1.7.1-armsx2-audio-test-30/code 119; module code 199.
+* Extend the opt-in AAudio compatibility resolver allowlist to ARMSX2's `libemucore_4k.so` and `libemucore_16k.so`. ARMSX2 statically links Oboe into these libraries, and Oboe resolves low-latency AAudio functions through `dlsym`; the existing hook previously watched only standalone `liboboe.so` and the known JL Mod soundfont DSOs.
+* AAudio/GOT sanitizer host tests, 522 root unit tests, and root universal release assembly/signing passed. ARMSX2 device routing and audible DSP remain unverified. Driver/helper unchanged. Actions artifact only; not a prerelease.
+
 ### v6.7.1-samsung-volume-test-31 (Actions-only Samsung volume panel workaround)
 
 * Include signed root universal app 1.7.1-samsung-volume-test-29/code 118; module code 198.
