@@ -1,3 +1,9 @@
+### v6.7.1-samsung-volume-test-31 (Actions-only Samsung volume panel workaround)
+
+* Include signed root universal app 1.7.1-samsung-volume-test-29/code 118; module code 198.
+* Add a SystemUI-scoped One UI hook that clears only `FLAG_SHOW_UI` from the Samsung volume callback while the root Volume Manager overlay is enabled. A six-second lease is refreshed by the root bridge and cleared on shutdown, so a stopped bridge restores native panel behavior automatically.
+* Root app tests and release build passed; module host tests and packaging checks passed. Samsung device runtime, SystemUI scope activation, and method resolution remain unverified. Driver/helper unchanged. Actions artifact only; not a prerelease.
+
 ### v6.7.1-mixers-test-30 (Actions-only AAudio loaded-library discovery fix)
 
 * Include signed root universal app 1.7.1-mixers-test-28/code 117; module code 197.

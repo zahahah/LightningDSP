@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-mixers-test-30'
-VERSION_CODE = 197
+VERSION = 'v6.7.1-samsung-volume-test-31'
+VERSION_CODE = 198
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-mixers-test-28'
-APP_CODE = 117
-APP_SOURCE_COMMIT = '9bf38e85efd7f9ca3b6bf4e772e7016367adbc31'
+APP_VERSION = '1.7.1-samsung-volume-test-29'
+APP_CODE = 118
+APP_SOURCE_COMMIT = 'a1e61de52e3376d38b5f921b6ab5df4d19bc3892'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -193,6 +193,7 @@ def payloads():
         'native-control/global-service.rule': 0o100644,
         'native-control/default-label-opt-in.rule': 0o100644,
         'docs/all-mixers-test.md': 0o100644,
+        'docs/samsung-volume-panel-test.md': 0o100644,
         DRIVER: 0o100644,
         HELPER: 0o100755,
     }
@@ -206,10 +207,10 @@ def payloads():
 
 
 def verify_distribution_branch(branch, manifest):
-    experimental = '-mixers-test-' in VERSION
+    experimental = '-test-' in VERSION
     if branch in ('master', 'ldsp-rebrand') and not experimental:
         return
-    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-mixers-test-30'
+    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-samsung-volume-test-31'
             and manifest.get('appSource', {}).get('branch') == branch):
         return
     raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand for releases, '
