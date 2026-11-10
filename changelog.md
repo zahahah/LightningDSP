@@ -1,3 +1,8 @@
+### v6.7.1-focused-session-test-35 (Actions-only Session Mode experiment)
+
+* Add opt-in focused-window retention for a verified unified AAudio session in Session Mode, with actual playback reporting separate. Fix the Binder acknowledgement that previously could not verify caller PID.
+* Correctly scoped to selected compatibility apps and existing sessions; Global Mode remains separate. Session disappearance, window-focus changes and audible short-sound continuity need device validation. Root universal app 1.7.1-focused-session-test-33/code 122; module code 202. Driver/helper unchanged.
+
 ### v6.7.1-unified-session-test-34 (Actions-only AAudio session experiment)
 
 * Retain the Session Mode effect of an independently verified, explicitly opted-in unified AAudio session between short sounds while its process lease and player record remain valid. Keep actual playback reporting separate; preserve Global Mode safeguards.

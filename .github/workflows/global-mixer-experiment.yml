@@ -37,30 +37,30 @@ jobs:
         run: |
           export LDSP_READELF="$(command -v llvm-readelf || command -v readelf)"
           python3 tools/package_lightningdsp.py
-          cp common/files/LightningDSP.apk dist/LightningDSP-1.7.1-unified-session-test-32.apk
-          cp docs/unified-session-test-34.md dist/TEST-NOTES.md
+          cp common/files/LightningDSP.apk dist/LightningDSP-1.7.1-focused-session-test-33.apk
+          cp docs/focused-session-test-35.md dist/TEST-NOTES.md
           cd dist
-          sha256sum -c LightningDSP-v6.7.1-unified-session-test-34.zip.sha256
-          sha256sum LightningDSP-1.7.1-unified-session-test-32.apk LightningDSP-v6.7.1-unified-session-test-34.zip > SHA256SUMS.txt
+          sha256sum -c LightningDSP-v6.7.1-focused-session-test-35.zip.sha256
+          sha256sum LightningDSP-1.7.1-focused-session-test-33.apk LightningDSP-v6.7.1-focused-session-test-35.zip > SHA256SUMS.txt
       - name: Verify embedded APK equals standalone
         run: |
           python3 - <<'PY'
           from pathlib import Path
           from zipfile import ZipFile
           root = Path('dist')
-          with ZipFile(root / 'LightningDSP-v6.7.1-unified-session-test-34.zip') as archive:
-              assert archive.read('common/files/LightningDSP.apk') == (root / 'LightningDSP-1.7.1-unified-session-test-32.apk').read_bytes()
+          with ZipFile(root / 'LightningDSP-v6.7.1-focused-session-test-35.zip') as archive:
+              assert archive.read('common/files/LightningDSP.apk') == (root / 'LightningDSP-1.7.1-focused-session-test-33.apk').read_bytes()
           PY
       - name: Upload signed experimental APK, module and provenance
         uses: actions/upload-artifact@v4
         with:
-          name: LightningDSP-unified-session-test-34-${{ github.sha }}
+          name: LightningDSP-focused-session-test-35-${{ github.sha }}
           if-no-files-found: error
           retention-days: 14
           path: |
-            dist/LightningDSP-1.7.1-unified-session-test-32.apk
-            dist/LightningDSP-v6.7.1-unified-session-test-34.zip
-            dist/LightningDSP-v6.7.1-unified-session-test-34.zip.sha256
-            dist/LightningDSP-v6.7.1-unified-session-test-34.zip.json
+            dist/LightningDSP-1.7.1-focused-session-test-33.apk
+            dist/LightningDSP-v6.7.1-focused-session-test-35.zip
+            dist/LightningDSP-v6.7.1-focused-session-test-35.zip.sha256
+            dist/LightningDSP-v6.7.1-focused-session-test-35.zip.json
             dist/SHA256SUMS.txt
             dist/TEST-NOTES.md

@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "5637009f1debaf8896a4034313c0bb136a316cec",
-    "buildBaseCommit": "5637009f1debaf8896a4034313c0bb136a316cec",
+    "commit": "7a69c6f8ad89fd9bef50ff471e6e3b42b5021ab9",
+    "buildBaseCommit": "7a69c6f8ad89fd9bef50ff471e6e3b42b5021ab9",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "aef51f3f7caeaa384280770c5d78da699b30cf122b3e0095a38b4b1ad7b20867",
+      "sha256": "f267abd6f3d1929b95175662b5c7846fbdafe447779e1f454b3e8e1293e9c6d8",
       "sizeBytes": 37535721,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-unified-session-test-32",
-      "versionCode": 121,
+      "versionName": "1.7.1-focused-session-test-33",
+      "versionCode": 122,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "5637009f1debaf8896a4034313c0bb136a316cec"
+      "sourceCommit": "7a69c6f8ad89fd9bef50ff471e6e3b42b5021ab9"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -64,6 +64,7 @@
     "Module test 31 embeds signed root universal app 1.7.1-samsung-volume-test-29/code 118 from committed source a1e61de52e3376d38b5f921b6ab5df4d19bc3892. For Samsung One UI, a SystemUI Xposed hook clears only FLAG_SHOW_UI in VolumeDialogControl.onVolumeChangedW while the root Volume Manager refreshes a short-lived lease. The existing root controller still opens LightningDSP UI; lease expiry and bridge shutdown restore native behavior. The manifest scopes the hook to SystemUI in addition to the framework. Root unit tests and app release compilation passed; no Samsung device runtime test has yet validated class/method resolution, Xposed scope activation, or panel suppression. Driver/helper unchanged; Actions artifact only, not a prerelease.",
     "Module test 32 embeds signed root universal app 1.7.1-armsx2-audio-test-30/code 119 from committed source 243322cca963084189320c2f92ca1dbf03703795. ARMSX2 source configures Oboe for AAudio LowLatency and statically links Oboe into libemucore_4k.so or libemucore_16k.so; its loader resolves AAudio symbols with dlsym. The opt-in compatibility observer now permits these two app-local sonames and wraps only matching AAudio symbols/addresses, rewriting the low-latency request through the established compatibility path. Host AAudio/GOT sanitizer tests, 522 root unit tests, and signed universal release assembly passed. Device stream interception, output routing, latency, and audible DSP remain unverified. Driver/helper unchanged; Actions artifact only, not a prerelease.",
     "Module test 33 includes the Samsung One UI controller class correction inspired by PR 1, guarded by Samsung manufacturer and foreground bypass. Rapid foreground transitions and device behavior are unverified. Receipt sync failure handling remains unchanged. Driver and helper unchanged.",
-    "Module test 34 embeds signed root universal app 1.7.1-unified-session-test-32/code 121. For the opt-in eligible process-local AAudio unified session, Session Mode retains an effect between bursts only while its UID/session/player and bounded verified process lease remain valid. Active playback visibility and global coverage remain separate. The effect can be removed when the player disappears; first-sound delay, Binder lifecycle and audible continuity require device testing. Driver/helper unchanged."
+    "Module test 34 embeds signed root universal app 1.7.1-unified-session-test-32/code 121. For the opt-in eligible process-local AAudio unified session, Session Mode retains an effect between bursts only while its UID/session/player and bounded verified process lease remain valid. Active playback visibility and global coverage remain separate. The effect can be removed when the player disappears; first-sound delay, Binder lifecycle and audible continuity require device testing. Driver/helper unchanged.",
+    "Module test 35 embeds signed root universal app 1.7.1-focused-session-test-33/code 122. Fixes Binder owner proof ACK PID and adds opt-in Session Mode focused-window retention for eligible, independently verified unified AAudio sessions. Focus and playback visibility remain separate; Global Mode is not changed. Session disappearance, missed focus loss, multi-process window focus, Binder runtime and audible continuity remain unverified on device. Driver/helper unchanged."
   ]
 }
