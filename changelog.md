@@ -1,3 +1,9 @@
+### v6.7.1-focused-session-test-37 (Actions-only Session Mode option)
+
+* Add the default-off **Keep effects ready** option directly below Media session scanning. In Session Mode it retains already-known app sessions while the app is focused or exposes active media controls; it is not limited to AAudio compatibility or Vector-selected apps.
+* Usage Access is granted through root when required. Per-app DSP controls remain enforced; no session IDs are fabricated. Global Mode and the native driver/helper are unchanged. Signed root universal app 1.7.1-focused-session-test-35/code 124; module code 204.
+* Root unit tests: 545 passed, 0 failed, 0 skipped; rootless/plugin main Kotlin compilation and signed universal APK verification passed. Focus/media discovery and cleanup behavior, battery impact, and audible continuity still need device testing. Actions artifact only, not a prerelease.
+
 ### v6.7.1-focused-session-test-36 (Actions-only Session Mode focused-session fix)
 
 * Include signed root universal app 1.7.1-focused-session-test-34/code 123. Make the Vector compatibility provider queryable without broad package permissions, and isolate focus/owner lease reports from potentially blocked stream preparation.

@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-focused-session-test-36'
-VERSION_CODE = 203
+VERSION = 'v6.7.1-focused-session-test-37'
+VERSION_CODE = 204
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-focused-session-test-34'
-APP_CODE = 123
-APP_SOURCE_COMMIT = '3aea6515cd480198ebeeb967a230b80123b41dcc'
+APP_VERSION = '1.7.1-focused-session-test-35'
+APP_CODE = 124
+APP_SOURCE_COMMIT = '4d51df6e4655e42b9303b4b406490b7483f151fc'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -86,7 +86,7 @@ def digest(path):
 def verify_candidate(root=ROOT, readelf=None):
     manifest = json.loads((root / CANDIDATE).read_text())
     provenance = json.loads((root / PROVENANCE).read_text())
-    if (manifest.get('iteration') != 7 or manifest.get('state') != 'ready-for-package' or
+    if (manifest.get('iteration') != 8 or manifest.get('state') != 'ready-for-package' or
             manifest.get('wireProtocol') != 3 or manifest.get('service') != 'ldsp.control' or
             manifest.get('descriptor') != 'lightning.dsp.ILightningDspControl' or
             manifest.get('profile') != 'dual-entry-effect-v4-legacy-arm64'):
@@ -194,6 +194,7 @@ def payloads():
         'native-control/default-label-opt-in.rule': 0o100644,
         'docs/all-mixers-test.md': 0o100644,
         'docs/samsung-volume-panel-test.md': 0o100644,
+        'docs/keep-effects-ready-test-37.md': 0o100644,
         DRIVER: 0o100644,
         HELPER: 0o100755,
     }
@@ -210,7 +211,7 @@ def verify_distribution_branch(branch, manifest):
     experimental = '-test-' in VERSION
     if branch in ('master', 'ldsp-rebrand') and not experimental:
         return
-    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-focused-session-test-36'
+    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-focused-session-test-37'
             and manifest.get('appSource', {}).get('branch') == branch):
         return
     raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand for releases, '
