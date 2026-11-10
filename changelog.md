@@ -1,3 +1,8 @@
+### v6.7.1-focused-session-test-36 (Actions-only Session Mode focused-session fix)
+
+* Include signed root universal app 1.7.1-focused-session-test-34/code 123. Make the Vector compatibility provider queryable without broad package permissions, and isolate focus/owner lease reports from potentially blocked stream preparation.
+* In Session Mode, report verified focused-session retention in Audio processing active while preserving playback visibility and per-app DSP gates. Global Mode and the native driver/helper are unchanged. Root app unit tests passed; runtime provider resolution, JL Mod session timing, notification visibility and audible continuity still require device testing. Module code 203.
+
 ### v6.7.1-focused-session-test-35 (Actions-only Session Mode experiment)
 
 * Add opt-in focused-window retention for a verified unified AAudio session in Session Mode, with actual playback reporting separate. Fix the Binder acknowledgement that previously could not verify caller PID.
