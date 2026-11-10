@@ -1,3 +1,8 @@
+### v6.7.1-unified-session-test-34 (Actions-only AAudio session experiment)
+
+* Retain the Session Mode effect of an independently verified, explicitly opted-in unified AAudio session between short sounds while its process lease and player record remain valid. Keep actual playback reporting separate; preserve Global Mode safeguards.
+* Add bounded process identity proof, lease renewal and cleanup; retain existing native DSP and helper. First sound after a completely absent player or service restart, Binder runtime lifecycle, and audible glitch-free playback remain unverified. Root universal app 1.7.1-unified-session-test-32/code 121; module code 201.
+
 ### v6.7.1-samsung-volume-test-33 (Actions-only One UI experiment)
 
 * Recognize the One UI volume controller class from PR #1 and restrict the hook to Samsung devices. Respect the foreground app volume-button bypass and keep existing journal sync error handling.

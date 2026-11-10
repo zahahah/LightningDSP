@@ -13,27 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "11bb18274a4e22388e693833d51836f2152529f5",
-    "buildBaseCommit": "11bb18274a4e22388e693833d51836f2152529f5",
+    "commit": "5637009f1debaf8896a4034313c0bb136a316cec",
+    "buildBaseCommit": "5637009f1debaf8896a4034313c0bb136a316cec",
     "builtFromWorkingTree": false,
-    "buildNote": "Signed root universal APK built from the committed app source at appSource.commit.",
-    "equivalentBranchCommit": "fa4b353642bda9226fb3dc2ebd851739a6018fc3",
-    "equivalentSourceTree": "a43ad2d8bfcb136c30f896b9b4fe438600e2b679",
-    "equivalenceNote": "The APK was built from commit 11bb18274a4e22388e693833d51836f2152529f5. That commit was amended only to correct the co-author email, producing equivalentBranchCommit with the same Git tree; it was not rebuilt."
+    "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "c87facdb96253e3a68fe015be0ae60928232d3a5d58a29fe675fe53b578ce3e3",
-      "sizeBytes": 37519337,
+      "sha256": "aef51f3f7caeaa384280770c5d78da699b30cf122b3e0095a38b4b1ad7b20867",
+      "sizeBytes": 37535721,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-samsung-volume-test-31",
-      "versionCode": 120,
+      "versionName": "1.7.1-unified-session-test-32",
+      "versionCode": 121,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "11bb18274a4e22388e693833d51836f2152529f5"
+      "sourceCommit": "5637009f1debaf8896a4034313c0bb136a316cec"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -66,6 +63,7 @@
     "Module test 30 embeds signed root universal app 1.7.1-mixers-test-28/code 117 from committed source 9bf38e85efd7f9ca3b6bf4e772e7016367adbc31. Runtime capture showed Vector injecting AudioCompatibilityHook and registering the native observer in both the launcher and JL Mod :midlet process, while libmmapi_eas.so/liboboe.so were mapped and short sounds kept receiving new session IDs. The observer had no AAudio imports rebound. The app now sweeps already-loaded app DSOs immediately and retries every two seconds until AAudio imports are actually patched; readiness is tracked separately from OpenSL. The sweep runs on a daemon worker, does not inspect or modify PCM callbacks, and remains limited to explicitly scoped apps with the compatibility property enabled. Native AAudio/GOT/OpenSL host tests, root unit tests, and native release builds for arm64-v8a, armeabi-v7a, x86 and x86_64 passed. The phone was disconnected before runtime validation, so glitch-free playback and JL Mod short-sound behavior remain unverified. Driver/helper unchanged; Actions artifact only, not a prerelease.",
     "Module test 31 embeds signed root universal app 1.7.1-samsung-volume-test-29/code 118 from committed source a1e61de52e3376d38b5f921b6ab5df4d19bc3892. For Samsung One UI, a SystemUI Xposed hook clears only FLAG_SHOW_UI in VolumeDialogControl.onVolumeChangedW while the root Volume Manager refreshes a short-lived lease. The existing root controller still opens LightningDSP UI; lease expiry and bridge shutdown restore native behavior. The manifest scopes the hook to SystemUI in addition to the framework. Root unit tests and app release compilation passed; no Samsung device runtime test has yet validated class/method resolution, Xposed scope activation, or panel suppression. Driver/helper unchanged; Actions artifact only, not a prerelease.",
     "Module test 32 embeds signed root universal app 1.7.1-armsx2-audio-test-30/code 119 from committed source 243322cca963084189320c2f92ca1dbf03703795. ARMSX2 source configures Oboe for AAudio LowLatency and statically links Oboe into libemucore_4k.so or libemucore_16k.so; its loader resolves AAudio symbols with dlsym. The opt-in compatibility observer now permits these two app-local sonames and wraps only matching AAudio symbols/addresses, rewriting the low-latency request through the established compatibility path. Host AAudio/GOT sanitizer tests, 522 root unit tests, and signed universal release assembly passed. Device stream interception, output routing, latency, and audible DSP remain unverified. Driver/helper unchanged; Actions artifact only, not a prerelease.",
-    "Module test 33 includes the Samsung One UI controller class correction inspired by PR 1, guarded by Samsung manufacturer and foreground bypass. Rapid foreground transitions and device behavior are unverified. Receipt sync failure handling remains unchanged. Driver and helper unchanged."
+    "Module test 33 includes the Samsung One UI controller class correction inspired by PR 1, guarded by Samsung manufacturer and foreground bypass. Rapid foreground transitions and device behavior are unverified. Receipt sync failure handling remains unchanged. Driver and helper unchanged.",
+    "Module test 34 embeds signed root universal app 1.7.1-unified-session-test-32/code 121. For the opt-in eligible process-local AAudio unified session, Session Mode retains an effect between bursts only while its UID/session/player and bounded verified process lease remain valid. Active playback visibility and global coverage remain separate. The effect can be removed when the player disappears; first-sound delay, Binder lifecycle and audible continuity require device testing. Driver/helper unchanged."
   ]
 }
