@@ -16,7 +16,10 @@
     "commit": "11bb18274a4e22388e693833d51836f2152529f5",
     "buildBaseCommit": "11bb18274a4e22388e693833d51836f2152529f5",
     "builtFromWorkingTree": false,
-    "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
+    "buildNote": "Signed root universal APK built from the committed app source at appSource.commit.",
+    "equivalentBranchCommit": "fa4b353642bda9226fb3dc2ebd851739a6018fc3",
+    "equivalentSourceTree": "a43ad2d8bfcb136c30f896b9b4fe438600e2b679",
+    "equivalenceNote": "The APK was built from commit 11bb18274a4e22388e693833d51836f2152529f5. That commit was amended only to correct the co-author email, producing equivalentBranchCommit with the same Git tree; it was not rebuilt."
   },
   "artifacts": {
     "app": {
