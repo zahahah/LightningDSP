@@ -1,3 +1,9 @@
+### v6.7.1-focused-session-test-38 (Actions-only Session Mode startup fix)
+
+* Keep new positive-session AudioEffects bypassed until a complete DSP preference state has been written, preventing first buffers from entering a partially configured engine. Remove duplicate initial sync scheduling.
+* Deduplicate app names in the service notification while preserving independent session effects and session ownership. The native driver/helper and Global Mode path are unchanged. Includes signed root universal app 1.7.1-focused-session-test-36/code 125; module code 205.
+* Root unit tests: 550 passed, 0 failed, 0 skipped; rootless/plugin Kotlin compilation and signed universal APK verification passed. JL Mod/Spotify audio startup and runtime stability still need device testing. A separate pstore review found kernel OOM/deadlock evidence but could not attribute the memory-heavy root `grep` process to LightningDSP. Actions artifact only, not a prerelease.
+
 ### v6.7.1-focused-session-test-37 (Actions-only Session Mode option)
 
 * Add the default-off **Keep effects ready** option directly below Media session scanning. In Session Mode it retains already-known app sessions while the app is focused or exposes active media controls; it is not limited to AAudio compatibility or Vector-selected apps.
