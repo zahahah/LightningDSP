@@ -1,3 +1,8 @@
+### v6.7.1-samsung-volume-test-33 (Actions-only One UI experiment)
+
+* Recognize the One UI volume controller class from PR #1 and restrict the hook to Samsung devices. Respect the foreground app volume-button bypass and keep existing journal sync error handling.
+* Rapid foreground transitions and Samsung runtime behavior remain unverified. Includes signed root universal app 1.7.1-samsung-volume-test-31/code 120; module code 200. Driver/helper unchanged.
+
 ### v6.7.1-armsx2-audio-test-32 (Actions-only static Oboe AAudio compatibility)
 
 * Include signed root universal app 1.7.1-armsx2-audio-test-30/code 119; module code 199.

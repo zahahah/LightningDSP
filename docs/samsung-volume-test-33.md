@@ -1,0 +1,3 @@
+# Samsung Volume Panel Test 33
+
+This experimental module includes the root universal app with the One UI volume controller class correction contributed in PR #1. Enable LightningDSP for System UI in LSPosed/Vector as required, and restart System UI only as directed by the framework. Test volume buttons normally and with Ignore volume buttons enabled for an app. Test switching quickly between apps. Foreground detection is periodic, so transitions are not yet guaranteed. If the volume panel is unavailable, disable the LightningDSP Volume Manager. Test also on non-Samsung devices. Driver and helper are unchanged.
