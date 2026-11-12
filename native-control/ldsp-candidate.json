@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "898396d65dc8b21c52a7dcb9c3370170fc233193",
-    "buildBaseCommit": "898396d65dc8b21c52a7dcb9c3370170fc233193",
+    "commit": "510198bdb6f01e6942b877a0ff48643a4142fd04",
+    "buildBaseCommit": "510198bdb6f01e6942b877a0ff48643a4142fd04",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "5fcce31cf1b111de068e71e66006c71b3a23972c1ae18561ccfc507a55096473",
-      "sizeBytes": 37556201,
+      "sha256": "63d2d2a3618961bc29a10a7c6a529ac0e1ac617efb0bd188f559a733bb8cec03",
+      "sizeBytes": 37588969,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-focused-session-test-36",
-      "versionCode": 125,
+      "versionName": "1.7.1-focused-session-test-46",
+      "versionCode": 135,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "898396d65dc8b21c52a7dcb9c3370170fc233193"
+      "sourceCommit": "510198bdb6f01e6942b877a0ff48643a4142fd04"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -68,6 +68,8 @@
     "Module test 35 embeds signed root universal app 1.7.1-focused-session-test-33/code 122. Fixes Binder owner proof ACK PID and adds opt-in Session Mode focused-window retention for eligible, independently verified unified AAudio sessions. Focus and playback visibility remain separate; Global Mode is not changed. Session disappearance, missed focus loss, multi-process window focus, Binder runtime and audible continuity remain unverified on device. Driver/helper unchanged.",
     "Module test 36 embeds signed root universal app 1.7.1-focused-session-test-34/code 123 from committed source 3aea6515cd480198ebeeb967a230b80123b41dcc. Package visibility for the Vector compatibility provider is declared queryable without adding broad package permissions. Focus/owner lease reports use a bounded control worker independent from stream pre-start preparation, preventing a blocked preparation from starving focus updates. Session Mode active processing now includes only currently playing sessions or sessions retained by verified focused-session policy, with user opt-in and per-app DSP state required. Global Mode and native driver/helper are unchanged. Root unit tests: 543 passed, 0 failed, 0 skipped; signed universal APK and manifest verified. Android runtime provider resolution, JL Mod session timing, notification visibility and audible continuity remain device-unverified.",
     "Module test 37 embeds signed root universal app 1.7.1-focused-session-test-35/code 124 from committed source 4d51df6e4655e42b9303b4b406490b7483f151fc. Adds the default-off Session Mode option Keep effects ready directly after Media session scanning. It retains already-known session effects while the owning app is foregrounded or has active media controls, independently of AAudio compatibility or Vector app selection; grants Usage Access through root when needed and preserves per-app DSP gates. No session IDs are fabricated, and Global Mode plus native driver/helper remain unchanged. Root unit tests: 545 passed; rootless/plugin main Kotlin compilation and signed universal APK assembly passed. Focus transitions, media-session discovery, retention cleanup, battery impact and audible continuity remain device-unverified.",
-    "Module test 38 embeds signed root universal app 1.7.1-focused-session-test-36/code 125 from committed source 898396d65dc8b21c52a7dcb9c3370170fc233193. Positive Session Mode effects now remain bypassed until a full initial DSP state write succeeds; duplicate initial sync scheduling was removed. Service notification app names are deduplicated without merging or removing underlying AudioEffect sessions. Root unit tests: 550 passed, 0 failed, 0 skipped; rootless/plugin Kotlin compilation and signed universal APK assembly passed. JL Mod/Spotify startup continuity remains device-unverified. Native driver/helper unchanged. A separate pstore review observed a kernel OOM/deadlock and a root grep process with extreme RSS/swap use, but no command ancestry or LightningDSP reference; no causal link to the module was established."
+    "Module test 38 embeds signed root universal app 1.7.1-focused-session-test-36/code 125 from committed source 898396d65dc8b21c52a7dcb9c3370170fc233193. Positive Session Mode effects now remain bypassed until a full initial DSP state write succeeds; duplicate initial sync scheduling was removed. Service notification app names are deduplicated without merging or removing underlying AudioEffect sessions. Root unit tests: 550 passed, 0 failed, 0 skipped; rootless/plugin Kotlin compilation and signed universal APK assembly passed. JL Mod/Spotify startup continuity remains device-unverified. Native driver/helper unchanged. A separate pstore review observed a kernel OOM/deadlock and a root grep process with extreme RSS/swap use, but no command ancestry or LightningDSP reference; no causal link to the module was established.",
+    "Module test 39 embeds signed root universal app 1.7.1-focused-session-test-37/code 126 from committed source 3a4ecb83fd8e1ee64cb7ae98c072ca764f74f1b1. Session Mode now registers positive sessions announced by ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION before playback, without replacing other sessions. Opted-in AAudio session reuse also covers POWER_SAVING/NONE streams while preserving the app-requested performance mode. Foreground ownership now remains valid across overlapping resumed Activities in the same app. Root release unit tests: 554 passed, 0 failed, 0 skipped; native AAudio construction/GOT host tests passed with sanitizers; signed universal release verified. Device startup timing and audible continuity remain unverified. Native driver/helper unchanged.",
+    "Module test 40 embeds signed root universal app 1.7.1-focused-session-test-46/code 135 from committed source 510198bdb6f01e6942b877a0ff48643a4142fd04. Adds the experimental App Mixer mode with per-app inclusion, bounded helper owner monitoring, and earlier preparation of announced Session Mode effects. The Volume Manager Hide system apps preference now filters only the manager page; the floating panel still lists system apps. Per-app DSP power changes no longer show a debug toast; attachment failures remain in logs. Root unit tests, app release compilation, and universal APK assembly passed. Device UI and routing behavior remain experimental and unverified. Driver/helper unchanged."
   ]
 }
