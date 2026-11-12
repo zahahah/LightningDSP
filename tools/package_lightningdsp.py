@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-focused-session-test-40'
-VERSION_CODE = 207
+VERSION = 'v6.7.1-focused-session-test-41'
+VERSION_CODE = 208
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-focused-session-test-46'
-APP_CODE = 135
-APP_SOURCE_COMMIT = '510198bdb6f01e6942b877a0ff48643a4142fd04'
+APP_VERSION = '1.7.1-focused-session-test-50'
+APP_CODE = 139
+APP_SOURCE_COMMIT = 'bf93551caa8aad45f08ff0a6a2ae5777537fc4b6'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -198,6 +198,7 @@ def payloads():
         'docs/focused-session-test-38.md': 0o100644,
         'docs/focused-session-test-39.md': 0o100644,
         'docs/focused-session-test-40.md': 0o100644,
+        'docs/focused-session-test-41.md': 0o100644,
         DRIVER: 0o100644,
         HELPER: 0o100755,
     }
@@ -214,7 +215,7 @@ def verify_distribution_branch(branch, manifest):
     experimental = '-test-' in VERSION
     if branch in ('master', 'ldsp-rebrand') and not experimental:
         return
-    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-focused-session-test-40'
+    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-focused-session-test-41'
             and manifest.get('appSource', {}).get('branch') == branch):
         return
     raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand for releases, '
