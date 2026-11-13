@@ -31,6 +31,10 @@ class LightningDSPPackageTests(unittest.TestCase):
                 self.assertIn(package.HELPER, names)
                 self.assertIn(package.APP, names)
                 self.assertIn('common/files/LightningDSP.apk.meta', names)
+                self.assertIn('module.prop', names)
+                self.assertIn(b'updateJson=https://raw.githubusercontent.com/zahahah/LightningDSP/master/update.json\n',
+                              archive.read('module.prop'))
+                self.assertNotIn('update.json', names)  # KernelSU fetches this using updateJson.
                 self.assertNotIn('common/files/JamesDSPManagerThePBone.apk', names)
                 self.assertNotIn('common/files/JamesDSPManager.apk', names)
                 self.assertNotIn('common/files/dual-entry-arm64/libjamesdsp.so', names)
@@ -43,6 +47,7 @@ class LightningDSPPackageTests(unittest.TestCase):
     def test_distribution_metadata_and_ci_match_the_rebrand_release(self):
         props = (ROOT / 'module.prop').read_text()
         self.assertIn('id=ainur_lightningdsp\n', props)
+        self.assertIn('updateJson=https://raw.githubusercontent.com/zahahah/LightningDSP/master/update.json\n', props)
         self.assertIn(f'version={package.VERSION}\n', props)
         self.assertIn(f'versionCode={package.VERSION_CODE}\n', props)
         update = json.loads((ROOT / 'update.json').read_text())
@@ -53,7 +58,8 @@ class LightningDSPPackageTests(unittest.TestCase):
         self.assertNotEqual(update['version'], package.VERSION)
         experiment = (ROOT / '.github/workflows/global-mixer-experiment.yml').read_text()
         self.assertIn(f'dist/LightningDSP-{package.VERSION}.zip', experiment)
-        self.assertIn(f'dist/LightningDSP-{package.APP_VERSION}.apk', experiment)
+        self.assertNotIn(f'dist/LightningDSP-{package.APP_VERSION}.apk', experiment)
+        self.assertIn("Path('common/files/LightningDSP.apk').read_bytes()", experiment)
         self.assertIn(f'name: LightningDSP-{package.VERSION.removeprefix("v6.7.1-")}-', experiment)
         # Previously distributed prototypes may remain installed; keep upgrades possible.
         self.assertGreater(package.VERSION_CODE, 184)

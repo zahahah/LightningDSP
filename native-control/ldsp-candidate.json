@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "global-output-experiment",
-    "commit": "bf93551caa8aad45f08ff0a6a2ae5777537fc4b6",
-    "buildBaseCommit": "bf93551caa8aad45f08ff0a6a2ae5777537fc4b6",
+    "commit": "31e92725b3a5757aafd7b63611350c22474fdfd2",
+    "buildBaseCommit": "31e92725b3a5757aafd7b63611350c22474fdfd2",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "47d6e5b33e6fcf99538203890455677f7316097bfcdea828687e6e62d319230e",
-      "sizeBytes": 37588969,
+      "sha256": "b478857f995173642bedcb3c2cebca641045e4f293057feb338095328c941b5b",
+      "sizeBytes": 37605353,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1-focused-session-test-50",
-      "versionCode": 139,
+      "versionName": "1.7.1-focused-session-test-51",
+      "versionCode": 140,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "bf93551caa8aad45f08ff0a6a2ae5777537fc4b6"
+      "sourceCommit": "31e92725b3a5757aafd7b63611350c22474fdfd2"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
