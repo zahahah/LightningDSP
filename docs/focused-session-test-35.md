@@ -1,0 +1,5 @@
+# Focused Session Test 35
+
+This experimental module contains the root universal app with a default-off **Keep effects ready while focused** option, visible only in Session Mode. Enable **Improve app compatibility** and **Reuse AAudio session**, select the emulator in Vector/LSPosed, enable the new option, and fully close and reopen the emulator. Test short sounds, silence between sounds, switching apps, Recents and emulator menus. Playback reporting remains independent from retained effects.
+
+The app fixes the Binder acknowledgement used to verify the session owner. It only retains a verified eligible AAudio session with an independently observed player and a focused window. If the player disappears completely, the first subsequent sound may precede reattachment. A missed focus-loss report can leave retention active for about six seconds plus scheduling. App-owned dialogs and separate UI/audio processes require device validation. Global Mode does not use this exemption. Driver and helper remain unchanged.

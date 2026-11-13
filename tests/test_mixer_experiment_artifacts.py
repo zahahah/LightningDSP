@@ -6,9 +6,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class MixerExperimentArtifactTests(unittest.TestCase):
     def test_workflow_is_branch_limited_and_artifact_only(self):
-        workflow = (ROOT / '.github/workflows/global-mixer-experiment.yml').read_text()
+        workflow = (ROOT / '.github/workflows/main-module-artifacts.yml').read_text()
         self.assertIn("github.repository == 'zahahah/LightningDSP'", workflow)
-        self.assertIn("github.ref == 'refs/heads/global-output-experiment'", workflow)
+        self.assertIn("github.ref == 'refs/heads/master'", workflow)
         self.assertIn('contents: read', workflow)
         self.assertNotIn('contents: write', workflow)
         self.assertNotIn('gh-release', workflow)

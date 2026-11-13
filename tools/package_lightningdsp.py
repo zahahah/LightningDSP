@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-beta-4'
-VERSION_CODE = 183
+VERSION = 'v6.7.1-beta-5'
+VERSION_CODE = 210
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-beta-4'
-APP_CODE = 104
-APP_SOURCE_COMMIT = 'd585fc594ba19999dc0ccb6b9d27a00700255e28'
+APP_VERSION = '1.7.1-beta-5'
+APP_CODE = 143
+APP_SOURCE_COMMIT = '43c6961d4cf0c44ba8350af6adf60bd2e7493aad'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -86,7 +86,7 @@ def digest(path):
 def verify_candidate(root=ROOT, readelf=None):
     manifest = json.loads((root / CANDIDATE).read_text())
     provenance = json.loads((root / PROVENANCE).read_text())
-    if (manifest.get('iteration') != 6 or manifest.get('state') != 'ready-for-package' or
+    if (manifest.get('iteration') != 8 or manifest.get('state') != 'ready-for-package' or
             manifest.get('wireProtocol') != 3 or manifest.get('service') != 'ldsp.control' or
             manifest.get('descriptor') != 'lightning.dsp.ILightningDspControl' or
             manifest.get('profile') != 'dual-entry-effect-v4-legacy-arm64'):
@@ -102,7 +102,7 @@ def verify_candidate(root=ROOT, readelf=None):
             app_source.get('buildBaseCommit') != APP_SOURCE_COMMIT or
             app_source.get('builtFromWorkingTree') is not False or
             app_artifact.get('sourceCommit') != APP_SOURCE_COMMIT or
-            app_source.get('buildNote') != 'Signed root APK built from the committed app source at appSource.commit.'):
+            app_source.get('buildNote') != 'Signed root universal APK built from the committed app source at appSource.commit.'):
         raise ValueError('Signed app source/provenance pin mismatch')
     if provenance.get('state') != 'elf-validated-runtime-unverified':
         raise ValueError('Native artifact has not passed static ELF validation')
@@ -193,6 +193,13 @@ def payloads():
         'native-control/global-service.rule': 0o100644,
         'native-control/default-label-opt-in.rule': 0o100644,
         'docs/all-mixers-test.md': 0o100644,
+        'docs/samsung-volume-panel-test.md': 0o100644,
+        'docs/keep-effects-ready-test-37.md': 0o100644,
+        'docs/focused-session-test-38.md': 0o100644,
+        'docs/focused-session-test-39.md': 0o100644,
+        'docs/focused-session-test-40.md': 0o100644,
+        'docs/focused-session-test-42.md': 0o100644,
+        'docs/fusion-mode-beta-5.md': 0o100644,
         DRIVER: 0o100644,
         HELPER: 0o100755,
     }
@@ -206,10 +213,10 @@ def payloads():
 
 
 def verify_distribution_branch(branch, manifest):
-    experimental = '-mixers-test-' in VERSION
+    experimental = '-test-' in VERSION
     if branch in ('master', 'ldsp-rebrand') and not experimental:
         return
-    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-mixers-test-16'
+    if (branch == 'global-output-experiment' and VERSION == 'v6.7.1-focused-session-test-42'
             and manifest.get('appSource', {}).get('branch') == branch):
         return
     raise ValueError('LightningDSP packaging is limited to master or ldsp-rebrand for releases, '

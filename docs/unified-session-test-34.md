@@ -1,0 +1,5 @@
+# Unified AAudio session test 34
+
+This prototype retains independently observed unified AAudio session effects between short sounds in Session Mode when Improve app compatibility and Reuse AAudio session are both enabled for a selected Vector/LSPosed app. Enable both options, select the emulator in Vector/LSPosed, then fully close and reopen it. Verify short and long sounds, stopping/restarting playback, disabling the option, app process death, and multiple other apps. Active-app reporting remains based on playback.
+
+Retention requires an independently observed matching audio player and a live verified process lease. Global Mode retains its existing safeguards and does not use the new idle-retention exemption. If the player disappears entirely or the service restarts, the first sound can still precede reattachment; glitch-free playback and Binder lifecycle on device are unverified. Existing FAST compatibility only applies to supported eligible process-local AAudio paths and explicit app-selected session IDs are preserved. The first eligible open can wait for bounded preparation. Driver and helper are unchanged.

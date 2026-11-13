@@ -1,3 +1,12 @@
+### v6.7.1-beta-5
+
+* Integrate Fusion Mode with a bounded local-DSP virtual audio relay, per-app DSP exclusions, and latency/buffer recovery improvements. Preserve separate Global and Session modes and scoped emulator compatibility.
+* Improve Samsung/remote volume interoperability, session ownership and notification app reporting. Keep native module driver/helper unchanged.
+* Group Audio Processing settings, add a theme-aware vector shortcut, fix per-app DSP button visibility and simplify persistent status notifications.
+* Default new root installs to Fusion, Volume Manager, per-app DSP and media controls without replacing saved choices. Add main-branch signed universal APK and verified module Actions artifacts.
+* Package app 1.7.1-beta-5/code 143 with module code 210. Stable update feed remains on the existing stable release; no automatic new release publication.
+* See docs/fusion-mode-beta-5.md for scope, verification and remaining runtime limitations.
+
 ### v6.7.1-beta-4
 
 * Include the signed root universal app 1.7.1-beta-4/code 104; module code 183.
@@ -28,6 +37,78 @@
   matched native driver/helper, SELinux policy, mount and recovery behavior unchanged.
 * Stable module 6.7 and app 1.7 remain the latest stable releases. The universal APK
   includes multiple app ABIs; the bundled native effect driver is still ARM64.
+
+### v6.7.1-focused-session-test-38 (Actions-only Session Mode startup fix)
+
+* Keep new positive-session AudioEffects bypassed until a complete DSP preference state has been written, preventing first buffers from entering a partially configured engine. Remove duplicate initial sync scheduling.
+* Deduplicate app names in the service notification while preserving independent session effects and session ownership. The native driver/helper and Global Mode path are unchanged. Includes signed root universal app 1.7.1-focused-session-test-36/code 125; module code 205.
+* Root unit tests: 550 passed, 0 failed, 0 skipped; rootless/plugin Kotlin compilation and signed universal APK verification passed. JL Mod/Spotify audio startup and runtime stability still need device testing. A separate pstore review found kernel OOM/deadlock evidence but could not attribute the memory-heavy root `grep` process to LightningDSP. Actions artifact only, not a prerelease.
+
+### v6.7.1-focused-session-test-37 (Actions-only Session Mode option)
+
+* Add the default-off **Keep effects ready** option directly below Media session scanning. In Session Mode it retains already-known app sessions while the app is focused or exposes active media controls; it is not limited to AAudio compatibility or Vector-selected apps.
+* Usage Access is granted through root when required. Per-app DSP controls remain enforced; no session IDs are fabricated. Global Mode and the native driver/helper are unchanged. Signed root universal app 1.7.1-focused-session-test-35/code 124; module code 204.
+* Root unit tests: 545 passed, 0 failed, 0 skipped; rootless/plugin main Kotlin compilation and signed universal APK verification passed. Focus/media discovery and cleanup behavior, battery impact, and audible continuity still need device testing. Actions artifact only, not a prerelease.
+
+### v6.7.1-focused-session-test-36 (Actions-only Session Mode focused-session fix)
+
+* Include signed root universal app 1.7.1-focused-session-test-34/code 123. Make the Vector compatibility provider queryable without broad package permissions, and isolate focus/owner lease reports from potentially blocked stream preparation.
+* In Session Mode, report verified focused-session retention in Audio processing active while preserving playback visibility and per-app DSP gates. Global Mode and the native driver/helper are unchanged. Root app unit tests passed; runtime provider resolution, JL Mod session timing, notification visibility and audible continuity still require device testing. Module code 203.
+
+### v6.7.1-focused-session-test-35 (Actions-only Session Mode experiment)
+
+* Add opt-in focused-window retention for a verified unified AAudio session in Session Mode, with actual playback reporting separate. Fix the Binder acknowledgement that previously could not verify caller PID.
+* Correctly scoped to selected compatibility apps and existing sessions; Global Mode remains separate. Session disappearance, window-focus changes and audible short-sound continuity need device validation. Root universal app 1.7.1-focused-session-test-33/code 122; module code 202. Driver/helper unchanged.
+
+### v6.7.1-unified-session-test-34 (Actions-only AAudio session experiment)
+
+* Retain the Session Mode effect of an independently verified, explicitly opted-in unified AAudio session between short sounds while its process lease and player record remain valid. Keep actual playback reporting separate; preserve Global Mode safeguards.
+* Add bounded process identity proof, lease renewal and cleanup; retain existing native DSP and helper. First sound after a completely absent player or service restart, Binder runtime lifecycle, and audible glitch-free playback remain unverified. Root universal app 1.7.1-unified-session-test-32/code 121; module code 201.
+
+### v6.7.1-samsung-volume-test-33 (Actions-only One UI experiment)
+
+* Recognize the One UI volume controller class from PR #1 and restrict the hook to Samsung devices. Respect the foreground app volume-button bypass and keep existing journal sync error handling.
+* Rapid foreground transitions and Samsung runtime behavior remain unverified. Includes signed root universal app 1.7.1-samsung-volume-test-31/code 120; module code 200. Driver/helper unchanged.
+
+### v6.7.1-armsx2-audio-test-32 (Actions-only static Oboe AAudio compatibility)
+
+* Include signed root universal app 1.7.1-armsx2-audio-test-30/code 119; module code 199.
+* Extend the opt-in AAudio compatibility resolver allowlist to ARMSX2's `libemucore_4k.so` and `libemucore_16k.so`. ARMSX2 statically links Oboe into these libraries, and Oboe resolves low-latency AAudio functions through `dlsym`; the existing hook previously watched only standalone `liboboe.so` and the known JL Mod soundfont DSOs.
+* AAudio/GOT sanitizer host tests, 522 root unit tests, and root universal release assembly/signing passed. ARMSX2 device routing and audible DSP remain unverified. Driver/helper unchanged. Actions artifact only; not a prerelease.
+
+### v6.7.1-samsung-volume-test-31 (Actions-only Samsung volume panel workaround)
+
+* Include signed root universal app 1.7.1-samsung-volume-test-29/code 118; module code 198.
+* Add a SystemUI-scoped One UI hook that clears only `FLAG_SHOW_UI` from the Samsung volume callback while the root Volume Manager overlay is enabled. A six-second lease is refreshed by the root bridge and cleared on shutdown, so a stopped bridge restores native panel behavior automatically.
+* Root app tests and release build passed; module host tests and packaging checks passed. Samsung device runtime, SystemUI scope activation, and method resolution remain unverified. Driver/helper unchanged. Actions artifact only; not a prerelease.
+
+### v6.7.1-mixers-test-30 (Actions-only AAudio loaded-library discovery fix)
+
+* Include signed root universal app 1.7.1-mixers-test-28/code 117; module code 197.
+* Sweep app-local DSOs already loaded before the Vector/LSPosed linker callback, then retry discovery every two seconds until AAudio imports are rebound. Keep this off the real-time audio path and distinguish AAudio readiness from OpenSL readiness.
+* Host regressions, root unit tests, and four-ABI release compilation passed. JL Mod short-sound behavior and glitch-free playback are not yet device-verified; the phone was disconnected. Native driver/helper unchanged. Actions artifact only, not a prerelease.
+
+### v6.7.1-mixers-test-29 (Actions-only AAudio default-session coverage fix)
+
+* Include signed root universal app 1.7.1-mixers-test-27/code 116; module code 196.
+* Recognize AAudio's default `SESSION_ID_NONE` even when an app never calls
+  `setSessionId`, enabling the opt-in session-reuse path for those streams.
+* Keep legacy pre-start allocation unchanged while the reuse option is off.
+  Host regression, root tests and all-ABI native compilation passed; device
+  audio and JL Mod behavior remain unverified. Actions artifact only.
+
+### v6.7.1-mixers-test-28 (Actions-only AAudio session reuse experiment)
+
+* Include signed root universal app 1.7.1-mixers-test-26/code 115; module code 195.
+* Add a separate, default-off AAudio session reuse option for selected
+  Vector/LSPosed compatibility apps. Reuse the first successful allocated
+  session for later streams that request no session, so short sounds can keep
+  the same effect chain instead of repeatedly preparing a new one.
+* Preserve explicit app session IDs and retry once with the original request
+  when reuse fails. Existing AAudio compatibility remains separately required.
+* Host tests and all-ABI release assembly passed. Device audio, latency and
+  JL Mod stability remain unverified. Driver/helper unchanged; Actions artifact
+  only, not a prerelease.
 
 ### v6.7.1-mixers-test-7 (Actions-only Session Mode coverage experiment)
 

@@ -185,3 +185,283 @@ Reduced-buffer normal tracks can be covered by session effects; actual FAST
 tracks are still excluded. This experiment may increase latency and requires
 validation on the affected device. The DirectAudio environment contract was
 reviewed against [upstream DirectAudio](https://github.com/The412Banner/directaudio/blob/8cc1227bf1b929521e6b2df2509d8b309c4c4f25/directaudio.c).
+
+## Mixers test 17: Oboe lookup and route-notification experiments
+
+This build includes an experimental extension of **Improve app compatibility**
+for AAudio functions resolved dynamically by an eligible app-local `liboboe.so`.
+The JL Mod report identified Oboe 1.7.0 requesting low-latency playback and an
+actual FAST track without LightningDSP coverage. The new adapter requests the
+existing compatible playback path; it does not apply DSP directly to FAST tracks.
+It remains opt-in, requires selecting the app in Vector/LSPosed, and requires
+fully restarting the app. Compatibility, latency and audible results on JL Mod
+remain unverified on a device. Existing AAudio, OpenSL ES and DirectAudio paths
+are retained.
+
+The app also includes a route-notification correction intended to prevent
+unchanged output routes from triggering profile reconciliation and rebuilding
+effect cards when physical volume changes. Effect headers also stop replaying
+their highlight animation on every view bind, while real changes still animate.
+The reported blinking can occur with
+the Volume Manager enabled or disabled. This is a code-level diagnosis and fix,
+not confirmation of the reported behavior on the user's device. Test physical
+volume changes on the main page with both manager states, as well as real route
+changes and device-profile selection.
+
+App code 105 and module code 184 exceed the withdrawn beta-4 codes so existing
+prototype and beta installations can update. The native driver and helper are
+unchanged. Host tests and compilation are not audio validation.
+
+## Mixers test 18: Volume Manager lifecycle experiment
+
+This prototype aims to preserve the Volume Manager panel/controller after long
+suspensions and recover unexpected loss of its helper using bounded backoff and
+verified cleanup. This is a code-level hypothesis and correction, not an observed
+runtime cause or confirmation that the reported device behavior is fixed.
+
+The Oboe/JL Mod compatibility and physical-volume effect-header corrections from
+test 17 are retained and are also not yet validated on the target device. Host
+tests and compilation are not audio or lifecycle validation. Test long suspension,
+foreground/background transitions, real volume controls, and ordinary global and
+session playback coverage. No native DSP driver or ldspctl change is included.
+
+App code 106 and module code 185 allow an update from test 17 and the withdrawn
+beta 4 without lowering installed version codes.
+
+## Mixers test 19: JL Mod soundfont compatibility and mode controls
+
+This artifact embeds the signed root universal APK built from LightningDSP-App
+commit `5a690216d85310b219c63f6e71e679f97a74d5eb`. Audio processing now presents
+Global Mode and Session Mode as mutually exclusive choices. The opt-in app
+compatibility hook also checks JL Mod's app-local TinySoundFont and Sonivox
+backend libraries (`libmmapi_tsf.so` and `libmmapi_eas.so`) for Oboe's dynamic
+AAudio lookup, in addition to `liboboe.so`. This targets the reported custom
+SoundFont path without patching system AAudio or changing the DSP driver.
+
+The affected app must be selected in Vector/LSPosed and **Improve app
+compatibility** must be enabled. Restart the app after changing either setting.
+This may increase latency. The user's JL Mod soundbank playback has not yet
+been validated with this build; host tests and compilation do not prove device
+compatibility or audibility. App code 107 and module code 186 are incremented
+for upgrade testing. This is an Actions artifact, not a prerelease.
+
+## Mixers test 20: JL Mod partial ELF page compatibility
+
+Embeds LightningDSP-App `1.7.1-mixers-test-19` (code 108), source commit
+`93f776d912cbe6814d6f197a92a0aaf1c6c5acd7`. The compatibility hook now allows
+an import slot within a load segment's final partial 4 KiB page when no other
+load segment shares that page. Exact ELF read bounds, non-executable mappings,
+RELRO restoration and third-party hook checks remain enforced. The examined
+JL Mod ELF still fails conservatively on 16 KiB pages because that page overlaps
+another segment. Device playback and audible DSP remain unverified. Module code
+187 allows updates from test 19. This is an Actions artifact, not a prerelease.
+
+## Mixers test 21: remove confirmed inactive session effects
+
+Embeds LightningDSP-App `1.7.1-mixers-test-20` (code 109), source commit
+`c54a2bd904bd7df6dfba305a85dfeaa5afe133e0`. In Session Mode, an effect
+attachment is now closed after two identity-consistent inactive AudioPolicy
+observations and the existing grace interval. Confirmed inactive sessions are
+not reattached until a fresh active observation appears. Unknown or incomplete
+activity remains conservative. Host tests and build passed; on-device stale
+session cleanup and resume behavior still need validation. Module code 188
+allows updates from test 20. This is an Actions artifact, not a prerelease.
+
+
+## Mixers test 23: preserve DSP through brief session gaps
+
+Embeds LightningDSP-App `1.7.1-mixers-test-22` (code 111), source commit
+`baaa40fa6e41703e958305fc2382eb278a42cff4`. Session Mode now keeps a per-session effect and its root service
+alive for 10 seconds after a close broadcast, and cancels that pending cleanup if
+the session reopens. Session-zero close remains immediate. Enhanced session
+coverage also keeps short inactive sessions through a 10-second grace while
+retaining identity confirmation and eventual cleanup. This is intended to avoid
+reinitialization gaps between brief JL Mod soundbank effects; on-device audio
+validation is still required. Module code 190 allows updates from test 21. This is
+an Actions artifact, not a prerelease.
+
+## Mixers test 24: prepare scoped AAudio sessions before playback
+
+Embeds signed root universal LightningDSP-App `1.7.1-mixers-test-23` (code 112),
+source `a85805279c05c5c11ade3117e17ffd3aded62885`. JL Mod logs showed a new session starting
+about 922 ms before its DSP was enabled. This prototype requests preparation
+while a compatible AAudio stream is opened, rather than relying only on scans
+after playback has started. Only observed NONE session requests are temporarily
+allocated; observed positive IDs and original builder settings are preserved.
+
+The existing coverage controller independently validates Binder caller UID,
+session, normal PCM layout, global-output exclusion and effect ownership. IPC
+is only a hint and cannot request arbitrary parameters or privileged commands.
+Deadlines are carried across IPC and rechecked before creation/activation.
+Never-started preparations are cleaned up. Missing service/provider, unsupported
+layout or timeout releases playback; preparation is not universally guaranteed.
+Stream opening may be delayed by up to 2.2 seconds, so test responsiveness as
+well as short sound effects. Fully restart the scoped emulator after updating.
+The existing opt-in compatibility setting and Vector/LSPosed app scope are
+required, along with enabled additional-session coverage.
+
+Root tests, native ASan/UBSan tests and release assembly passed. Actual provider
+access, first-frame coverage and audible JL Mod behavior require device testing.
+Driver/helper and ldsp.control are unchanged. Module code 191 allows updates
+from test 23. Actions artifact only, not a prerelease.
+
+## Mixers test 25: accept shared fast rows and expose preparation failure phase
+
+Embeds signed root universal LightningDSP-App `1.7.1-mixers-test-24` (code 113),
+source `5068320994a7c2b2e654061ca054e4818006f222`. The AudioFlinger parser now
+accepts unrelated `F<n> S` track rows while retaining their non-normal status;
+these rows are not DSP targets. A regression test covers inactive shared rows,
+normal PCM candidate discovery, and exclusion of active fast/shared-only tracks.
+
+AAudio preparation errors now report a bounded phase, underlying exception class,
+and fixed category, without logging exception text, paths, or caller inventories.
+The latest user output confirms that `CompatibilityPreparationProvider` and
+`com.lightning.dsp.compatibility` are registered. The only provider lookup error
+shown is for Huawei's unrelated `com.huawei.appmarket.commondata` authority.
+That rules out a missing LightningDSP manifest registration, but does not reveal
+why the JL Mod provider call failed. This artifact adds diagnostics; it does not
+claim to resolve JL Mod soundbank instability. Capture the new
+`LightningDSP_AAudio` preparation line after fully restarting JL Mod.
+
+Root tests and release assembly passed; runtime provider access and consistent
+audible processing still require device validation. Driver/helper and
+`ldsp.control` are unchanged. Module code 192 allows updates from test 24.
+Actions artifact only, not a prerelease.
+
+
+## Mixers test 26: make the preparation endpoint discoverable
+
+Live Pixel testing with module test 25 showed repeated `provider_unresolved`
+errors in JL Mod's audio process. Normal PCM playback and enabled session effects
+were observed, but effects were created only after each new stream opened.
+That delay is particularly problematic for short sounds. These observations do
+not independently establish the cause of the reported distortion.
+
+On Android 11+, the module's existing APK installation now requests Package
+Manager's `--force-queryable` override for **LightningDSP only**. This targets
+provider discovery from scoped apps without modifying those apps, granting them
+package-inventory permissions, or bypassing provider caller/session validation.
+The compatibility option remains opt-in and Vector/LSPosed app scope is still
+required. Android 10 and older retain the previous install command. If a firmware
+rejects the option, installation reports failure and preserves the existing app;
+it does not uninstall or silently retry with weakened behavior.
+
+This is the official AOSP install-session override, not the manifest
+`forceQueryable` attribute, which is restricted for non-system apps:
+https://android.googlesource.com/platform/frameworks/base/+/android11-release/services/core/java/com/android/server/pm/PackageManagerShellCommand.java
+
+Flash the module through the normal installer to apply the install-session
+metadata, then fully close and reopen the scoped emulator. Merely extracting the
+unchanged APK or restarting the app does not apply this fix. No reinstall or
+visibility modification is performed repeatedly by the boot service.
+
+This artifact deliberately reuses the same signed root universal app
+`1.7.1-mixers-test-24` (code 113), source
+`5068320994a7c2b2e654061ca054e4818006f222`. Native driver/helper and
+`ldsp.control` are unchanged. Module code 193 permits upgrades from test 25.
+Provider resolution, pre-start preparation success, responsiveness and audible
+JL Mod results still require testing after this change. It is not a confirmed
+universal fix for distortion. Actions artifact only, not a prerelease.
+
+
+## Mixers test 27: distinguish playing apps from retained session engines
+
+Embeds signed root universal app `1.7.1-mixers-test-25` (code 114), source
+`f1254990f2234d155f992ba145f38c393c7a028a`. Session Mode observes playback
+activity even when optional Media session scanning is off; discovery remains
+optional. Explicitly inactive sessions are bypassed immediately and are not
+reported as Active. Ownership retained for short-gap reuse is not playback.
+Ordinary-mode bypassed engines can resume on fresh active evidence without
+requiring another OPEN broadcast. Enhanced discovery keeps bounded idle cleanup.
+
+AudioService collection now distinguishes started players from paused, stopped,
+released and idle players. Same-session concurrent players remain active when
+any player is started. Unknown/failed observations are not advertised as Active,
+and do not turn known-idle engines back on. Only a validated complete empty
+player section counts as successful silence; malformed and unsupported output
+remains unavailable. A fresh matching active observation restores processing.
+
+Global-to-Session transitions explicitly remove session zero. Global baseline
+behavior, the scoped compatibility pre-start path, UID/session safeguards and
+Volume Manager's explicit-pause media retention are otherwise unchanged.
+The test 26 provider-discovery installation correction is preserved.
+
+519 root unit tests passed without failures or skips; rootless/plugin release
+Kotlin compilation passed. Runtime pause/resume, background playback, muted but
+active tracks and vendor layouts still require device validation. No native DSP
+algorithm, driver/helper or ldsp.control changes. Module code 194 allows upgrades
+from test 26. Actions artifact only, not a prerelease.
+
+Lint was executed: 680 Error, 67 Fatal and 262 Warning findings. Lint is not
+clean; a complete pre-existing-baseline comparison has not been established.
+
+## Mixers test 28: opt-in AAudio session reuse for short sounds
+
+Embeds the signed root universal app `1.7.1-mixers-test-26` (code 115), source
+`58ed9f200596d3f712d2eb3dd713fcaeb8d7399b`. The new **Reuse AAudio session**
+option is separate from and off by default. It is available only with
+**Improve app compatibility** enabled and only affects apps selected in
+Vector/LSPosed that load the LightningDSP hook. Fully close and reopen those
+apps after changing either setting.
+
+When enabled, the hook records the first successful allocated AAudio session
+ID in that app process and reuses it for later builders that explicitly
+requested no session. This is intended to let short sound effects share an
+already-prepared effect session rather than causing repeated session setup.
+An app-provided session ID is never replaced. If opening with the reused ID
+fails, the hook clears it and makes one retry with the app's original request.
+The existing compatibility option still changes eligible LOW_LATENCY requests
+to NONE; session reuse does not itself guarantee that an app's output is
+processed or that its audio policy accepts cross-stream session reuse.
+
+Session IDs and effect attachment behavior vary by Android implementation.
+This option can affect latency or application audio behavior and has not yet
+been validated on-device with JL Mod or other short-sound workloads. Disable it
+if streams fail or audio quality/regressions occur. Root tests, native AAudio
+hook host tests and universal release compilation passed; runtime audio and
+latency remain unverified. Driver, helper and `ldsp.control` are unchanged.
+This is an Actions test artifact, not a prerelease.
+
+## Mixers test 29: recognize AAudio's implicit default session
+
+Embeds signed root universal app `1.7.1-mixers-test-27` (code 116), source
+`bf270aa574f127e272129bb1060e8ccdeaff4681`. The test 28 reuse hook required an
+observed call to `AAudioStreamBuilder_setSessionId(NONE)`. AAudio instead
+defaults to `AAUDIO_SESSION_ID_NONE` when an app omits that call, so those
+builders were bypassing the reuse experiment. The hook now recognizes that
+documented default and, only when **Reuse AAudio session** is enabled, assigns
+and reuses the first allocated session for later eligible streams.
+
+To avoid changing behavior for users who leave the experiment off, the existing
+pre-start allocation path remains limited to apps that explicitly call the
+session setter. Explicit positive app IDs, input streams, normal/untracked
+builders and the one-shot original-request fallback remain protected. Direct
+session-setter imports are observed through an optional safe GOT transaction;
+reuse fails closed if an imported setter cannot be safely observed. Regression
+tests cover omitted setter, explicit NONE/positive ID, optional import and shared
+ID reuse without changing the opt-out path. Root unit tests and all four ABI native
+compilation passed. Device-level short-sound coverage, delay, latency and JL Mod
+behavior remain unverified. Driver/helper and `ldsp.control` are unchanged.
+This is an Actions test artifact, not a prerelease.
+
+
+## Mixers test 30: discover already-loaded AAudio backends
+
+Embeds signed root universal app `1.7.1-mixers-test-28` (code 117), source
+`9bf38e85efd7f9ca3b6bf4e772e7016367adbc31`. The latest JL Mod capture showed the compatibility observer
+was registered by Vector/LSPosed, but remained waiting while its app-local Oboe
+backend was mapped and short sounds continued creating distinct sessions. The
+compatibility entry now scans the process's current app-library list after
+observer registration and retries every two seconds until AAudio imports are
+actually rebound. This also covers libraries loaded before or without an
+observable linker callback. OpenSL readiness does not stop AAudio discovery.
+
+The sweep executes on a daemon worker only in explicitly scoped processes with
+the compatibility property enabled. It does not access PCM callbacks or modify
+system libraries. Existing safe import/GOT validation remains in force, and a
+failed/unsupported transaction retains original audio behavior. Host AAudio, GOT
+and OpenSL tests passed; Root unit tests passed; native release compilation
+passed for all four app ABIs. The device disconnected before this build could be
+tried, so short-sound processing, delay, latency and freedom from glitches are
+not yet verified on JL Mod or other apps. Driver, helper and `ldsp.control` are
+unchanged. This is an Actions test artifact, not a prerelease.

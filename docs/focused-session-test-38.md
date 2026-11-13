@@ -1,0 +1,7 @@
+# LightningDSP focused-session test 38
+
+This Actions-only module test embeds signed root universal app `1.7.1-focused-session-test-36` (versionCode 125). It addresses the reported audio stutter/delay at playback start by keeping each newly created positive AudioEffect session disabled until the complete DSP preference state has been written successfully. The duplicate initial preference synchronization has been removed. Session instances remain independent; only the app names shown in the persistent service notification are deduplicated. Global Mode and the native driver/helper are unchanged.
+
+Host verification: 550 root unit tests passed with no failures or skips; rootless and plugin Kotlin compilation passed; universal root release APK assembled and verified with the authorized certificate. Runtime audio behavior on JL Mod, Spotify and other apps is not yet device-validated.
+
+Separate reboot diagnosis: the retained pstore console record indicates a kernel memory deadlock/OOM panic. Its final task list reports a root `grep` process with unusually large resident and swap usage. The record does not preserve its command line or parent, and contains no direct LightningDSP reference. Repository runtime scripts use bounded status/config/log inputs; no recursive or unbounded grep pipeline was identified. Therefore the reboot is not attributed to LightningDSP and no speculative module behavior was changed for it.
