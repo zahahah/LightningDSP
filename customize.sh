@@ -45,6 +45,7 @@ REPLACE="
 ##########################################################################################
 
 set_permissions() {
+  [ -f "$MODPATH/diagnostic-mode.sh" ] && set_perm "$MODPATH/diagnostic-mode.sh" 0 0 0755
   [ ! -f "$MODPATH/system/vendor/bin/ldspctl" ] || set_perm "$MODPATH/system/vendor/bin/ldspctl" 0 0 0755
   [ -f "$MODPATH/post-fs-data.sh" ] && set_perm "$MODPATH/post-fs-data.sh" 0 0 0755
   [ -f "$MODPATH/native-control.sh" ] && set_perm "$MODPATH/native-control.sh" 0 0 0755

@@ -1,5 +1,13 @@
 #!/system/bin/sh
 MODPATH=${0%/*}
+
+if [ -f "$MODPATH/diagnostic-mode.sh" ]; then
+    . "$MODPATH/diagnostic-mode.sh"
+else
+    ldsp_diagnostics_enabled() { return 1; }
+    ldsp_trace_to() { return 1; }
+    ldsp_finish_trace() { return 0; }
+fi
 MODDIR="$MODPATH"
 LOGDIR="$MODPATH/logs"
 STATUS="$LOGDIR/late-load.status"
@@ -238,8 +246,7 @@ if [ -f "$MODPATH/.late-load-no-effect" ] || [ -f "$MODPATH/.late-load-rootless"
 		"$MODPATH/.late-load-rootless" \
 		"$MODPATH/.late-load-reload-experimental"
 fi
-exec 2>"$MODPATH/logs/post-fs-debug.txt"
-set -x
+ldsp_trace_to "$MODPATH/logs/post-fs-debug.txt" || :
 
 if [ -f $MODPATH/.AIDL ];then
 	AIDL=true

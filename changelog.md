@@ -1,3 +1,10 @@
+### v6.7.1-beta-6
+
+* Add default-off **Enable diagnostic mode** under Settings > Miscellaneous. Detailed app, Fusion relay and scoped-hook logging requires opt-in; warnings, errors and functional control/status messages remain available.
+* Remove raw root-command arguments and native pointer values from diagnostic messages. Keep logs local, with no audio recordings or automatic upload.
+* Gate module shell tracing and optional recovery dumps, with private log permissions. Preserve readiness probe receipts and all recovery/mount safety observations.
+* Include the owner-signed root universal app 1.7.1-beta-6/code 144; module code 211. Native HAL driver/helper and the stable update feed remain unchanged.
+
 ### v6.7.1-beta-5
 
 * Integrate Fusion Mode with a bounded local-DSP virtual audio relay, per-app DSP exclusions, and latency/buffer recovery improvements. Preserve separate Global and Session modes and scoped emulator compatibility.

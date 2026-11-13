@@ -37,28 +37,28 @@ jobs:
         run: |
           export LDSP_READELF="$(command -v llvm-readelf || command -v readelf)"
           python3 tools/package_lightningdsp.py
-          cp docs/fusion-mode-beta-5.md dist/TEST-NOTES.md
+          cp docs/diagnostic-mode-beta-6.md dist/TEST-NOTES.md
           cd dist
-          sha256sum -c LightningDSP-v6.7.1-beta-5.zip.sha256
-          sha256sum LightningDSP-v6.7.1-beta-5.zip > SHA256SUMS.txt
+          sha256sum -c LightningDSP-v6.7.1-beta-6.zip.sha256
+          sha256sum LightningDSP-v6.7.1-beta-6.zip > SHA256SUMS.txt
       - name: Verify embedded APK equals signed module input
         run: |
           python3 - <<'PY'
           from pathlib import Path
           from zipfile import ZipFile
           root = Path('dist')
-          with ZipFile(root / 'LightningDSP-v6.7.1-beta-5.zip') as archive:
+          with ZipFile(root / 'LightningDSP-v6.7.1-beta-6.zip') as archive:
               assert archive.read('common/files/LightningDSP.apk') == Path('common/files/LightningDSP.apk').read_bytes()
           PY
       - name: Upload signed module and provenance
         uses: actions/upload-artifact@v4
         with:
-          name: LightningDSP-beta-5-${{ github.sha }}
+          name: LightningDSP-beta-6-${{ github.sha }}
           if-no-files-found: error
           retention-days: 30
           path: |
-            dist/LightningDSP-v6.7.1-beta-5.zip
-            dist/LightningDSP-v6.7.1-beta-5.zip.sha256
-            dist/LightningDSP-v6.7.1-beta-5.zip.json
+            dist/LightningDSP-v6.7.1-beta-6.zip
+            dist/LightningDSP-v6.7.1-beta-6.zip.sha256
+            dist/LightningDSP-v6.7.1-beta-6.zip.json
             dist/SHA256SUMS.txt
             dist/TEST-NOTES.md

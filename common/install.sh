@@ -166,7 +166,7 @@ fi
 
 ui_print " "
 ui_print "- UI installation -"
-ui_print "   Installing LightningDSP 1.7.1-beta-5 root universal app"
+ui_print "   Installing LightningDSP 1.7.1-beta-6 root universal app"
 ui_print "   APK uses the current maintainer signing key"
 ui_print "   Same-signature apps are updated in place"
 ui_print "   Different signatures require explicit volume-key confirmation"
@@ -176,7 +176,7 @@ touch "$MODPATH/.apkpbone"
 
 [ ! -f "$MODPATH/native-control.sh" ] || sh "$MODPATH/native-control.sh" prepare "$MODPATH"
 
-set -x
+# Tracing is configured by common/functions.sh only after a private logfile is ready.
 # Audio effects patching 
 ui_print " "
 ui_print "   Patching existing audio_effects files..."

@@ -1,5 +1,13 @@
 #!/system/bin/sh
 MODPATH=${0%/*}
+
+if [ -f "$MODPATH/diagnostic-mode.sh" ]; then
+    . "$MODPATH/diagnostic-mode.sh"
+else
+    ldsp_diagnostics_enabled() { return 1; }
+    ldsp_trace_to() { return 1; }
+    ldsp_finish_trace() { return 0; }
+fi
 MODDIR=$MODPATH
 mkdir -p "$MODPATH/logs"
 
@@ -64,8 +72,7 @@ if [ -f "$MODPATH/.late-load-no-effect" ] || [ -f "$MODPATH/.late-load-rootless"
 		>"$MODPATH/logs/service.status"
 	exit 0
 fi
-exec 2>"$MODPATH/logs/service_debug.txt"
-set -x
+ldsp_trace_to "$MODPATH/logs/service_debug.txt" || :
 if [ -d "$MODPATH/system/vendor" ] && [ ! -L "$MODPATH/system/vendor" ]; then
 MOD_VENDOR="$MODPATH/system/vendor"
 MOD_ODM="$MODPATH/system/odm"

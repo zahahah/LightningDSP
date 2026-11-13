@@ -163,9 +163,17 @@ $KSU && { [ $KSU_VER_CODE -lt 11184 ] && require_new_ksu; }
 [ -z $APATCH ] && APATCH=false
 [ "$APATCH" == "true" ] && KSU=true
 
-# Start debug
-exec 2>/data/adb/ldsp_install_log.txt
-set -x
+
+if [ -f "$MODPATH/diagnostic-mode.sh" ]; then
+    . "$MODPATH/diagnostic-mode.sh"
+else
+    ldsp_diagnostics_enabled() { return 1; }
+    ldsp_trace_to() { return 1; }
+    ldsp_finish_trace() { return 0; }
+fi
+
+# Detailed installer traces require an explicit diagnostic opt-in.
+ldsp_trace_to /data/adb/ldsp_install_log.txt || :
 
 # Set variables
 [ -z $NVBASE ] && NVBASE=/data/adb # removed in magisk v28.0
@@ -318,10 +326,14 @@ set_permissions
 # The recursive module permission pass normalizes files to 0644, but patch.sh
 # must execute this bundled ELF to validate its exact Android AIDL dependencies.
 [ ! -f "$MODPATH/tools/patchelf" ] || chmod 0755 "$MODPATH/tools/patchelf"
-set +x
-exec 2>&-
-mkdir "$MODPATH/logs"
-mv -f /data/adb/ldsp_install_log.txt "$MODPATH/logs/ldsp_install_log.txt"
+# Preserve normal stderr unless this invocation started a diagnostic trace.
+if [ "${LDSP_TRACE_ACTIVE:-0}" = 1 ]; then
+    ldsp_finish_trace
+    mkdir -p "$MODPATH/logs"
+    chmod 700 "$MODPATH/logs"
+    mv -f /data/adb/ldsp_install_log.txt "$MODPATH/logs/ldsp_install_log.txt"
+    chmod 600 "$MODPATH/logs/ldsp_install_log.txt"
+fi
 chmod 755 "$MODPATH/lightningdsp_app_handle.sh"
 mv -f "$MODPATH/lightningdsp_app_handle.sh" /data/adb/service.d/lightningdsp_app_handle.sh
 

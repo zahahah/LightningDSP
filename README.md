@@ -107,6 +107,13 @@ During an **explicit module flash**, the installer verifies the old `ainur_james
 
 ## If something doesn't work
 
+Current main-branch builds include **Enable diagnostic mode** under Settings →
+Miscellaneous. It is off by default. Turn it on for extra troubleshooting logs,
+then turn it off when finished. Logs stay local and may include app/device
+information; nothing is uploaded or recorded from the audio stream. Module
+shell traces follow the setting on their next execution, without a forced reboot.
+
+
 Tell me your device and Android build, root manager, module and app versions, audio route, and whether you used normal boot or late-load. Other audio modules can matter too. For native-path diagnostics, mounting, lifecycle and control details, see [LIGHTNINGDSP-CONTROL.md](LIGHTNINGDSP-CONTROL.md) and [TEMP-ROOT-RELOAD.md](TEMP-ROOT-RELOAD.md). The [changelog](changelog.md) records release changes.
 
 ## Roadmap

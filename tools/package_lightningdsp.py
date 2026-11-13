@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1-beta-5'
-VERSION_CODE = 210
+VERSION = 'v6.7.1-beta-6'
+VERSION_CODE = 211
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1-beta-5'
-APP_CODE = 143
-APP_SOURCE_COMMIT = '43c6961d4cf0c44ba8350af6adf60bd2e7493aad'
+APP_VERSION = '1.7.1-beta-6'
+APP_CODE = 144
+APP_SOURCE_COMMIT = 'f9a2179b3dd78f86fe124ae041385a5662f58356'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -187,6 +187,7 @@ def payloads():
         'native-control.sh': 0o100755,
         'lightningdsp-app-start.sh': 0o100755,
         'dsp-thread-profile.sh': 0o100755,
+        'diagnostic-mode.sh': 0o100755,
         'native-control/ldsp-candidate.json': 0o100644,
         'native-control/ldsp-build-provenance.json': 0o100644,
         'native-control/ldsp-NOTICES.txt': 0o100644,
@@ -200,6 +201,7 @@ def payloads():
         'docs/focused-session-test-40.md': 0o100644,
         'docs/focused-session-test-42.md': 0o100644,
         'docs/fusion-mode-beta-5.md': 0o100644,
+        'docs/diagnostic-mode-beta-6.md': 0o100644,
         DRIVER: 0o100644,
         HELPER: 0o100755,
     }

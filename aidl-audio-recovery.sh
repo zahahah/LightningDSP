@@ -4,6 +4,14 @@
 MODE=${1:-}
 case "$MODE" in --auto-once|--retry|--check) ;; *) echo 'Usage: aidl-audio-recovery.sh --auto-once|--retry|--check' >&2; exit 2 ;; esac
 MODPATH=${0%/*}
+
+if [ -f "$MODPATH/diagnostic-mode.sh" ]; then
+    . "$MODPATH/diagnostic-mode.sh"
+else
+    ldsp_diagnostics_enabled() { return 1; }
+    ldsp_trace_to() { return 1; }
+    ldsp_finish_trace() { return 0; }
+fi
 LOGDIR="$MODPATH/logs"
 mkdir -p "$LOGDIR" || exit 1
 PROC_ROOT=${LDSP_PROC_ROOT:-/proc}
@@ -81,15 +89,29 @@ library_mapped() {
     return 1
 }
 native_diagnostics() {
+    # The probe receipt is consumed by the readiness guard, not optional debug data.
+    diagnostic_probe="$LOGDIR/aidl-recovery-probe.txt"
+    if command -v ldsp_private_log >/dev/null 2>&1; then
+        ldsp_private_log "$diagnostic_probe" || :
+    fi
+    diagnostic_status=/dev/null
+    if ldsp_diagnostics_enabled && ldsp_private_log "$LOGDIR/aidl-recovery-native-status.txt"; then
+        diagnostic_status="$LOGDIR/aidl-recovery-native-status.txt"
+    fi
     helper=${LDSP_CONTROL_HELPER:-/vendor/bin/ldspctl}
     if [ -x "$helper" ] && cmp -s "$helper" "$MODPATH/common/files/control/arm64-v8a/ldspctl"; then
-        "${LDSP_TIMEOUT_BIN:-/system/bin/timeout}" 3 "$helper" probe >"$LOGDIR/aidl-recovery-probe.txt" 2>&1
-        "${LDSP_TIMEOUT_BIN:-/system/bin/timeout}" 3 "$helper" status >"$LOGDIR/aidl-recovery-native-status.txt" 2>&1
+        "${LDSP_TIMEOUT_BIN:-/system/bin/timeout}" 3 "$helper" probe >"$diagnostic_probe" 2>&1
+        "${LDSP_TIMEOUT_BIN:-/system/bin/timeout}" 3 "$helper" status >"$diagnostic_status" 2>&1
         return
     fi
-    printf 'helper=unavailable_or_mismatched\n' >"$LOGDIR/aidl-recovery-probe.txt"
+    printf 'helper=unavailable_or_mismatched\n' >"$diagnostic_probe"
 }
 snapshot() {
+    # Never gate observations used to detect lifecycle changes during preflight.
+    diagnostic_snapshot=/dev/null
+    if ldsp_diagnostics_enabled && ldsp_private_log "$LOGDIR/aidl-recovery-$1.txt"; then
+        diagnostic_snapshot="$LOGDIR/aidl-recovery-$1.txt"
+    fi
     {
         printf 'boot_id=%s factory_pid=%s property=%s\n' "$boot_id" "$(factory_pid)" "$("$GETPROP_BIN" sys.audio.restart.hal)"
         cat "$work/targets"
@@ -98,7 +120,7 @@ snapshot() {
         done <"$work/targets"
         current=$(factory_pid)
         [ -z "$current" ] || grep -F lightningdsplib.so "$PROC_ROOT/$current/maps" 2>/dev/null
-    } >"$LOGDIR/aidl-recovery-$1.txt"
+    } >"$diagnostic_snapshot"
 }
 # Require every originally running handler target to come back with a new PID.
 # audioserver is observed, not explicitly restarted or assumed to survive.
@@ -279,7 +301,7 @@ done
 snapshot after
 native_diagnostics
 if [ "$count" -ge 20 ]; then
-    "$LOGCAT_BIN" -d -t 400 2>/dev/null | grep -iE 'lightningdsp|ldsp.control|EffectFactory|dlopen|CANNOT LINK|avc:.*denied' >"$LOGDIR/aidl-recovery-loader.txt"
+    if ldsp_diagnostics_enabled && ldsp_private_log "$LOGDIR/aidl-recovery-loader.txt"; then "$LOGCAT_BIN" -d -t 400 2>/dev/null | grep -iE 'lightningdsp|ldsp.control|EffectFactory|dlopen|CANNOT LINK|avc:.*denied' >"$LOGDIR/aidl-recovery-loader.txt"; fi
     finish 'BLOCKED reason=reload_or_library_mapping_not_observed registration=unverified processing=unverified'
 fi
 stable_pid=$current
@@ -290,7 +312,7 @@ while [ "$count" -lt 6 ]; do
     if ! reloaded || [ "$current" != "$stable_pid" ] || ! library_mapped "$current"; then
         snapshot unstable
         native_diagnostics
-        "$LOGCAT_BIN" -d -t 400 2>/dev/null | grep -iE 'lightningdsp|ldsp.control|EffectFactory|dlopen|CANNOT LINK|avc:.*denied' >"$LOGDIR/aidl-recovery-loader.txt"
+        if ldsp_diagnostics_enabled && ldsp_private_log "$LOGDIR/aidl-recovery-loader.txt"; then "$LOGCAT_BIN" -d -t 400 2>/dev/null | grep -iE 'lightningdsp|ldsp.control|EffectFactory|dlopen|CANNOT LINK|avc:.*denied' >"$LOGDIR/aidl-recovery-loader.txt"; fi
         finish 'BLOCKED reason=audio_services_unstable_after_reload'
     fi
     count=$((count + 1))
