@@ -2,6 +2,19 @@
 
 **Your music, with a little more say in how it sounds.**
 
+<table>
+  <tr>
+    <td width="33%" align="center"><img src="docs/images/1.jpg" width="280" alt="LightningDSP audio effects" /></td>
+    <td width="33%" align="center"><img src="docs/images/2.jpg" width="280" alt="Audio Processing modes and settings" /></td>
+    <td width="33%" align="center"><img src="docs/images/3.jpg" width="280" alt="Per-app Volume Manager" /></td>
+  </tr>
+  <tr>
+    <td width="33%" align="center"><img src="docs/images/4.png" width="280" alt="Compact floating volume panel" /></td>
+    <td width="33%" align="center"><img src="docs/images/5.png" width="280" alt="Floating effects and media controls" /></td>
+    <td width="33%" align="center"><img src="docs/images/6.png" width="280" alt="Expanded floating system volume panel" /></td>
+  </tr>
+</table>
+
 This is LightningDSP, your audio pocket knife for Android. It is a root audio-effects module, a companion app, and a collection of tools for shaping sound and controlling volume. Keep your favorite music player. LightningDSP works alongside it.
 
 The current stable releases are **LightningDSP module 6.7** and **LightningDSP app 1.7**. The module includes the signed root app. You can also download the APK separately, but the APK alone does not install the audio driver.
