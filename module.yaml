@@ -1,0 +1,5 @@
+schemaVersion: 1
+id: ainur_lightningdsp
+name: LightningDSP
+summary: Root Android audio effects with Global, Session and Fusion modes.
+description: README.md

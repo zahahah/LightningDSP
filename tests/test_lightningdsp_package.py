@@ -35,6 +35,14 @@ class LightningDSPPackageTests(unittest.TestCase):
                 self.assertIn(b'updateJson=https://raw.githubusercontent.com/zahahah/LightningDSP/master/update.json\n',
                               archive.read('module.prop'))
                 self.assertNotIn('update.json', names)  # KernelSU fetches this using updateJson.
+                self.assertIn('docs/release-6.7.1.md', names)
+                for private_test_note in (
+                        'docs/all-mixers-test.md', 'docs/samsung-volume-panel-test.md',
+                        'docs/keep-effects-ready-test-37.md', 'docs/focused-session-test-38.md',
+                        'docs/focused-session-test-39.md', 'docs/focused-session-test-40.md',
+                        'docs/focused-session-test-42.md', 'docs/fusion-mode-beta-5.md',
+                        'docs/diagnostic-mode-beta-6.md'):
+                    self.assertNotIn(private_test_note, names)
                 self.assertNotIn('common/files/JamesDSPManagerThePBone.apk', names)
                 self.assertNotIn('common/files/JamesDSPManager.apk', names)
                 self.assertNotIn('common/files/dual-entry-arm64/libjamesdsp.so', names)
@@ -51,7 +59,7 @@ class LightningDSPPackageTests(unittest.TestCase):
         self.assertIn(f'version={package.VERSION}\n', props)
         self.assertIn(f'versionCode={package.VERSION_CODE}\n', props)
         update = json.loads((ROOT / 'update.json').read_text())
-        # A beta package must not replace the stable/latest update channel.
+        # Do not advance the stable channel until the stable release is published.
         self.assertEqual(update['version'], 'v6.7')
         self.assertEqual(update['versionCode'], 159)
         self.assertTrue(update['zipUrl'].endswith('/v6.7/LightningDSP-v6.7.zip'))
@@ -73,8 +81,18 @@ class LightningDSPPackageTests(unittest.TestCase):
                        if line.strip().startswith('dist/LightningDSP-'))
         self.assertTrue(fnmatch(f'dist/LightningDSP-{package.VERSION}.zip', pattern))
 
+    def test_kernelsu_catalog_metadata_points_to_public_module_docs(self):
+        metadata = (ROOT / 'module.yaml').read_text()
+        self.assertIn('schemaVersion: 1', metadata)
+        self.assertIn('id: ainur_lightningdsp', metadata)
+        self.assertIn('description: README.md', metadata)
+
     def test_integrated_app_metadata_matches_the_signed_release_build(self):
         manifest = json.loads((ROOT / package.CANDIDATE).read_text())
+        self.assertEqual(len(manifest['notes']), 3)
+        self.assertFalse(any(any(token in note.lower() for token in
+                                 ('beta ', 'module test', 'pstore', 'test 41'))
+                             for note in manifest['notes']))
         app = manifest['artifacts']['app']
         apk = ROOT / package.APP
         self.assertEqual(app['versionName'], package.APP_VERSION)

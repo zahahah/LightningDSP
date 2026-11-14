@@ -16,7 +16,7 @@ class MixerExperimentArtifactTests(unittest.TestCase):
         self.assertIn('actions/upload-artifact@v4', workflow)
         self.assertIn('python3 tools/package_lightningdsp.py', workflow)
         self.assertIn("archive.read('common/files/LightningDSP.apk') ==", workflow)
-        self.assertIn('dist/TEST-NOTES.md', workflow)
+        self.assertIn('dist/RELEASE-NOTES.md', workflow)
 
     def test_testing_notes_do_not_claim_runtime_validation(self):
         notes = (ROOT / 'docs/all-mixers-test.md').read_text()

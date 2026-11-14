@@ -1,3 +1,14 @@
+### v6.7.1 (LightningDSP stable)
+
+* Bring the pre-release profile and preset fixes into stable, including reliable profile reconciliation after output changes, secure Android-compatible preset parsing, atomic saves, script restoration and isolation between interrupted imports.
+* Add **Fusion Mode**, a virtual audio output with a local DSP relay and per-app effect exclusions. Keep Global Mode and Session Mode separate. New root installs enable Fusion, Volume Manager, per-app DSP controls and media buttons; existing preferences are preserved.
+* Improve Global/Session coverage for additional mixers, extended AudioFlinger layouts, mono voice messages, simultaneous media, eligible system sounds, stale-session cleanup and first-buffer readiness. Tighten active-app reporting and session ownership.
+* Add tested FAST-audio compatibility paths for **Bannerlator, Eden, NetherSX2, ARMSX2 and RetroArch**, using opt-in Vector/LSPosed hooks for eligible AAudio, OpenSL ES, DirectAudio and Oboe paths. Arbitrary FAST/RAW tracks are not directly processed by the driver. JL Mod short-sound/custom-soundbank behavior remains unresolved.
+* Improve Fusion relay latency and resource use with bounded buffering, local processing, safer recovery and in-place per-app/effect updates. Fusion's virtual capture/playback route can still add latency.
+* Expand Volume Manager with per-app DSP controls, media play/pause, pause-only three-minute retention, edit cancel, working mute, collapsible inactive apps, separate hide scopes, theme/layout fixes and more reliable Samsung/KDE Connect volume-panel recovery.
+* Add the stable module update prompt and opt-out, KernelSU update feed, and default-off diagnostic mode. Keep detailed diagnostics local and gated while preserving essential safety/error reporting.
+* Include the owner-signed universal root app **1.7.1/code 145** in module **6.7.1/code 212**. The ARM64 native driver and `ldspctl` helper are unchanged from 6.7.
+
 ### v6.7.1-beta-6
 
 * Add default-off **Enable diagnostic mode** under Settings > Miscellaneous. Detailed app, Fusion relay and scoped-hook logging requires opt-in; warnings, errors and functional control/status messages remain available.

@@ -17,12 +17,11 @@
 
 This is LightningDSP, your audio pocket knife for Android. It is a root audio-effects module, a companion app, and a collection of tools for shaping sound and controlling volume. Keep your favorite music player. LightningDSP works alongside it.
 
-The current stable releases are **LightningDSP module 6.7** and **LightningDSP app 1.7**. The module includes the signed root app. You can also download the APK separately, but the APK alone does not install the audio driver.
+The current stable releases are **LightningDSP module 6.7.1** and **LightningDSP app 1.7.1**. The module includes the signed root app. You can also download the APK separately, but the APK alone does not install the audio driver.
 
-[Download the module](https://github.com/zahahah/LightningDSP/releases/tag/v6.7) · [App source and release](https://github.com/zahahah/LightningDSP-App) · [Native library source](https://github.com/zahahah/LibLightningDSP-OSS)
+[Download the module](https://github.com/zahahah/LightningDSP/releases/tag/v6.7.1) · [App source and release](https://github.com/zahahah/LightningDSP-App) · [Native library source](https://github.com/zahahah/LibLightningDSP-OSS)
 
-The main branch has newer features, including **Fusion Mode**. They are not part of
-stable 6.7 yet. Test builds are available in [module Actions](https://github.com/zahahah/LightningDSP/actions/workflows/main-module-artifacts.yml)
+Test builds are available in [module Actions](https://github.com/zahahah/LightningDSP/actions/workflows/main-module-artifacts.yml)
 and [app Actions](https://github.com/zahahah/LightningDSP-App/actions/workflows/root-artifacts.yml).
 
 ## Make the sound yours
@@ -46,7 +45,7 @@ It's a collection of tools, not a preset that automatically makes everything sou
   Use the DSP power buttons in Volume Manager to leave an app without effects.
   Fusion needs root, not Vector/LSPosed. The extra audio path can add latency.
 
-On current main-branch builds, new root installations start with Fusion Mode,
+New root installations start with Fusion Mode,
 Volume Manager, app DSP buttons and media controls enabled. Your saved choices
 stay as they are. Global Mode cannot exclude one app from its shared effect;
 per-app DSP buttons work in Session Mode and Fusion Mode.
@@ -63,7 +62,7 @@ create a new session for each sound. These hooks are not required for Fusion.
 
 ### LightningDSP Volume Manager
 
-A per-app volume manager inspired by the VolumeManager app. It is part of the root app, not a separate installation. Open it from the mixer button on the main screen. Stable 6.7 leaves it off by default; the current main-branch defaults are described above.
+A per-app volume manager inspired by the VolumeManager app. It is part of the root app, not a separate installation. Open it from the mixer button on the main screen. New root installations enable it by default; saved choices are preserved when updating.
 
 Control each app's volume, mute and stereo balance, including saved settings for apps that are not playing right now. See Active, Recent and Inactive apps; pin, hide and reorder them. The manager also includes system streams, a LightningDSP effects card, a floating panel, themes, and backup and restore of portable settings. In the floating panel, tap the LightningDSP card icon to open its effect controls. Press and hold an effect name to select it, then use the slider to lower or raise its intensity. The per-app controls and DSP card have separate switches.
 
@@ -83,7 +82,7 @@ An optional **Disable App Audio Focus (Requires Xposed)** setting is available o
 
 ## Get started
 
-1. Download the [LightningDSP 6.7 ZIP](https://github.com/zahahah/LightningDSP/releases/tag/v6.7) and install it with a compatible root manager. The module is root-only and includes an ARM64 audio-effect driver. On KernelSU, you also need a mounting metamodule, such as **Magic Mount** or **NoMount**.
+1. Download the [LightningDSP 6.7.1 ZIP](https://github.com/zahahah/LightningDSP/releases/tag/v6.7.1) and install it with a compatible root manager. The module is root-only and includes an ARM64 audio-effect driver. On KernelSU, you also need a mounting metamodule, such as **Magic Mount** or **NoMount**.
 2. Follow your root manager's activation or reboot procedure. Temp-root/late-load setups need their own activation flow; a reboot may not preserve temp root.
 3. Open LightningDSP and grant **the app itself** root access. Root granted to ADB or another app is not a grant to LightningDSP.
 4. Enable processing, play music, and try an obvious EQ adjustment at a comfortable volume.
@@ -94,7 +93,7 @@ The installer creates `/sdcard/LightningDSP/Presets` alongside the public effect
 
 ### Keeping up to date
 
-The current main-branch app can check for new **stable module releases**, not
+The app can check for new **stable module releases**, not
 pre-releases or app-only releases. **Download** opens the release page; **Skip**
 hides just that version. You can turn off automatic checks in Settings. KernelSU
 Manager uses the same stable module update channel, not the Actions test builds.
@@ -107,7 +106,7 @@ During an **explicit module flash**, the installer verifies the old `ainur_james
 
 ## If something doesn't work
 
-Current main-branch builds include **Enable diagnostic mode** under Settings →
+Stable builds include **Enable diagnostic mode** under Settings →
 Miscellaneous. It is off by default. Turn it on for extra troubleshooting logs,
 then turn it off when finished. Logs stay local and may include app/device
 information; nothing is uploaded or recorded from the audio stream. Module
@@ -118,7 +117,7 @@ Tell me your device and Android build, root manager, module and app versions, au
 
 ## Roadmap
 
-I am considering script-level debugging tools for Live Programmable DSP, an optional SBC XQ Bluetooth audio-stack patch for compatible devices, and a Loudness Controller inspired by existing rootless JamesDSP implementations. These are ideas, not features included in 6.7.
+I am considering script-level debugging tools for Live Programmable DSP, an optional SBC XQ Bluetooth audio-stack patch for compatible devices, and a Loudness Controller inspired by existing rootless JamesDSP implementations. These are ideas, not features included in 6.7.1.
 
 ## Credits and licensing
 
