@@ -1,6 +1,6 @@
 {
-  "version": "v6.7",
-  "versionCode": 159,
-  "zipUrl": "https://github.com/zahahah/LightningDSP/releases/download/v6.7/LightningDSP-v6.7.zip",
-  "changelog": "https://raw.githubusercontent.com/zahahah/LightningDSP/v6.7/changelog.md"
+  "version": "v6.7.1",
+  "versionCode": 212,
+  "zipUrl": "https://github.com/zahahah/LightningDSP/releases/download/v6.7.1/LightningDSP-v6.7.1.zip",
+  "changelog": "https://raw.githubusercontent.com/zahahah/LightningDSP/v6.7.1/changelog.md"
 }
