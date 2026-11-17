@@ -157,10 +157,10 @@ class StableUpdateFeedTests(unittest.TestCase):
 
     def test_published_feed_metadata_is_stable_and_uses_raw_changelog(self):
         current = json.loads((ROOT / "update.json").read_text())
-        self.assertEqual(current["version"], "v6.7")
-        self.assertEqual(current["versionCode"], 159)
+        self.assertEqual(current["version"], "v6.7.1")
+        self.assertEqual(current["versionCode"], 212)
         self.assertEqual(current["changelog"],
-                         "https://raw.githubusercontent.com/zahahah/LightningDSP/v6.7/changelog.md")
+                         "https://raw.githubusercontent.com/zahahah/LightningDSP/v6.7.1/changelog.md")
 
     def test_stable_feed_is_written_atomically_only_after_validation(self):
         with tempfile.TemporaryDirectory() as directory:

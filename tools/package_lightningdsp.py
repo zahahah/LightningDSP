@@ -15,12 +15,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.1'
-VERSION_CODE = 212
+VERSION = 'v6.7.2'
+VERSION_CODE = 213
 APP_PACKAGE = 'com.lightning.dsp'
-APP_VERSION = '1.7.1'
-APP_CODE = 145
-APP_SOURCE_COMMIT = '79297920b590c0acec0c6d43a4e79e49c85f4529'
+APP_VERSION = '1.7.2'
+APP_CODE = 146
+APP_SOURCE_COMMIT = 'b2700662cb43a3bc361c8eab340fd593b174246f'
 TRUSTED_APK_SIGNER = 'c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357'
 CANDIDATE = 'native-control/ldsp-candidate.json'
 PROVENANCE = 'native-control/ldsp-build-provenance.json'
@@ -193,7 +193,7 @@ def payloads():
         'native-control/ldsp-NOTICES.txt': 0o100644,
         'native-control/global-service.rule': 0o100644,
         'native-control/default-label-opt-in.rule': 0o100644,
-        'docs/release-6.7.1.md': 0o100644,
+        'docs/release-6.7.2.md': 0o100644,
         DRIVER: 0o100644,
         HELPER: 0o100755,
     }

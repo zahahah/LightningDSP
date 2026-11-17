@@ -13,24 +13,24 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "master",
-    "commit": "79297920b590c0acec0c6d43a4e79e49c85f4529",
-    "buildBaseCommit": "79297920b590c0acec0c6d43a4e79e49c85f4529",
+    "commit": "b2700662cb43a3bc361c8eab340fd593b174246f",
+    "buildBaseCommit": "b2700662cb43a3bc361c8eab340fd593b174246f",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "a330c41bb58314ee9083c2df86ee55ae7526dc35ef84cc8dc8ec0fc924015aa6",
-      "sizeBytes": 37634081,
+      "sha256": "0f7a6b28ab6adc3fff9f6a5df2db439953c0ac56fe9e1898e9b2f32143e220db",
+      "sizeBytes": 37687329,
       "packageId": "com.lightning.dsp",
-      "versionName": "1.7.1",
-      "versionCode": 145,
+      "versionName": "1.7.2",
+      "versionCode": 146,
       "variant": "root",
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "79297920b590c0acec0c6d43a4e79e49c85f4529"
+      "sourceCommit": "b2700662cb43a3bc361c8eab340fd593b174246f"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -50,8 +50,8 @@
   },
   "buildProvenance": "native-control/ldsp-build-provenance.json",
   "notes": [
-    "Stable 6.7.1 packages the signed root universal app 1.7.1/code 145 from committed app master source 79297920b590c0acec0c6d43a4e79e49c85f4529. The standalone app release and module archive contain identical APK bytes.",
-    "The ARM64 dual-entry audio-effect driver and ldspctl helper are unchanged from stable 6.7. Their existing source pins, static ELF evidence, dependency allow-list and hashes are retained.",
-    "User-facing compatibility scope and known limitations are summarized in docs/release-6.7.1.md. This release manifest contains build provenance, not raw device logs or per-build experiment notes."
+    "Stable 6.7.2 packages the signed root universal app 1.7.2/code 146 from committed app master source b2700662cb43a3bc361c8eab340fd593b174246f. The standalone app APK and module archive contain identical APK bytes.",
+    "The ARM64 dual-entry audio-effect driver and ldspctl helper are unchanged from stable 6.7.1; their source pins, static ELF evidence, dependency allow-list and hashes are retained.",
+    "Work-profile DSP defaults on when Android exposes an eligible work profile; explicit saved choices are preserved. The SystemUI volume-panel replacement still requires the scoped Vector/LSPosed hook and retains stock controls as fallback."
   ]
 }

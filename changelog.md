@@ -1,3 +1,9 @@
+### v6.7.2 (LightningDSP stable)
+
+* Include the owner-signed root universal app **1.7.2/code 146** in module **6.7.2/code 213**. Work-profile DSP is on by default when Android exposes a work profile; saved user choices remain unchanged, and the control is in Volume Manager settings.
+* Improve work-profile routing and per-app DSP behavior in Session and Fusion. Improve the optional SystemUI volume replacement across expansion, lock-screen, touch pass-through and wake/unlock transitions.
+* The module remains root-only with an ARM64 audio driver. Work-profile routing requires a complete inventory from Android's supported root path. SystemUI replacement requires its Vector/LSPosed hook; stock controls remain the fallback. The driver and `ldspctl` helper are unchanged from 6.7.1.
+
 ### v6.7.1 (LightningDSP stable)
 
 * Bring the pre-release profile and preset fixes into stable, including reliable profile reconciliation after output changes, secure Android-compatible preset parsing, atomic saves, script restoration and isolation between interrupted imports.

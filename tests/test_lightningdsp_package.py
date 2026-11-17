@@ -35,7 +35,7 @@ class LightningDSPPackageTests(unittest.TestCase):
                 self.assertIn(b'updateJson=https://raw.githubusercontent.com/zahahah/LightningDSP/master/update.json\n',
                               archive.read('module.prop'))
                 self.assertNotIn('update.json', names)  # KernelSU fetches this using updateJson.
-                self.assertIn('docs/release-6.7.1.md', names)
+                self.assertIn('docs/release-6.7.2.md', names)
                 for private_test_note in (
                         'docs/all-mixers-test.md', 'docs/samsung-volume-panel-test.md',
                         'docs/keep-effects-ready-test-37.md', 'docs/focused-session-test-38.md',
@@ -60,9 +60,9 @@ class LightningDSPPackageTests(unittest.TestCase):
         self.assertIn(f'versionCode={package.VERSION_CODE}\n', props)
         update = json.loads((ROOT / 'update.json').read_text())
         # Do not advance the stable channel until the stable release is published.
-        self.assertEqual(update['version'], 'v6.7')
-        self.assertEqual(update['versionCode'], 159)
-        self.assertTrue(update['zipUrl'].endswith('/v6.7/LightningDSP-v6.7.zip'))
+        self.assertEqual(update['version'], 'v6.7.1')
+        self.assertEqual(update['versionCode'], 212)
+        self.assertTrue(update['zipUrl'].endswith('/v6.7.1/LightningDSP-v6.7.1.zip'))
         self.assertNotEqual(update['version'], package.VERSION)
         experiment = (ROOT / '.github/workflows/main-module-artifacts.yml').read_text()
         self.assertIn(f'dist/LightningDSP-{package.VERSION}.zip', experiment)
