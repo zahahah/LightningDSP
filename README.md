@@ -89,6 +89,16 @@ An optional **Disable App Audio Focus (Requires Xposed)** setting is available o
 
 The module installs its library and effect configuration systemlessly. It does not permanently rewrite your system or vendor partitions. Device firmware, effect host, root mounts and audio route still affect compatibility. The native library supports Android's AIDL effect entry and a legacy effect entry in one ARM64 binary; the app keeps the AudioEffect lifecycle and uses native control where supported.
 
+### Android version compatibility
+
+The ARM64 audio driver and `ldspctl` helper shipped in 6.7.1 use
+`AIBinder_Class_setTransactionCodeToFunctionNameMap`, a Binder NDK API
+available from Android 16/API 36. These native binaries fail to load on
+Android 15/API 35 and earlier. The 6.7.2 prerelease carries the same driver
+and helper. This is a native-binary compatibility limitation; files may be
+installed and mounted while the audio effect is still unavailable. A rebuild
+for older Android versions is planned but has not shipped.
+
 The installer creates `/sdcard/LightningDSP/Presets` alongside the public effect examples. The app keeps its live preset library separately in its app-specific storage, normally `Android/data/com.lightning.dsp/files/Presets`. Use the app's preset import/export controls to move presets between locations.
 
 ### Keeping up to date
@@ -117,7 +127,9 @@ Tell me your device and Android build, root manager, module and app versions, au
 
 ## Roadmap
 
-I am considering script-level debugging tools for Live Programmable DSP, an optional SBC XQ Bluetooth audio-stack patch for compatible devices, and a Loudness Controller inspired by existing rootless JamesDSP implementations. These are ideas, not features included in 6.7.1.
+The next compatibility work is to rebuild the ARM64 audio driver and `ldspctl` helper without the Android 16/API 36-only Binder symbol, then validate them on Android 14/API 34. This work is planned and has not shipped.
+
+Other ideas under consideration are script-level debugging tools for Live Programmable DSP, an optional SBC XQ Bluetooth audio-stack patch for compatible devices, and a Loudness Controller inspired by existing rootless JamesDSP implementations. These are not current features.
 
 ## Credits and licensing
 
