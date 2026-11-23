@@ -14,7 +14,7 @@ class AidlAudioRecoveryTests(unittest.TestCase):
         path.chmod(0o755)
         return path
 
-    def fixture(self, root, pixel=False):
+    def fixture(self, root, pixel=False, exynos=False):
         module = root / 'module'
         logs = module / 'logs'
         logs.mkdir(parents=True)
@@ -29,6 +29,9 @@ class AidlAudioRecoveryTests(unittest.TestCase):
         script.write_bytes((ROOT / script.name).read_bytes())
         self.executable(module / 'aidl-effect-mount.sh', 'exit "${MOCK_MOUNT_FAILURE:-0}"\n')
         owner_exe = '/vendor/bin/hw/' + ('android.hardware.audio.service-aidl.aoc' if pixel else 'audiohalservice.qti')
+        apex = '/apex/com.android.hardware.audio.exynos'
+        if exynos:
+            owner_exe = apex + '/bin/hw/android.hardware.audio.effect.service-aidl.exynos'
         secondary_exe = '/vendor/bin/hw/secaudiohalaidl'
         proc = root / 'proc'
         for pid, exe in ((101, owner_exe), (102, secondary_exe), (201, owner_exe), (202, secondary_exe)):
@@ -49,6 +52,24 @@ class AidlAudioRecoveryTests(unittest.TestCase):
         (init / 'vendor/etc/init/audio.rc').write_text(
             f'service vendor.audio-hal-aidl {owner_exe}\n    user audioserver\n    onrestart restart audioserver\n'
             f'service vendor.secaudiohal-aidl {secondary_exe}\n    user audioserver\n    onrestart restart audioserver\n')
+        if exynos:
+            a = init / apex.lstrip('/')
+            (a / 'bin/hw').mkdir(parents=True)
+            (init / owner_exe.lstrip('/')).touch()
+            (a / 'lib64/soundfx').mkdir(parents=True)
+            config = a / 'etc/audio_effects_config.xml'
+            config.parent.mkdir()
+            config.write_text(f'<effect uuid="{UUID}"/>')
+            (a / 'etc/init').mkdir()
+            (init / 'vendor/etc/init/audio.rc').rename(a / 'etc/init/audio.rc')
+            for pid in (101, 201):
+                (proc / str(pid) / 'root/apex').symlink_to(init / 'apex')
+            driver = f'{apex}/lib64/soundfx/lightningdsplib.so'
+            (proc / '201/maps').write_text(driver + '\n')
+            self.executable(module / 'aidl-effect-mount.sh', f'''echo "$*" >>"{root}/mount.calls"
+[ "$1" = --mount ] || exit 0
+cp "{lib}" "{init}{driver}"
+''')
         rc = init / 'system/etc/init/audioserver.rc'
         services = ('vendor.secaudiohal-aidl', 'vendor.audio-hal-aidl', 'vendor.audio-hal')
         rc.write_text('on property:sys.audio.restart.hal=1\n' + ''.join(
@@ -96,6 +117,38 @@ esac
             exe = p / 'exe'
             if not exe.exists() and not exe.is_symlink():
                 exe.symlink_to('/system/bin/app_process64')
+
+    def test_exynos_apex_uses_guarded_reload_and_requires_apex_mapping(self):
+        for mapped in (True, False):
+            with self.subTest(mapped=mapped), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                _, script, calls, _, env = self.fixture(root, exynos=True)
+                if not mapped:
+                    (root / 'proc/201/maps').write_text('/vendor/lib64/soundfx/lightningdsplib.so\n')
+                check = self.run_script(script, env, '--check')
+                self.assertEqual(check.returncode, 0, check.stdout + check.stderr)
+                self.assertFalse(calls.exists())
+                self.assertIn('--check --exynos-apex /apex/', (root / 'mount.calls').read_text())
+                result = self.run_script(script, env)
+                self.assertEqual(result.returncode, 0 if mapped else 1, result.stdout + result.stderr)
+                self.assertIn('processing=unverified', result.stdout)
+                self.assertEqual(calls.read_text(), 'sys.audio.restart.hal 1\n')
+                self.assertIn('reload_already_attempted_this_boot', self.run_script(script, env).stdout)
+                self.assertEqual(len((root / 'mount.calls').read_text().splitlines()), 2)
+
+    def test_exynos_apex_does_not_mount_without_verified_handler_or_shared_view(self):
+        for case in ('handler', 'namespace'):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                _, script, calls, rc, env = self.fixture(root, exynos=True)
+                if case == 'handler':
+                    rc.write_text(rc.read_text().replace('stop vendor.audio-hal-aidl', 'restart audioserver'))
+                else:
+                    (root / 'proc/101/root/apex').unlink()
+                result = self.run_script(script, env)
+                self.assertNotEqual(result.returncode, 0, result.stdout)
+                self.assertFalse((root / 'mount.calls').exists())
+                self.assertFalse(calls.exists())
 
     def test_ten_soft_reboots_each_allow_one_request_but_hal_only_does_not(self):
         with tempfile.TemporaryDirectory() as tmp:

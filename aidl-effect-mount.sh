@@ -3,21 +3,45 @@
 # No local-namespace fallback, service restarts, resetprop, or policy grants.
 MODE=${1:-}
 case "$MODE" in --check|--mount) ;; *) echo 'Usage: aidl-effect-mount.sh --check|--mount' >&2; exit 2 ;; esac
+exynos_apex=/apex/com.android.hardware.audio.exynos
+apex_config=
+case "$#" in
+    1) ;;
+    4)
+        [ "$2" = --exynos-apex ] || exit 2
+        case "$3" in
+            "$exynos_apex/etc/audio_effects_config.xml"|/vendor/etc/audio_effects_config.xml) apex_config=$3 ;;
+            *) exit 2 ;;
+        esac
+        case "$4" in ''|*[!0-9]*) exit 2 ;; esac
+        [ "$4" -gt 1 ] || exit 2
+        apex_pid=$4 ;;
+    *) exit 2 ;;
+esac
 MODPATH=${0%/*}
 LOGDIR="$MODPATH/logs"
 mkdir -p "$LOGDIR" || exit 1
 STATUS="$LOGDIR/aidl-effect-mount.status"
 INIT_ROOT=${LDSP_INIT_ROOT:-/proc/1/root}
+PROC_ROOT=${LDSP_PROC_ROOT:-/proc}
 ID_BIN=${LDSP_ID_BIN:-/system/bin/id}
 FLOCK_BIN=${LDSP_FLOCK_BIN:-/system/bin/flock}
 NSENTER_BIN=${LDSP_NSENTER_BIN:-/system/bin/nsenter}
 MOUNT_BIN=${LDSP_MOUNT_BIN:-/system/bin/mount}
+UMOUNT_BIN=${LDSP_UMOUNT_BIN:-/system/bin/umount}
 CHCON_BIN=${LDSP_CHCON_BIN:-/system/bin/chcon}
 LS_BIN=${LDSP_LS_BIN:-/system/bin/ls}
 BOOT_ID_FILE=${LDSP_BOOT_ID_FILE:-/proc/sys/kernel/random/boot_id}
 UUID=f27317f4-c984-4de6-9a90-545759495bf2
 
+rollback_targets=
 finish() {
+    if [ -n "$rollback_targets" ] && [ "${2:-1}" != 0 ]; then
+        for rollback_target in $rollback_targets; do
+            "$NSENTER_BIN" -t 1 -m -- "$UMOUNT_BIN" "$rollback_target" ||
+                set -- "$1 rollback=incomplete" "${2:-1}"
+        done
+    fi
     printf '%s\n' "$1" | tee "$STATUS"
     exit "${2:-1}"
 }
@@ -129,45 +153,85 @@ exec 0>"$LOGDIR/aidl-effect-mount.lock" || finish 'BLOCKED reason=lock_open_fail
 
 source_lib="$MODPATH/system/vendor/lib64/soundfx/lightningdsplib.so"
 [ -s "$source_lib" ] || finish 'BLOCKED reason=source_library_missing'
-[ -d "$INIT_ROOT/vendor/lib64/soundfx" ] || finish 'BLOCKED reason=vendor_soundfx_directory_missing'
-# Do not replace all of /vendor/etc to invent a missing file. The manager must
-# expose the prepared factory config first; directory overlays here hide mounts.
-[ -f "$INIT_ROOT/vendor/etc/audio_effects_config.xml" ] || finish 'BLOCKED reason=factory_config_target_missing'
+soundfx=/vendor/lib64/soundfx
+factory_config=/vendor/etc/audio_effects_config.xml
+driver_label=u:object_r:vendor_file:s0
+if [ -n "$apex_config" ]; then
+    soundfx="$exynos_apex/lib64/soundfx"
+    factory_config="$apex_config"
+    if [ "$factory_config" = /vendor/etc/audio_effects_config.xml ]; then
+        [ ! -e "$INIT_ROOT$exynos_apex/etc/audio_effects_config.xml" ] &&
+            [ ! -e "$INIT_ROOT/odm/etc/audio_effects_config.xml" ] ||
+            finish 'BLOCKED reason=exynos_apex_config_changed'
+    fi
+    [ "$PROC_ROOT/$apex_pid/root$soundfx" -ef "$INIT_ROOT$soundfx" ] &&
+        [ "$PROC_ROOT/$apex_pid/root$factory_config" -ef "$INIT_ROOT$factory_config" ] ||
+        finish 'BLOCKED reason=exynos_apex_targets_not_visible'
+    [ "$MODE" = --check ] || [ -x "$UMOUNT_BIN" ] ||
+        finish 'BLOCKED reason=apex_rollback_unavailable'
+    [ ! -L "$INIT_ROOT$exynos_apex" ] && [ ! -L "$INIT_ROOT$exynos_apex/lib64" ] &&
+        [ ! -L "$INIT_ROOT$soundfx" ] && [ ! -L "$INIT_ROOT$factory_config" ] &&
+        [ ! -L "$INIT_ROOT${factory_config%/*}" ] &&
+        [ ! -L "$INIT_ROOT$soundfx/lightningdsplib.so" ] ||
+        finish 'BLOCKED reason=exynos_apex_unexpected_symlink'
+    # Reuse the label of actual stock effect libraries, not a guessed policy.
+    driver_label=
+    for stock in "$INIT_ROOT$soundfx/"*.so; do
+        [ -f "$stock" ] && [ ! -L "$stock" ] && [ "${stock##*/}" != lightningdsplib.so ] || continue
+        stock_label=$(label_of "$stock")
+        case "$stock_label" in u:object_r:*:s0) ;; *) finish 'BLOCKED reason=exynos_apex_stock_label_unverified' ;; esac
+        [ -z "$driver_label" ] || [ "$driver_label" = "$stock_label" ] ||
+            finish 'BLOCKED reason=exynos_apex_stock_label_ambiguous'
+        driver_label=$stock_label
+    done
+    [ -n "$driver_label" ] || finish 'BLOCKED reason=exynos_apex_stock_libraries_missing'
+fi
+[ -d "$INIT_ROOT$soundfx" ] || finish 'BLOCKED reason=vendor_soundfx_directory_missing'
+# Never synthesize a factory config or cover its enclosing etc directory.
+[ -f "$INIT_ROOT$factory_config" ] || finish 'BLOCKED reason=factory_config_target_missing'
 mkdir -p "$MODPATH/.aidl-mount" || finish 'BLOCKED reason=staging_directory_failed'
 stage=$(mktemp -d "$MODPATH/.aidl-mount/$boot_id.XXXXXX") || finish 'BLOCKED reason=staging_directory_failed'
 plan="$stage/plan"
 : >"$plan"
 
-target=/vendor/lib64/soundfx/lightningdsplib.so
+target="$soundfx/lightningdsplib.so"
 if ! cmp -s "$source_lib" "$INIT_ROOT$target" || \
-    [ "$(label_of "$INIT_ROOT$target")" != u:object_r:vendor_file:s0 ]; then
+    [ "$(label_of "$INIT_ROOT$target")" != "$driver_label" ]; then
     cp -p "$source_lib" "$stage/lightningdsplib.so" || finish 'BLOCKED reason=library_stage_failed'
     chmod 0644 "$stage/lightningdsplib.so" || finish 'BLOCKED reason=library_stage_failed'
-    "$CHCON_BIN" u:object_r:vendor_file:s0 "$stage/lightningdsplib.so" || finish 'BLOCKED reason=library_label_failed'
+    "$CHCON_BIN" "$driver_label" "$stage/lightningdsplib.so" || finish 'BLOCKED reason=library_label_failed'
     if [ -e "$INIT_ROOT$target" ]; then
-        printf '%s\t%s\t%s\n' "$stage/lightningdsplib.so" "$target" u:object_r:vendor_file:s0 >>"$plan"
+        printf '%s\t%s\t%s\n' "$stage/lightningdsplib.so" "$target" "$driver_label" >>"$plan"
     else
-        # A bind mount cannot create a file on read-only vendor. Preserve every
+        # A bind mount cannot create a file on a read-only filesystem. Preserve every
         # existing soundfx entry and its labels, including other audio modules.
-        mkdir "$stage/soundfx" && cp -a "$INIT_ROOT/vendor/lib64/soundfx/." "$stage/soundfx/" || \
-            finish 'BLOCKED reason=library_directory_stage_failed'
+        if [ -n "$apex_config" ]; then
+            cp -a "$INIT_ROOT$soundfx" "$stage/soundfx" || finish 'BLOCKED reason=library_directory_stage_failed'
+        else
+            mkdir "$stage/soundfx" && cp -a "$INIT_ROOT$soundfx/." "$stage/soundfx/" ||
+                finish 'BLOCKED reason=library_directory_stage_failed'
+        fi
         cp -p "$stage/lightningdsplib.so" "$stage/soundfx/lightningdsplib.so" || finish 'BLOCKED reason=library_stage_failed'
-        "$CHCON_BIN" --reference="$INIT_ROOT/vendor/lib64/soundfx" "$stage/soundfx" && \
-            "$CHCON_BIN" u:object_r:vendor_file:s0 "$stage/soundfx/lightningdsplib.so" || finish 'BLOCKED reason=library_label_failed'
-        printf '%s\t%s\t%s\n' "$stage/soundfx" /vendor/lib64/soundfx u:object_r:vendor_file:s0 >>"$plan"
+        "$CHCON_BIN" --reference="$INIT_ROOT$soundfx" "$stage/soundfx" && \
+            "$CHCON_BIN" "$driver_label" "$stage/soundfx/lightningdsplib.so" || finish 'BLOCKED reason=library_label_failed'
+        printf '%s\t%s\t%s\n' "$stage/soundfx" "$soundfx" "$driver_label" >>"$plan"
     fi
 fi
 
 # Patch the live init-visible configs, not stale module copies. Include the
 # Qualcomm SKU locations that can differ from the canonical vendor XML.
-: >"$stage/configs"
-for dir in /vendor/etc /odm/etc /system/etc /product/etc /system_ext/etc; do
-    [ ! -d "$INIT_ROOT$dir" ] || find "$INIT_ROOT$dir" -maxdepth 1 -type f -name 'audio_effects*.xml' >>"$stage/configs"
-done
-for dir in "$INIT_ROOT"/vendor/etc/audio/sku_*; do
-    [ ! -d "$dir" ] || find "$dir" -maxdepth 1 -type f -name 'audio_effects*.xml' >>"$stage/configs"
-done
-sort -u "$stage/configs" >"$stage/configs.sorted"
+if [ -n "$apex_config" ]; then
+    printf '%s\n' "$INIT_ROOT$factory_config" >"$stage/configs.sorted"
+else
+    : >"$stage/configs"
+    for dir in /vendor/etc /odm/etc /system/etc /product/etc /system_ext/etc; do
+        [ ! -d "$INIT_ROOT$dir" ] || find "$INIT_ROOT$dir" -maxdepth 1 -type f -name 'audio_effects*.xml' >>"$stage/configs"
+    done
+    for dir in "$INIT_ROOT"/vendor/etc/audio/sku_*; do
+        [ ! -d "$dir" ] || find "$dir" -maxdepth 1 -type f -name 'audio_effects*.xml' >>"$stage/configs"
+    done
+    sort -u "$stage/configs" >"$stage/configs.sorted"
+fi
 index=0
 while IFS= read -r original; do
     target=${original#"$INIT_ROOT"}
@@ -193,7 +257,7 @@ if [ "$MODE" = --check ]; then
 fi
 [ ! -f "$MODPATH/disable" ] && [ ! -f "$MODPATH/.samsung-firmware-recovery-disabled" ] && [ ! -f "$MODPATH/.aidl-recovery-disabled" ] || \
     finish 'BLOCKED reason=module_disabled_during_preflight'
-if [ "$changes" -gt 0 ]; then
+if [ "$changes" -gt 0 ] && [ -z "$apex_config" ]; then
     # Keep a generation pending until a successful guarded HAL reload. Merely
     # seeing a mapped library does not mean the new XML has been consumed.
     printf '%s\n' "${stage##*/}" >"$LOGDIR/aidl-effect-mount.generation" || finish 'BLOCKED reason=generation_write_failed'
@@ -203,15 +267,27 @@ tab=$(printf '\t')
 while IFS="$tab" read -r source target expected_label; do
     "$NSENTER_BIN" -t 1 -m -- "$MOUNT_BIN" --bind "$source" "$target" || \
         finish "BLOCKED reason=init_bind_mount_failed mounted=$mounted target=$target restart=not_requested"
+    if [ -n "$apex_config" ]; then
+        rollback_targets="$target $rollback_targets"
+    fi
     cmp -s "$source" "$INIT_ROOT$target" || {
         [ -d "$source" ] && cmp -s "$source/lightningdsplib.so" "$INIT_ROOT$target/lightningdsplib.so"
     } || finish "BLOCKED reason=init_mount_verification_failed mounted=$mounted target=$target restart=not_requested"
     label_target="$INIT_ROOT$target"
     case "$target" in
-        /vendor/lib64/soundfx) label_target="$label_target/lightningdsplib.so" ;;
+        "$soundfx") label_target="$label_target/lightningdsplib.so" ;;
     esac
     [ "$(label_of "$label_target")" = "$expected_label" ] || \
         finish "BLOCKED reason=init_mount_label_verification_failed target=$target restart=not_requested"
     mounted=$((mounted + 1))
 done <"$plan"
+if [ -n "$apex_config" ]; then
+    cmp -s "$source_lib" "$PROC_ROOT/$apex_pid/root$soundfx/lightningdsplib.so" &&
+        cmp -s "$INIT_ROOT$factory_config" "$PROC_ROOT/$apex_pid/root$factory_config" ||
+        finish 'BLOCKED reason=exynos_apex_mount_not_visible restart=not_requested'
+    if [ "$changes" -gt 0 ]; then
+        printf '%s\n' "${stage##*/}" >"$LOGDIR/aidl-effect-mount.generation" ||
+            finish 'BLOCKED reason=generation_write_failed'
+    fi
+fi
 finish "MOUNTED namespace=init changed=$mounted configs=$index restart=not_requested registration=unverified processing=unverified" 0

@@ -36,8 +36,13 @@ finish() {
     cat "$LOGDIR/aidl-audio-recovery.status"
     exit "${2:-1}"
 }
-factory_pid() {
+aidl_factory_pid() {
     result=$("$DUMPSYS_BIN" -t 2 --pid "$FACTORY" 2>/dev/null)
+    case "$result" in ''|*[!0-9]*) return 1 ;; esac
+    [ "$result" -gt 1 ] && printf '%s\n' "$result"
+}
+factory_pid() {
+    result=$(aidl_factory_pid)
     case "$result" in
         ''|*[!0-9]*)
             sh "$MODPATH/effect-host.sh" --hidl-pid 2>/dev/null ;;
@@ -73,7 +78,19 @@ framework_identity() {
     printf '%s %s %s %s\n' "$zpid" "$2" "$spid" "$4"
 }
 running() { [ "$("$GETPROP_BIN" "init.svc.$1" 2>/dev/null)" = running ]; }
+exynos_apex=/apex/com.android.hardware.audio.exynos
+apex_owner_executable() {
+    case "$1" in
+        "$exynos_apex"/bin/android.hardware.audio.effect.service-aidl.exynos|"$exynos_apex"/bin/hw/android.hardware.audio.effect.service-aidl.exynos) return 0 ;;
+        *) return 1 ;;
+    esac
+}
 overlay_ok() {
+    if [ -n "$apex_config" ]; then
+        cmp -s "$source_lib" "$1$exynos_apex/lib64/soundfx/lightningdsplib.so" &&
+            grep -Fq "uuid=\"$UUID\"" "$1$apex_config" 2>/dev/null
+        return
+    fi
     cmp -s "$source_lib" "$1/vendor/lib64/soundfx/lightningdsplib.so" &&
         grep -qi "$UUID" "$1/vendor/etc/audio_effects_config.xml" 2>/dev/null
 }
@@ -81,6 +98,14 @@ library_mapped() {
     overlay_ok "$PROC_ROOT/$1/root" || return 1
     paths=$(awk '$NF ~ /\/lightningdsplib[.]so$/ { print $NF }' "$PROC_ROOT/$1/maps" 2>/dev/null)
     for mapped in $paths; do
+        if [ -n "$apex_config" ]; then
+            case "$mapped" in
+                "$exynos_apex"/lib64/soundfx/lightningdsplib.so) return 0 ;;
+                "$MODPATH"/.aidl-mount/*/lightningdsplib.so)
+                    [ "$PROC_ROOT/$1/root$mapped" -ef "$PROC_ROOT/$1/root$exynos_apex/lib64/soundfx/lightningdsplib.so" ] && return 0 ;;
+            esac
+            continue
+        fi
         case "$mapped" in
             /vendor/lib64/soundfx/lightningdsplib.so|/system/vendor/lib64/soundfx/lightningdsplib.so|"$MODPATH"/system/vendor/lib64/soundfx/lightningdsplib.so|"$MODPATH"/.aidl-mount/*/lightningdsplib.so)
                 cmp -s "$source_lib" "$PROC_ROOT/$1/root$mapped" && return 0 ;;
@@ -131,7 +156,11 @@ reloaded() {
         new_pid=$(unique_pid "$exe") || return 1
         [ "$new_pid" != "$old_pid" ] && [ "$(readlink "$PROC_ROOT/$new_pid/exe")" = "$exe" ] || return 1
     done <"$work/targets"
-    current=$(factory_pid) || return 1
+    if [ -n "$apex_config" ]; then
+        current=$(aidl_factory_pid) || return 1
+    else
+        current=$(factory_pid) || return 1
+    fi
     [ "$current" = "$(unique_pid "$owner_exe")" ] && [ "$current" != "$before_pid" ]
 }
 
@@ -148,20 +177,48 @@ exec 0>"$LOGDIR/manual-audio-reload.lock" || finish 'BLOCKED reason=lock_open_fa
 [ "$("$GETPROP_BIN" ro.audio.ignore_effects 2>/dev/null)" != true ] || finish 'BLOCKED reason=effects_disabled_by_firmware restart=not_requested'
 source_lib="$MODPATH/system/vendor/lib64/soundfx/lightningdsplib.so"
 [ -s "$source_lib" ] || finish 'BLOCKED reason=source_library_missing'
-mount_mode=--mount
-[ "$MODE" != --check ] || mount_mode=--check
-sh "$MODPATH/aidl-effect-mount.sh" "$mount_mode" >"$LOGDIR/aidl-effect-mount.log" 2>&1 || finish 'BLOCKED reason=effect_mount_failed restart=not_requested'
-# --check never alters namespaces; it may report a plan for currently absent files.
-[ "$MODE" = --check ] || overlay_ok "$INIT_ROOT" || finish 'BLOCKED reason=init_overlay_verification_failed restart=not_requested'
+before_pid=$(factory_pid) || finish 'BLOCKED reason=factory_owner_unavailable'
+owner_exe=$(readlink "$PROC_ROOT/$before_pid/exe")
+apex_config=
+if apex_owner_executable "$owner_exe"; then
+    # A reported model or an APEX on disk does not identify the live factory.
+    [ "$(aidl_factory_pid)" = "$before_pid" ] &&
+        [ "$PROC_ROOT/$before_pid/root$owner_exe" -ef "$INIT_ROOT$owner_exe" ] &&
+        [ "$PROC_ROOT/$before_pid/root$exynos_apex/lib64/soundfx" -ef "$INIT_ROOT$exynos_apex/lib64/soundfx" ] ||
+        finish 'BLOCKED reason=exynos_apex_namespace_not_verified'
+    apex_config="$exynos_apex/etc/audio_effects_config.xml"
+    if [ ! -e "$INIT_ROOT$apex_config" ]; then
+        [ ! -e "$INIT_ROOT/odm/etc/audio_effects_config.xml" ] ||
+            finish 'BLOCKED reason=exynos_apex_config_ambiguous'
+        apex_config=/vendor/etc/audio_effects_config.xml
+    fi
+    [ "$PROC_ROOT/$before_pid/root$apex_config" -ef "$INIT_ROOT$apex_config" ] ||
+        finish 'BLOCKED reason=exynos_apex_config_not_visible'
+else
+    case "$owner_exe" in /vendor/bin/*audio*|/odm/bin/*audio*|/system/bin/*audio*|/system_ext/bin/*audio*) ;; *) finish 'BLOCKED reason=factory_executable_not_verified' ;; esac
+fi
+[ "$(unique_pid "$owner_exe")" = "$before_pid" ] || finish 'BLOCKED reason=factory_process_not_unique'
+running audioserver || finish 'BLOCKED reason=audioserver_not_running'
+
+mount_effect() {
+    if [ -n "$apex_config" ]; then
+        set -- "$1" --exynos-apex "$apex_config" "$before_pid"
+    fi
+    sh "$MODPATH/aidl-effect-mount.sh" "$@" >"$LOGDIR/aidl-effect-mount.log" 2>&1 ||
+        finish 'BLOCKED reason=effect_mount_failed restart=not_requested'
+}
+if [ -z "$apex_config" ]; then
+    if [ "$MODE" = --check ]; then
+        mount_effect --check
+    else
+        mount_effect --mount
+        overlay_ok "$INIT_ROOT" || finish 'BLOCKED reason=init_overlay_verification_failed restart=not_requested'
+    fi
+fi
 "$LINKER_BIN" --list "$source_lib" >"$LOGDIR/aidl-recovery-linker.txt" 2>&1 || finish 'BLOCKED reason=linker_dependency_resolution_failed'
 # Shell-linker success is not proof of the HAL linker namespace.
 mount_generation=$(cat "$LOGDIR/aidl-effect-mount.generation" 2>/dev/null)
 activated_generation=$(cat "$LOGDIR/aidl-effect-mount.activated" 2>/dev/null)
-before_pid=$(factory_pid) || finish 'BLOCKED reason=factory_owner_unavailable'
-owner_exe=$(readlink "$PROC_ROOT/$before_pid/exe")
-case "$owner_exe" in /vendor/bin/*audio*|/odm/bin/*audio*|/system/bin/*audio*|/system_ext/bin/*audio*) ;; *) finish 'BLOCKED reason=factory_executable_not_verified' ;; esac
-[ "$(unique_pid "$owner_exe")" = "$before_pid" ] || finish 'BLOCKED reason=factory_process_not_unique'
-running audioserver || finish 'BLOCKED reason=audioserver_not_running'
 
 work=$(mktemp -d "$LOGDIR/aidl-preflight.XXXXXX") || finish 'BLOCKED reason=preflight_directory_failed'
 : >"$work/services"
@@ -169,6 +226,9 @@ work=$(mktemp -d "$LOGDIR/aidl-preflight.XXXXXX") || finish 'BLOCKED reason=pref
 for dir in /vendor/etc/init /odm/etc/init /system/etc/init /system_ext/etc/init /product/etc/init; do
     [ ! -d "$INIT_ROOT$dir" ] || find "$INIT_ROOT$dir" -maxdepth 2 -type f -name '*.rc'
 done >"$work/rc-files"
+if [ -n "$apex_config" ] && [ -d "$INIT_ROOT$exynos_apex/etc/init" ]; then
+    find "$INIT_ROOT$exynos_apex/etc/init" -maxdepth 1 -type f -name '*.rc'
+fi >>"$work/rc-files"
 while IFS= read -r rc; do
     # Data-only parsing. Do not source, eval, or execute firmware file contents.
     awk '
@@ -226,7 +286,9 @@ END { if (bad || n == 0 || n != j || reset != 1 || !owns) exit 1; for (i=1; i<=n
 while IFS= read -r service; do
     running "$service" || continue
     exe=$(awk -v svc="$service" '$1 == svc { print $2 }' "$work/services")
-    case "$exe" in /vendor/bin/*audio*|/odm/bin/*audio*|/system/bin/*audio*|/system_ext/bin/*audio*) ;; *) finish "BLOCKED reason=handler_target_not_verified service=$service" ;; esac
+    if [ -z "$apex_config" ] || [ "$exe" != "$owner_exe" ]; then
+        case "$exe" in /vendor/bin/*audio*|/odm/bin/*audio*|/system/bin/*audio*|/system_ext/bin/*audio*) ;; *) finish "BLOCKED reason=handler_target_not_verified service=$service" ;; esac
+    fi
     pid=$(unique_pid "$exe") || finish "BLOCKED reason=handler_target_not_unique service=$service"
     [ "$(readlink "$PROC_ROOT/$pid/exe")" = "$exe" ] || finish 'BLOCKED reason=handler_executable_mismatch'
     printf '%s %s %s\n' "$service" "$exe" "$pid" >>"$work/targets"
@@ -234,6 +296,7 @@ done <"$work/handler-services"
 [ -s "$work/targets" ] || finish 'BLOCKED reason=handler_has_no_running_targets'
 snapshot before
 if [ "$MODE" = --check ]; then
+    [ -z "$apex_config" ] || mount_effect --check
     finish "PREFLIGHT factory_service=$owner sequence=firmware_stop_start restart=not_requested registration=unverified processing=unverified" 0
 fi
 native_diagnostics
@@ -282,11 +345,27 @@ for guard in "$LOGDIR/audio-hal-reload-samsung.boot-id" "$LOGDIR/audio-hal-reloa
     [ ! -f "$guard" ] || [ "$(cat "$guard")" != "$boot_id" ] || finish 'BLOCKED reason=reload_already_attempted_this_boot'
 done
 [ ! -f "$MODPATH/disable" ] && [ ! -f "$MODPATH/skip_mount" ] && [ ! -f "$MODPATH/.aidl-recovery-disabled" ] && [ ! -f "$MODPATH/.samsung-firmware-recovery-disabled" ] || finish 'BLOCKED reason=recovery_disabled_during_preflight'
-[ "$(factory_pid)" = "$before_pid" ] && overlay_ok "$INIT_ROOT" || finish 'BLOCKED reason=audio_state_changed_during_preflight'
+[ "$(factory_pid)" = "$before_pid" ] || finish 'BLOCKED reason=audio_state_changed_during_preflight'
+if [ -z "$apex_config" ]; then
+    overlay_ok "$INIT_ROOT" || finish 'BLOCKED reason=audio_state_changed_during_preflight'
+fi
 while read -r service exe old_pid; do
     running "$service" && [ "$(unique_pid "$exe")" = "$old_pid" ] || finish 'BLOCKED reason=audio_state_changed_during_preflight'
 done <"$work/targets"
 case "$("$GETPROP_BIN" sys.audio.restart.hal)" in ''|0) ;; *) finish 'BLOCKED reason=firmware_reload_already_in_progress' ;; esac
+if [ -n "$apex_config" ]; then
+    [ "$(framework_identity)" = "$framework" ] || finish 'BLOCKED reason=framework_changed_during_preflight'
+    [ "$(aidl_factory_pid)" = "$before_pid" ] &&
+        [ "$PROC_ROOT/$before_pid/root$owner_exe" -ef "$INIT_ROOT$owner_exe" ] &&
+        [ "$PROC_ROOT/$before_pid/root$exynos_apex/lib64/soundfx" -ef "$INIT_ROOT$exynos_apex/lib64/soundfx" ] &&
+        [ "$PROC_ROOT/$before_pid/root$apex_config" -ef "$INIT_ROOT$apex_config" ] ||
+        finish 'BLOCKED reason=exynos_apex_changed_during_preflight'
+    mount_effect --mount
+    overlay_ok "$INIT_ROOT" && overlay_ok "$PROC_ROOT/$before_pid/root" &&
+        [ "$(aidl_factory_pid)" = "$before_pid" ] || finish 'BLOCKED reason=exynos_apex_overlay_not_visible restart=not_requested'
+    case "$("$GETPROP_BIN" sys.audio.restart.hal)" in ''|0) ;; *) finish 'BLOCKED reason=firmware_reload_already_in_progress' ;; esac
+    mount_generation=$(cat "$LOGDIR/aidl-effect-mount.generation" 2>/dev/null)
+fi
 [ "$(framework_identity)" = "$framework" ] || finish 'BLOCKED reason=framework_changed_during_preflight'
 # Persist the consumed lifecycle before the legacy boot marker and request. A
 # partial/failed write blocks rather than silently enabling another restart.

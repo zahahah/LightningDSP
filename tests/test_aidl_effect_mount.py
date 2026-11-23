@@ -81,6 +81,40 @@ if [ -d "$2" ]; then cp -a "$2/." "{init}$3/"; else cp -p "$2" "{init}$3"; fi
     def run_script(self, script, env, mode='--mount'):
         return subprocess.run(['sh', str(script), mode], env=env, capture_output=True, text=True, timeout=20)
 
+    def test_exynos_mount_is_scoped_to_one_apex_and_config(self):
+        for case in ('success', 'rollback'):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                module, script, init, env = self.fixture(root)
+                apex = '/apex/com.android.hardware.audio.exynos'
+                sfx = init / (apex.lstrip('/') + '/lib64/soundfx')
+                sfx.mkdir(parents=True)
+                (sfx / 'stock.so').write_bytes(b'apex-stock')
+                config = init / (apex.lstrip('/') + '/etc/audio_effects_config.xml')
+                config.parent.mkdir()
+                config.write_text(XML)
+                (root / 'proc/101').mkdir(parents=True)
+                (root / 'proc/101/root').symlink_to(init)
+                env['LDSP_PROC_ROOT'] = str(root / 'proc')
+                env['LDSP_UMOUNT_BIN'] = str(self.executable(root / 'bin/umount',
+                    f'''echo "$1" >>"{root}/umount.calls"
+rm -f "{sfx}/lightningdsplib.so"
+'''))
+                if case == 'rollback':
+                    mount = Path(env['LDSP_MOUNT_BIN'])
+                    mount.write_text(mount.read_text().replace('[ "$1" = --bind ]', 'case "$3" in *.xml) exit 1 ;; esac\n[ "$1" = --bind ]'))
+                result = subprocess.run(['sh', str(script), '--mount', '--exynos-apex',
+                                         apex + '/etc/audio_effects_config.xml', '101'],
+                                        env=env, capture_output=True, text=True, timeout=20)
+                self.assertEqual(result.returncode, 0 if case == 'success' else 1, result.stdout + result.stderr)
+                self.assertEqual((sfx / 'stock.so').read_bytes(), b'apex-stock')
+                self.assertEqual((init / 'vendor/etc/audio_effects_config.xml').read_text(), XML)
+                self.assertEqual((sfx / 'lightningdsplib.so').exists(), case == 'success')
+                self.assertEqual(UUID in config.read_text(), case == 'success')
+                if case == 'rollback':
+                    self.assertEqual((root / 'umount.calls').read_text(), apex + '/lib64/soundfx\n')
+                    self.assertFalse((module / 'logs/aidl-effect-mount.generation').exists())
+
     def test_mounts_vendor_library_and_all_live_configs_preserving_stock_entries(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
