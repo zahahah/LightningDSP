@@ -13,16 +13,17 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "master",
-    "commit": "b2700662cb43a3bc361c8eab340fd593b174246f",
-    "buildBaseCommit": "b2700662cb43a3bc361c8eab340fd593b174246f",
+    "commit": "ee6cbc7b8aea66d01ab9d9606cc9cb3e2ccd4986",
+    "buildBaseCommit": "ee6cbc7b8aea66d01ab9d9606cc9cb3e2ccd4986",
     "builtFromWorkingTree": false,
-    "buildNote": "Signed root universal APK built from the committed app source at appSource.commit."
+    "buildNote": "Signed root universal APK built from the committed app source at appSource.commit.",
+    "releaseNote": "The app pre-release also offers a separately signed libxposed API 102 candidate; this module embeds the legacy-hook default build."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "0f7a6b28ab6adc3fff9f6a5df2db439953c0ac56fe9e1898e9b2f32143e220db",
-      "sizeBytes": 37687329,
+      "sha256": "fda3e932cc753688fb6a074db39b3cacaeac66dbd4dc3ab7650376ff1b074bf2",
+      "sizeBytes": 37707809,
       "packageId": "com.lightning.dsp",
       "versionName": "1.7.2",
       "versionCode": 146,
@@ -30,7 +31,7 @@
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "b2700662cb43a3bc361c8eab340fd593b174246f"
+      "sourceCommit": "ee6cbc7b8aea66d01ab9d9606cc9cb3e2ccd4986"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -50,8 +51,8 @@
   },
   "buildProvenance": "native-control/ldsp-build-provenance.json",
   "notes": [
-    "Stable 6.7.2 packages the signed root universal app 1.7.2/code 146 from committed app master source b2700662cb43a3bc361c8eab340fd593b174246f. The standalone app APK and module archive contain identical APK bytes.",
-    "The ARM64 dual-entry audio-effect driver and ldspctl helper are unchanged from stable 6.7.1; their source pins, static ELF evidence, dependency allow-list and hashes are retained.",
-    "Work-profile DSP defaults on when Android exposes an eligible work profile; explicit saved choices are preserved. The SystemUI volume-panel replacement still requires the scoped Vector/LSPosed hook and retains stock controls as fallback."
+    "Pre-release 6.7.2-beta-2 packages the signed root universal app 1.7.2/code 146 from committed app source ee6cbc7b8aea66d01ab9d9606cc9cb3e2ccd4986. The module embeds the legacy-hook APK; a separate libxposed API 102 candidate is provided by the app pre-release.",
+    "The ARM64 driver and ldspctl helper are unchanged from stable 6.7.1, including their Android 16/API 36 minimum. Native compatibility for earlier Android versions remains planned and is not part of this beta.",
+    "Work-profile routing, Samsung SystemUI panel reliability, SBC Bluetooth distortion in Fusion and late-mounted audio APEX behavior in temp-root remain under investigation before stable 6.7.2."
   ]
 }

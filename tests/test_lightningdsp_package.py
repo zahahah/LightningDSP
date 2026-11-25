@@ -81,6 +81,16 @@ class LightningDSPPackageTests(unittest.TestCase):
                        if line.strip().startswith('dist/LightningDSP-'))
         self.assertTrue(fnmatch(f'dist/LightningDSP-{package.VERSION}.zip', pattern))
 
+    def test_prerelease_notes_keep_unresolved_stable_gates_explicit(self):
+        notes = (ROOT / 'docs/release-6.7.2.md').read_text().lower()
+        for required_detail in (
+                'corrections in progress before stable', 'sbc bluetooth',
+                'samsung one ui', 'pixel 10 pro xl', 'temp-root',
+                'does not yet establish that this separate timing case is fixed'):
+            with self.subTest(detail=required_detail):
+                self.assertIn(required_detail, notes)
+        self.assertIn('audio driver and `ldspctl` helper are unchanged', notes)
+
     def test_kernelsu_catalog_metadata_points_to_public_module_docs(self):
         metadata = (ROOT / 'module.yaml').read_text()
         self.assertIn('schemaVersion: 1', metadata)
