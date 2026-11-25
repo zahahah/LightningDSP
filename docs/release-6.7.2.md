@@ -5,8 +5,8 @@ This pre-release brings the work-profile and SystemUI volume-panel updates, addi
 ### Changes
 
 #### Module and app package
-- Include app **1.7.2/code 146**, package `com.lightning.dsp`, signed with the existing owner certificate. The module ZIP carries the legacy-hook root universal APK; the separate API 102 candidate is available from the app pre-release for targeted testing.
-- Set module version **6.7.2-beta-2/code 213**. The stable KernelSU update feed remains on **6.7.1/code 212**; this pre-release does not move the stable feed.
+- Include app **1.7.2/code 147**, package `com.lightning.dsp`, signed with the existing owner certificate. The module ZIP carries the legacy-hook root universal APK; the separate API 102 candidate is available from the app pre-release for targeted testing.
+- Set module version **6.7.2-beta-2/code 214**. The stable KernelSU update feed remains on **6.7.1/code 212**; this pre-release does not move the stable feed.
 - Keep the driver and `ldspctl` helper unchanged. Both require Android 16/API 36 or newer; Android 15/API 35 and older cannot resolve a Binder NDK symbol they import. This beta does not fix that native compatibility limitation.
 
 #### Work profiles and per-app controls
