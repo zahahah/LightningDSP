@@ -51,7 +51,7 @@
   },
   "buildProvenance": "native-control/ldsp-build-provenance.json",
   "notes": [
-    "Pre-release 6.7.2-beta-2 packages the signed root universal app 1.7.2/code 147 from committed app source 83abf6a315efc623beeb7efe774609e7cf3c447d. The module embeds the legacy-hook APK; a separate libxposed API 102 candidate is provided by the app pre-release.",
+    "Pre-release 6.7.2-beta.2 packages the signed root universal app 1.7.2/code 147 from committed app source 83abf6a315efc623beeb7efe774609e7cf3c447d. The module embeds the legacy-hook APK; a separate libxposed API 102 candidate is provided by the app pre-release.",
     "The ARM64 driver and ldspctl helper are unchanged from stable 6.7.1, including their Android 16/API 36 minimum. Native compatibility for earlier Android versions remains planned and is not part of this beta.",
     "Work-profile routing, Samsung SystemUI panel reliability, SBC Bluetooth distortion in Fusion and late-mounted audio APEX behavior in temp-root remain under investigation before stable 6.7.2."
   ]
