@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import package_6511_pixel_native_control_v3 as baseline
 from ldsp import validate_ldsp_elf as elf_gate
 
-VERSION = 'v6.7.2-beta-2'
+VERSION = 'v6.7.2-beta.2'
 VERSION_CODE = 214
 APP_PACKAGE = 'com.lightning.dsp'
 APP_VERSION = '1.7.2'
