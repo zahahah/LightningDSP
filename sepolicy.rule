@@ -4,3 +4,4 @@ allow zygote vendor_file file { read open getattr map }
 type ldsp_control_service service_manager_type
 allow hal_audio_default ldsp_control_service service_manager { add find }
 allow hal_audio_default servicemanager binder { call transfer }
+allow platform_app debug_prop property_service set
