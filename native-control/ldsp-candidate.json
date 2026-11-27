@@ -13,16 +13,16 @@
   "appSource": {
     "repository": "https://github.com/zahahah/LightningDSP-App",
     "branch": "master",
-    "commit": "83abf6a315efc623beeb7efe774609e7cf3c447d",
-    "buildBaseCommit": "83abf6a315efc623beeb7efe774609e7cf3c447d",
+    "commit": "bac41d025ed4dfde4014844d10ae784a156741b4",
+    "buildBaseCommit": "bac41d025ed4dfde4014844d10ae784a156741b4",
     "builtFromWorkingTree": false,
     "buildNote": "Signed root universal APK built from the committed app source at appSource.commit.",
-    "releaseNote": "The app pre-release also offers a separately signed libxposed API 102 candidate; this module embeds the legacy-hook default build."
+    "releaseNote": "This Actions candidate embeds the default root build; the app workflow also provides a signed libxposed API 102 variant."
   },
   "artifacts": {
     "app": {
       "path": "common/files/LightningDSP.apk",
-      "sha256": "b006fa9bf42cc394e3105815114caf68d4eb5cb47f273a12c38b2a32ab2b0e0f",
+      "sha256": "7a234e5bb70a15e507e40de0f7b5ef77dc8212067dc2b3afd90d5e82dcab1b42",
       "sizeBytes": 37707809,
       "packageId": "com.lightning.dsp",
       "versionName": "1.7.2",
@@ -31,7 +31,7 @@
       "abi": "universal",
       "signatureVerified": true,
       "signerSha256": "c18c2d21eee51c357d9485c781be9bf201131c6fa94bab97b93c94b710c40357",
-      "sourceCommit": "83abf6a315efc623beeb7efe774609e7cf3c447d"
+      "sourceCommit": "bac41d025ed4dfde4014844d10ae784a156741b4"
     },
     "driver": {
       "path": "common/files/dual-entry-arm64/lightningdsplib.so",
@@ -51,7 +51,7 @@
   },
   "buildProvenance": "native-control/ldsp-build-provenance.json",
   "notes": [
-    "Pre-release 6.7.2-beta.2 packages the signed root universal app 1.7.2/code 147 from committed app source 83abf6a315efc623beeb7efe774609e7cf3c447d. The module embeds the legacy-hook APK; a separate libxposed API 102 candidate is provided by the app pre-release.",
+    "This Actions candidate packages signed root universal app 1.7.2/code 147 from bac41d025ed4dfde4014844d10ae784a156741b4, without changing any published release.",
     "The ARM64 driver and ldspctl helper are unchanged from stable 6.7.1, including their Android 16/API 36 minimum. Native compatibility for earlier Android versions remains planned and is not part of this beta.",
     "Work-profile routing, Samsung SystemUI panel reliability, SBC Bluetooth distortion in Fusion and late-mounted audio APEX behavior in temp-root remain under investigation before stable 6.7.2."
   ]
