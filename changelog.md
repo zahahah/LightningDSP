@@ -1,7 +1,8 @@
 ### v6.7.2-beta.2 (pre-release)
 
-* Include the owner-signed root universal app **1.7.2/code 147** in module **6.7.2-beta.2/code 214**. Enable work-profile DSP by default only when Android exposes an eligible profile; preserve saved user choices.
+* Include the owner-signed root universal app **1.7.2/code 152** in module **6.7.2-beta.2/code 214**. Enable work-profile DSP by default only when Android exposes an eligible profile; preserve saved user choices.
 * Improve work-profile routing and per-app DSP behavior in Session and Fusion. Improve the optional SystemUI volume replacement across initialization, expansion, lock-screen, touch pass-through and wake/unlock transitions.
+* On 64-bit ARM64 Android 17/API 37, allow large Fusion UID exclusion lists through guarded direct AudioPolicyService AIDL rule updates while preserving the relay. This path has a defensive 8,192-UID transport bound; other Android versions retain the existing AudioPolicy route.
 * Add a guarded KernelSU late-load path for the verified Samsung Exynos AIDL effects factory, which may load its effect library from the audio APEX. Keep the normal boot path and firmware reload safeguards unchanged.
 * The module remains root-only with an ARM64 audio driver. Work-profile routing requires an eligible Android package inventory. SystemUI replacement requires its Vector/LSPosed hook; stock controls remain the fallback.
 * The driver and `ldspctl` helper are unchanged from 6.7.1 and require Android 16/API 36 or newer. SBC distortion with some Bluetooth headsets in Fusion, Samsung One UI SystemUI panel instability, and late APEX availability in temp-root remain open before stable. See `docs/release-6.7.2.md` for scope and limitations.

@@ -5,7 +5,7 @@ This pre-release brings the work-profile and SystemUI volume-panel updates, addi
 ### Changes
 
 #### Module and app package
-- Include app **1.7.2/code 147**, package `com.lightning.dsp`, signed with the existing owner certificate. The module ZIP carries the legacy-hook root universal APK; the separate API 102 candidate is available from the app pre-release for targeted testing.
+- Include app **1.7.2/code 152**, package `com.lightning.dsp`, signed with the existing owner certificate. The module ZIP carries the legacy-hook root universal APK; the separate API 102 candidate is available from the app Actions artifact for targeted testing.
 - Set module version **6.7.2-beta.2/code 214**. The stable KernelSU update feed remains on **6.7.1/code 212**; this pre-release does not move the stable feed.
 - Keep the driver and `ldspctl` helper unchanged. Both require Android 16/API 36 or newer; Android 15/API 35 and older cannot resolve a Binder NDK symbol they import. This beta does not fix that native compatibility limitation.
 
@@ -13,6 +13,11 @@ This pre-release brings the work-profile and SystemUI volume-panel updates, addi
 - Enable work-profile DSP by default only when Android exposes an eligible profile. Existing saved choices remain unchanged, and the setting is available in **Volume Manager → Settings → App controls**.
 - Carry the app's separate work-profile rows and per-app volume/DSP controls into the packaged release. Preserve full Android UIDs and personal/work separation in Session and Fusion.
 - Keep Fusion available when Android restricts work-profile package inventory; effect routing still depends on what Android exposes through the supported root path.
+
+#### Fusion exclusions
+- On 64-bit ARM64 Android 17/API 37, use a guarded direct AudioPolicyService AIDL update for large Fusion exclusion lists while keeping the relay and its owned remote-submix route.
+- The current transport guard allows up to 8,192 UID entries. This is not literally unlimited, and the direct path is not enabled on other Android versions; those continue using the legacy AudioPolicy rule path.
+- This path has been exercised on the project's Pixel 10 Pro XL. That does not establish compatibility with every Android 17 OEM build.
 
 #### SystemUI volume panel
 - Include the app's optional SystemUI replacement improvements: safer initialization, stock-panel fallback until the LightningDSP surface is ready, content-sized expansion, lock-screen and wake/unlock handling, and touch pass-through outside the visible panel.
@@ -37,4 +42,4 @@ The app pre-release offers two root universal APKs with the same package, versio
 - We are continuing work on the hooked SystemUI volume panel for Samsung One UI, where it can remain unreliable. It has been stable in testing on the project's Pixel 10 Pro XL, but that does not establish Samsung or device-wide compatibility.
 - We are investigating late-mounted audio APEX availability in temp-root environments. The guarded Exynos late-load path in this beta does not yet establish that this separate timing case is fixed.
 
-Host tests and shell checks passed for the module changes; the release package and checksums must also pass validation before publication. None of these checks replaces live device validation. This pre-release does not update the stable KernelSU feed.
+Host tests and shell checks passed for the module changes; the release package and checksums must also pass validation before publication. None of these checks replaces live device validation. This Actions artifact does not update the stable KernelSU feed or publish a GitHub release.
